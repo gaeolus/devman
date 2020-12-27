@@ -1,0 +1,135 @@
+@(deviceForm: Form[Purchase],product: Product)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@header(key:String, title:String) = {
+<th class="headerSortDown">
+    @title
+</th>
+}
+
+@head = {
+
+}
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+    <ul class="nav navbar-nav">
+
+        <li class="dropdown">
+            <a href="http://101.200.82.40" class="dropdown-toggle" data-toggle="dropdown">采购管理<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#">产品管理</a></li>
+                <li><a href="#">采购申请</a></li>
+                <li><a href="#">审批流程</a></li>
+                <li><a href="#">合同管理</a></li>
+
+                <li class="divider"></li>
+                <li ><a href="#">供方资质</a></li>
+                <li ><a href="#">招标管理</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+    </ul>
+
+
+
+</div>
+}
+
+
+@content = {
+
+<div align="center">
+
+<h1>订单 @deviceForm("department").valueOr("新增")</h1>
+
+@form(routes.Purchases.save(product.id)) {
+
+<fieldset>
+
+
+    @inputText(deviceForm("department"), '_label -> "采购部门", '_help -> "")
+    @inputText(deviceForm("employee"), '_label -> "采购人", '_help -> "")
+
+
+
+</fieldset>
+
+
+
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            @header("name", "通用名")
+            @header("cname", "商品名")
+            @header("manufacturer", "厂家")
+            @header("model", "规格型号")
+            @header("unit", "单位")
+            @header("catalog", "类型")
+            @header("regno","注册证号")
+            @header("distribute","经销商")
+            @header("warranty","保修期")
+
+            @header("memo","备注")
+
+            @header("updated","报价")
+            @header("icon", "数量")
+            @header("icon", "小计")
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="@routes.Purchases.create(product.id)">@product.name</a></td>
+            <td>@product.cname</td>
+            <td>@product.manufacturer</td>
+            <td>@product.model</td>
+            <td>@product.unit</td>
+            <td>@product.catalog</td>
+            <td>@product.regno</td>
+            <td>@product.distribute</td>
+            <td>
+                @if(product.warranty == null) {
+                <em>-</em>
+                } else {
+                @product.warranty.format("yy-MM-dd")
+                }
+
+            </td>
+
+            <td>@product.memo</td>
+
+            <td>@inputText(deviceForm("orderItem.get(0).price"), '_label -> "", '_help -> "")</td>
+
+
+            <td><input type="text" value="" name="num"/></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <div class="actions">
+        <input type="submit" value="提交采购单" class="btn primary"> or
+        <a href="@routes.Purchases.list()" class="btn">取消</a>
+    </div>
+
+</div>
+
+
+}
+
+
+
+}
+
+@main(head)(navbar)(content)

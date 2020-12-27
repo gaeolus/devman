@@ -1,0 +1,212 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>保养模版管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!--弹窗组件start-->
+    <script type="text/javascript" src="../libs/js/popup/drag.js"></script>
+    <script type="text/javascript" src="../libs/js/popup/dialog.js"></script>
+    <!--弹窗组件end-->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+</head>
+<body>
+<div id="layout1">
+    <div id="centerCon" position="center" style="">
+        <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+            <form method="post" action="PMModelList.aspx" id="Form1">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTIwMTgyMTAxN2RkVdxn1hWcHJ8QDeMSYgp6kKzh8Wcu98CO5KYOl4WxBAQ=" />
+                </div>
+
+                <table>
+                    <tr>
+                        <td>
+                            模版名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtModelName" />
+                        </td>
+                        <td align="center">
+                            <button type="button" id="btnSearch"><span class="icon_find">查询</span></button>
+                        </td>
+                        <td colspan="4">
+                            <button type="button" onclick="resetSearch()"><span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="padding_right5">
+            <div id="dataBasic">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+        //定义grid
+        var grid = null;
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+            var parm = "&ModelName=" + encodeURIComponent($("#txtModelName").val());
+            parm += "&RoleId=3000&UserId=0";
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/PMModelHandler.ashx?type=GetList' + parm });
+            //刷新表格数据
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+            //初始化grid组件
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                    grid.resetWidth();
+                }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '模版名称', name: 'ModelName', align: 'center', width: "16.5%", showTitle: true },
+				{ display: '模版编号', name: 'ModelNo', align: 'center', width: "14.5%" },
+			    { display: '设备分类', name: 'CategoryName', align: 'center', width: "18.5%" },
+                { display: '创建人', name: 'CreateName', align: 'center', width: "12.5%", showTitle: true },
+                { display: '创建时间', name: 'CreateTime', align: 'center', width: "12.5%", showTitle: true },
+                { display: '更新时间', name: 'UpdateTime', align: 'center', width: "12.5%", showTitle: true },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: "16%",
+           		    render: function (rowdata, rowindex, value, column) {
+           		        var operate = '<div class="padding_top4 padding_left5">';
+           		        operate += '<span class="img_edit hand" title="修改" onclick="onEdit(' + rowdata.id + ')"></span>';
+           		        operate += '<span class="img_print hand" title="打印" onclick="onPrint(' + rowdata.id + ')"></span>';
+           		        operate += '<span class="img_delete hand" title="删除" onclick="onDelete(' + rowdata.id + ')"></span>';
+
+           		        operate += '</div>';
+           		        return operate;
+           		        alert(operate);
+           		    }
+           		}
+			  ],
+           		url: '../Handler/PMModelHandler.ashx?type=GetList&RoleId=3000&UserId=0&date=' + new Date().getTime(),
+                sortName: 'id',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: true,
+                enabledEdit: true,
+                sortOrder: "desc",
+                toolbar: {
+                    items: [
+        		  { text: '新增', click: addUnit, iconClass: 'icon_add' },
+        		  { line: true}]
+                }
+            });
+        }
+
+        //新增
+        function addUnit() {
+            top.Dialog.open({
+                URL: "Maintenance/PMModelInfo.aspx?type=Add",
+                ID: "a1",
+                Title: "添加",
+                ShowMaxButton: true,
+                Width: 1000,
+                Height: 650
+            });
+        }
+        //修改
+        function onEdit(rowid) {
+            top.Dialog.open({
+                URL: "Maintenance/PMModelInfo.aspx?type=Update&id=" + rowid,
+                Title: "编辑模版",
+                Width: 1000,
+                ShowMaxButton: true,
+                Height: 650
+            });
+        }
+        //打印
+        function onPrint(rowid) {
+            window.open("PMModelPrint.aspx?type=Update&id=" + rowid);
+            //window.open('PMModelPrint.aspx');
+        }
+
+        //删除
+        function onDelete(rowid, rowidx) {
+
+            top.Dialog.confirm("确定要删除该模版吗？", function () {
+                //此处进行ajax后台数据处理
+                $.ajax({
+                    url: '../Handler/PMModelHandler.ashx',
+                    dataType: 'text',
+                    data: { id: rowid, type: "Del" },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

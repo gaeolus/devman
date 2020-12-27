@@ -1,0 +1,727 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title></title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="/assets/libs/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/framework.js"></script>
+    <link href="/assets/libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="/assets/" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!--基本选项卡start-->
+    <script type="text/javascript" src="/assets/libs/js/nav/basicTabModern.js"></script>
+    <!--基本选项卡end-->
+    <!--数据表格start-->
+    <script src="/assets/libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!--弹出式提示框start-->
+    <script type="text/javascript" src="/assets/libs/js/popup/messager.js"></script>
+    <!--弹出式提示框end-->
+    <!--树组件start -->
+    <script type="text/javascript" src="/assets/libs/js/tree/ztree/ztree.js"></script>
+    <link href="/assets/libs/js/tree/ztree/ztree.css" rel="stylesheet" type="text/css" />
+    <!--树组件end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="/assets/libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!-- 表单start -->
+    <script src="/assets/libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <!--图表脚本start-->
+    <script type="text/javascript" src="/assets/libs/thirdparty/fusioncharts/js/FusionCharts.js"></script>
+    <!--图表脚本end-->
+    <script type="text/javascript">
+        $(function () {
+            //        setTimeout(function () {
+            //            $.messager.show('提示信息', '提示内容', 'stay', '', 'box_msg_custom');
+            //        }, 2000)
+
+            //修正由于使用了tab导致高度计算不准确
+            if (broswerFlag == "IE6") {
+                setTimeout(function () {
+                    top.iframeHeight('frmrightChild');
+                }, 500)
+            }
+
+            $("#tabs2").bind("actived", function (e, i) {
+                if (i == 0) {
+                    ProfitSpending();
+                }
+                if (i == 1) {
+                    ProfitSpending();
+                }
+                if (i == 2) {
+                    EngineerWork();
+                }
+                if (i == 3) {
+                    ProfitTower();
+                }
+                if (i == 4) {
+                    ProfitRing();
+                }
+            });
+
+            $("#tabs1").bind("actived", function (e, i) {
+
+                if (i == 0) {
+                    initGridTransfer();
+
+                }
+                if (i == 1) {
+                    initGridReply();
+
+                }
+                if (i == 2) {
+                    initGridRepairAudit();
+
+                }
+                if (i == 3) {
+                    initGridDeal();
+
+                }
+                if (i == 4) {
+                    initGridAccept();
+                }
+                if (i == 5) {
+                    initGridMain();
+                }
+                if (i == 6) {
+                    initGridCheck();
+
+                }
+                if (i == 7) {
+                    initGridRetire();
+
+                }
+
+            })
+
+
+        });
+
+        function customHeightSet(contentHeight) {
+            if ($("#newsBox").width() < 420) {
+                $("#newsBox").width(420);
+            }
+        }
+    </script>
+</head>
+<body>
+<table width="100%">
+    <tr>
+        <td colspan="2">
+            <div class="basicTabModern" id="tabs1" tabscroll="true">
+                <div name="转科审批(0)" id="Transfer">
+                </div>
+                <div name="维修响应(0)" id="Reply">
+                </div>
+                <div name="维修审核(0)" id="RepairAudit">
+                </div>
+                <div name="维修处理(0)" id="RepairDeal">
+                </div>
+                <div name="维修考评(0)" id="RepairAccept">
+                </div>
+                <div name="保养提醒(24)" id="initGridMain">
+                </div>
+                <div name="计量提醒(4)" id="initGridCheck">
+                </div>
+                <div name="报废审批(0)" id="initGridRetire">
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div class="basicTabModern" id="tabs2">
+                <div name="维修费用统计图" id="RepairTotal">
+                </div>
+                <div name="科室盈利支出图" id="ProfitSpending">
+                </div>
+                <div name="工程师工作量对比图" id="EngineerWork">
+                </div>
+                <div name="盈利塔形图" id="ProfitTower">
+                </div>
+                <div name="盈利环形图" id="ProfitRing">
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+<script type="text/javascript">
+    function ProfitRing() {
+        var chartPath = "/assets/libs/thirdparty/fusioncharts/swf/";
+        $.ajax({
+            url: "/ChartData?date=" + new Date().getTime(),
+            data: { Type: "ProfitRing", DepartmentID: "", Year: '2016' },
+            datatype: "xml",
+            success: function (data) {
+                var myChart2 = new FusionCharts(chartPath + "Doughnut2D.swf", "myChartId2", "100%", "370", "0", "0");
+                myChart2.setDataXML(data);
+                myChart2.render("ProfitRing");
+            },
+            error: function () {
+                //alert("加载失败");
+            }
+        });
+    };
+    function ProfitTower() {
+        var chartPath = "/assets/libs/thirdparty/fusioncharts/swf/";
+        $.ajax({
+            url: "/ChartData?date=" + new Date().getTime(),
+            data: { Type: "ProfitTower", DepartmentID: "", Year: '2016' },
+            datatype: "xml",
+            success: function (data) {
+                var myChart2 = new FusionCharts(chartPath + "Pyramid.swf", "myChartId2", "100%", "370", "0", "0");
+                myChart2.setDataXML(data);
+                myChart2.render("ProfitTower");
+            },
+            error: function () {
+                //alert("加载失败");
+            }
+        });
+    };
+    function EngineerWork() {
+        var chartPath = "/assets/libs/thirdparty/fusioncharts/swf/";
+        $.ajax({
+            url: "/ChartData?date=" + new Date().getTime(),
+            data: { Type: "EngineerWork", DepartmentID: "" },
+            datatype: "xml",
+            success: function (data) {
+                var myChart2 = new FusionCharts(chartPath + "Column2D.swf", "myChartId2", "100%", "370", "0", "0");
+                myChart2.setDataXML(data);
+                myChart2.render("EngineerWork");
+            },
+            error: function () {
+                //alert("加载失败");
+            }
+        });
+    }
+    function RepairTotal() {
+        var chartPath = "/assets/libs/thirdparty/fusioncharts/swf/";
+        $.ajax({
+            url: "/ChartData?date=" + new Date().getTime(),
+            data: { Type: "RepairTotal", Year: '2016', DepartmentID: "" },
+            datatype: "xml",
+            success: function (data) {
+                var myChart2 = new FusionCharts(chartPath + "Column2D.swf", "myChartId2", "100%", "370", "0", "0");
+                myChart2.setDataXML(data);
+                myChart2.render("RepairTotal");
+            },
+            error: function () {
+                //alert("加载失败");
+            }
+        });
+    }
+    function ProfitSpending() {
+        var chartPath = "/assets/libs/thirdparty/fusioncharts/swf/";
+        $.ajax({
+            url: "/ChartData?date=" + new Date().getTime(),
+            data: { Type: "DepartmentProfitSpending", Year: '2016', DepartmentID: "" },
+            datatype: "xml",
+            success: function (data) {
+                var myChart2 = new FusionCharts(chartPath + "ScrollColumn2D.swf", "myChartId2", "100%", "370", "0", "0");
+                myChart2.setDataXML(data);
+                myChart2.render("ProfitSpending");
+            },
+            error: function () {
+                //alert("加载失败");
+            }
+        });
+    }
+    //数据表格初始化
+    var g;
+
+    function initComplete() {
+        initGridTransfer();
+        RepairTotal();
+        g = $("#cargrid").quiGrid({
+            columns: [
+                { display: '申请车号', name: 'Code', align: 'left', width: 80 },
+                { display: '申请部门', name: 'DepName', align: 'left', width: 100 },
+                { display: '申请人', name: 'FullName', align: 'left', width: 80 },
+                { display: '用车事由', name: 'Reason', align: 'left', width: 150 },
+				{ display: '目的地', name: 'Adr', align: 'left', width: 100 },
+				{ display: '预计用车时间', name: 'FromTime', align: 'left', width: 150 }
+                ], url: 'oa?command=getCarApply&Typ=Apply', usePager: false, sortName: 'id', checkbox: false, percentWidthMode: false,
+            height: 240, width: "100%",
+            onDblClickRow: function (rowdata, rowid, rowobj) {
+                top.Dialog.alert('选择的是:' + rowdata.Code);
+            }
+        });
+
+        g = $("#meetinggrid").quiGrid({
+            columns: [
+                { display: '会议室名', name: 'Name', align: 'left', width: 120 },
+				{ display: '申请部门', name: 'DepName', align: 'left', width: 80 },
+			    { display: '申请人', name: 'FullName', align: 'left', width: 80 },
+				{ display: '使用时间', name: 'Times', align: 'left', width: 100 },
+				{ display: '会议标题', name: 'Title', align: 'left', width: 200 }
+                ], url: 'oa?command=getMeetingApply&Typ=Apply', usePager: false, sortName: 'id', checkbox: false, percentWidthMode: false,
+            height: 240, width: "100%",
+            onDblClickRow: function (rowdata, rowid, rowobj) {
+                top.Dialog.alert('选择的是:' + rowdata.Name);
+            }
+        });
+    }
+
+    //设备转科审批
+    function initGridTransfer() {
+        g = $("#Transfer").quiGrid({
+            columns: [
+			    { display: '转移单号', name: 'EquipMentCode', align: 'left', width: "15%" },
+                { display: '系统编号', name: 'IBNumber', align: 'left', width: "15%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "15%" },
+			    { display: '目前所属科室', name: 'DeptNameNow', align: 'left', width: "15%" },
+                { display: '转移后科室', name: 'DeptNameAfter', align: 'left', width: "15%" },
+                { display: '审核状态', name: 'AuditStatus', align: 'left', width: "7%" },
+                { display: '审核时间', name: 'AuditDateTime', align: 'left', width: "10%" },
+                { display: '目前摆放地点', name: 'DepositAddress', align: 'left', width: "20%" },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        return '<div class="padding_top4 padding_left5">'
+	                                 + '<span class="img_edit hand" title="审核" onclick="onEdit(' + rowdata.Id + ')"></span>'
+	                             + '</div>';
+           		    }
+           		}
+			  ],
+            url: 'Handler/EquipmentAuditRecord.ashx?UserId=20036&Type=AuditList&FirstPage=FirstPage&date=' + new Date().getTime(), sortName: 'Id', rownumbers: true, checkbox: false,
+            height: 300, width: "100%", pageSize: 20, percentWidthMode: true
+        });
+    }
+
+    //修改
+    function onEdit(rowid) {
+
+        top.Dialog.open({
+            URL: "EquManager/TransferAuditInfo.aspx?Type=Edit&IfFast=1&id=" + rowid, ID: "a2",
+            Title: "修改", ShowMaxButton: true, Width: 850, Height: 530
+        });
+    }
+
+    //维修响应
+    function initGridReply() {
+        g = $("#Reply").quiGrid({
+            columns: [
+			     { display: '维修单号', name: 'RepairCode', align: 'left', width: "10%" },
+			    { display: '系统编号', name: 'EquCode', align: 'left', width: "15%" },
+                { display: '设备型号', name: 'Specification', align: 'left', width: "8%" },
+			    { display: '设备名称', name: 'HEquName', align: 'left', width: "5%" },
+			    { display: '目前所属科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: "5%" },
+                { display: '维修期限', name: 'MaintenDate', align: 'left', width: "7%" },
+                { display: '报修人', name: 'RepairPerson', align: 'left', width: "5%" },
+                { display: '维修状态', name: 'RepairStatus', align: 'left', width: "5%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'left', width: "10%" },
+                { display: '响应人', name: 'ReplyPerson', align: 'left', width: "5%" },
+                { display: '供应商名称', name: 'SupplierName', align: 'left', width: "10%" },
+                { display: '资质有效期', name: 'EndTime', align: 'left', width: "5%",
+                    render: function (rowdata, rowindex, value, column) {
+                        return '2016/1/3 10:16:18' > value ? "<font color=red>" + value + "</font>" : value;
+                    }
+                },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        //           		        return '<div class="padding_top4 padding_left5">'
+           		        //	                                 + '<span class="img_edit hand padding_left5" title="响应" onclick="onEditReply(' + rowdata.Id + ')"></span>'
+           		        //	                             + '</div>';
+
+           		        var operate = '<div class="padding_top4 padding_left5">';
+           		        if (rowdata.RepairStatus == "报修中" && ('3094' == '3001'||'3094' =='3003')){
+           		            operate += '<span class="img_edit hand padding_left5" title="响应" onclick="onEditReply(' + rowdata.Id + ')"></span>';
+           		        }
+           		        else {
+           		            operate += '<span class="img_list hand" title="查看" onclick="onLookReply(' + rowdata.Id + ')"></span>' + '</div>';
+           		        }
+
+           		        return operate;
+           		    }
+           		}
+			  ],
+            url: 'Handler/Repairs.ashx?DepartmentID=30484&RoleId=3094&UserId=20036&Type=ReplyList&FirstPage=FirstPage&date=' + new Date().getTime(), sortName: 'Id', rownumbers: true, checkbox: false,
+            height: 300, width: "100%", pageSize: 20, percentWidthMode: true
+        });
+    }
+    function onEditReply(rowid) {
+        top.Dialog.open({
+            URL: "Repair/ReplyInfo.aspx?id=" + rowid + "&IfFast=1", ID: "a2",
+            Title: "响应", ShowMaxButton: true, Width: 790, Height: 630
+        });
+    }
+
+    function onLookReply(rowid) {
+        top.Dialog.open({
+            URL: "Repair/ReplyInfo.aspx?Type=Look&id=" + rowid, ID: "a2",
+            Title: "查看", ShowMaxButton: true, Width: 720, Height: 630
+        });
+    }
+
+
+    //维修审核
+    function initGridRepairAudit() {
+        grid = $("#RepairAudit").quiGrid({
+            columns: [
+			    { display: '维修单号', name: 'RepairCode', align: 'left', width: "10%" },
+			    { display: '系统编号', name: 'EquCode', align: 'left', width: "12%" },
+                { display: '设备型号', name: 'Specification', align: 'left', width: "8%" },
+			    { display: '设备名称', name: 'HEquName', align: 'left', width: "10%" },
+			    { display: '目前所属科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: "10%" },
+                { display: '维修期限', name: 'MaintenDate', align: 'left', width: "10%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'left', width: "10%" },
+                { display: '响应人', name: 'ReplyPerson', align: 'left', width: "5%" },
+                { display: '报修人', name: 'RepairPerson', align: 'left', width: "8%" },
+                { display: '审核状态', name: 'AuditStatus', align: 'left', width: "7%" },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        return '<div class="padding_top4 padding_left5">'
+	                                 + '<span class="img_edit hand padding_left5" title="审核" onclick="onEditRepairAudit(' + rowdata.Id + ',' + rowdata.RepairCode + ')"></span>'
+	                             + '</div>';
+           		    }
+           		}
+			  ],
+            url: 'Handler/Repairs.ashx?DepartmentID=30484&RoleId=3094&UserId=20036&Type=AuditList&FirstPage=FirstPage&date=' + new Date().getTime() + "&AuditUserID=" + '20036',
+            height: 300, width: "100%", pageSize: 20, sortName: 'Id', rownumbers: true, checkbox: false, percentWidthMode: true
+        });
+    }
+    //审核
+    function onEditRepairAudit(rowid, RepairCode) {
+        top.Dialog.open({
+            URL: "Repair/AuditInfo.aspx?Type=Edit&IfFast=1&id=" + rowid + "&RepairCode=" + RepairCode, ID: "a2",
+            Title: "审核", ShowMaxButton: true, Width: 750, Height: 730
+        });
+
+    }
+
+
+    //维修处理
+    function initGridDeal() {
+        grid = $("#RepairDeal").quiGrid({
+            columns: [
+			    { display: '维修单号', name: 'RepairCode', align: 'left', width: "10%" },
+			    { display: '系统编号', name: 'EquCode', align: 'left', width: "12%" },
+                { display: '设备型号', name: 'Specification', align: 'left', width: "8%" },
+			    { display: '设备名称', name: 'HEquName', align: 'left', width: "10%" },
+			    { display: '目前所属科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: "10%" },
+                { display: '维修期限', name: 'MaintenDate', align: 'left', width: "10%" },
+                { display: '报修人', name: 'RepairPerson', align: 'left', width: "10%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'left', width: "10%" },
+                { display: '响应人', name: 'ReplyPerson', align: 'left', width: "5%" },
+                { display: '维修状态', name: 'RepairStatus', align: 'left', width: "5%" },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        var operate = '<div class="padding_top4 padding_left5">';
+           		        if ((rowdata.RepairStatus == "审核通过" || rowdata.RepairStatus == "维修中") && ('3094' == '3001' || '3094' == '3003')) {
+           		            operate += '<span class="img_edit hand padding_left5" title="维修处理" onclick="onEditDeal(' + rowdata.Id + ',' + rowdata.RepairCode + ',' + rowdata.HID + ')"></span>' + '</div>';
+           		        }
+           		        else {
+           		            operate += '<span class="img_list hand padding_left5" title="查看信息" onclick="onLookDeal(' + rowdata.Id + ',' + rowdata.RepairCode + ')"></span>' + '</div>';
+           		        }
+           		        return operate;
+           		    }
+           		}
+			  ],
+            url: 'Handler/Repairs.ashx?Department=30484&RoleId=3094&UserId=20036&UserName=' + escape('系统管理员') + '&Type=DealList&date=' + new Date().getTime(), sortName: 'Id', rownumbers: true, checkbox: false,
+            height: 300, width: "100%", pageSize: 20, percentWidthMode: true
+        });
+    }
+
+    //维修处理
+    function onEditDeal(rowid, RepairCode, hid) {
+        top.Dialog.open({
+            URL: "Repair/DealInfo.aspx?Type=Edit&IfFast=1&id=" + rowid + "&RepairCode=" + RepairCode + "&HID=" + hid, ID: "a2",
+            Title: "维修处理", ShowMaxButton: true, Width: 990, Height: 640
+        });
+    }
+
+    //查看
+    function onLookDeal(rowid, RepairCode) {
+        top.Dialog.open({
+            URL: "Repair/DealLook.aspx?id=" + rowid + "&RepairCode=" + RepairCode, ID: "a2",
+            Title: "查看信息", ShowMaxButton: true, Width: 990, Height: 640
+        });
+    }
+
+    //维修考评
+    function initGridAccept() {
+        grid = $("#RepairAccept").quiGrid({
+            columns: [
+			    { display: '维修单号', name: 'RepairCode', align: 'left', width: "10%" },
+			    { display: '系统编号', name: 'EquCode', align: 'left', width: "15%" },
+                { display: '设备型号', name: 'Specification', align: 'left', width: "10%" },
+			    { display: '设备名称', name: 'HEquName', align: 'left', width: "10%" },
+			    { display: '目前所属科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: "10%" },
+                { display: '维修期限', name: 'MaintenDate', align: 'left', width: "10%" },
+                { display: '报修人', name: 'RepairPerson', align: 'left', width: "5%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'left', width: "10%" },
+                { display: '响应人', name: 'ReplyPerson', align: 'left', width: "5%" },
+                { display: '维修状态', name: 'RepairStatus', align: 'left', width: "5%" },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        var operate = '<div class="padding_top4 padding_left5">';
+           		        if (rowdata.RepairStatus != "已验收" && ('3094' == '3004' || '3094' == '3000')) {
+           		            operate += '<span class="img_edit hand padding_left5" title="维修考评" onclick="onEditAccept(' + rowdata.Id + ',' + rowdata.RepairCode + ')"></span>' + '</div>';
+           		        }
+           		        else {
+           		            operate += '<span class="img_list hand padding_left5" title="查看信息" onclick="onLookAccept(' + rowdata.Ids + ',' + rowdata.RepairCode + ')"></span>' + '</div>';
+           		        }
+
+           		        return operate;
+           		    }
+           		}
+			  ],
+            url: 'Handler/Repairs.ashx?DepartmentID=30484&RoleId=3094&UserId=20036&Type=AcceptList&IfFast=1&date=' + new Date().getTime(), sortName: 'Id', rownumbers: true, checkbox: false,
+            height: 300, width: "100%", pageSize: 20, percentWidthMode: true
+        });
+    }
+    //维修考评
+    function onEditAccept(rowid, RepairCode) {
+        top.Dialog.open({
+            URL: "Repair/AcceptInfo.aspx?Type=Edit&id=" + rowid + "&RepairCode=" + RepairCode + "&IfFast=1", ID: "a2",
+            Title: "维修考评", ShowMaxButton: true, Width: 990, Height: 640
+        });
+    }
+
+    //维修考评
+    function onLookAccept(rowid, RepairCode) {
+        top.Dialog.open({
+            URL: "Repair/LookInfo.aspx?Type=Edit&id=" + rowid + "&RepairCode=" + RepairCode, ID: "a2",
+            Title: "查看维修考评", ShowMaxButton: true, Width: 990, Height: 640
+        });
+    }
+    //保养提醒
+    function initGridMain() {
+        grid = $("#initGridMain").quiGrid({
+            columns: [
+				   { display: '计划编号', name: 'PMCode', align: 'left', width: "10%", showTitle: true },
+                    { display: '计划名称', name: 'PMTitle', align: 'left', width: "5%", showTitle: true },
+                    { display: '系统编号', name: 'IBNumber', align: 'left', width: "5%" },
+			        { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+			        { display: '设备型号', name: 'Specification', align: 'center', width: "5%" },
+                    { display: '医院名称', name: 'HospitalName', align: 'center', width: "10%" },
+                    { display: '目前摆放地点', name: 'Equput', align: 'center', width: "5%" },
+                    { display: '设备厂家', name: 'FactoryName', align: 'center', width: "10%" },
+			        { display: '预计执行时间', name: 'PlanTime', align: 'left', width: "10%", render: renderTimeStatus1 },
+                    { display: '计划保养科室', name: 'DeptName', align: 'left', width: "5%", showTitle: true },
+                    { display: '外包公司', name: 'Outsource', align: 'left', width: "5%", showTitle: true },
+                    { display: '计划状态', name: 'PMStatus', align: 'center', width: "10%" },
+                    { display: '实施状态', name: 'IsCompleted', align: 'center', width: "10%" },
+           		    { display: '操作', isAllowHide: false, align: 'center', width: 80,
+           		        render: function (rowdata, rowindex, value, column) {
+           		            return '<div class="padding_top4 padding_left5">'
+	                        + '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.pmid + ')"></span>' + '</div>';
+           		        }
+           		    }
+			    ],
+            alternatingRow: false,
+            //行渲染 实质是对该行的tr标签进行属性的设置
+            rowAttrRender: function (rowdata, rowid) {
+                if ("停用" == rowdata.PMStatus) {
+                    return "style=\"background-color:#eee;\"";
+                }
+                if ("保养完成" == rowdata.IsCompleted) {
+                    return "style=\"background-color:#bcfcb1;\"";
+                }
+            },
+            url: 'Handler/MaintenancePlans.ashx?UserId=20036&type=GetListQuery&date=' + new Date().getTime(),
+            sortName: 'ProjectedDate',
+            rownumbers: true,
+            height: 300, width: "100%", pageSize: 20,
+            percentWidthMode: true,
+            sortOrder: "desc"
+        });
+    }
+
+    //查看
+    function onView(rowid) {
+        top.Dialog.open({
+            URL: "Maintenance/MaintenancePlansLook.aspx?id=" + rowid,
+            Title: "查看设备信息",
+            Width: 1000,
+            Height: 650
+        });
+    }
+
+
+    function renderTimeStatus(rowdata, rowindex, value, column) {
+
+        // add by wangpc
+        s1 = new Date(value.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var dateT = parseInt(days / (1000 * 60 * 60 * 24));
+
+
+        if ((rowdata.IsCompleted == "保养未完成" && rowdata.PMStatus == "启用")) {
+            if ((dateT >= 0 && dateT < 7)) {
+                return "<div style='background-color:yellow;'>" + value + "</div>";
+            }
+
+
+            else if (dateT < 0 && dateT > -7) {
+                return "<div style='background-color:Red;'>" + value + "</div>";
+            }
+
+            else {
+                return "<div>" + value + "</div>";
+            }
+        }
+        else {
+            return "<div >" + value + "</div>";
+        }
+    }
+    //计量提醒
+    function initGridCheck() {
+        grid = $("#initGridCheck").quiGrid({
+            columns: [
+				{ display: '处理状态', name: 'State', align: 'left', wdith: "5%" },
+                { display: '证书编号', name: 'BookSn', align: 'left', wdith: "5%" },
+                { display: '检测产品', name: 'CheckProduct', align: 'left', width: "5%" },
+                { display: '备件名称', name: 'PartName', align: 'left', width: "5%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', wdith: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', wdith: "10%" },
+			    { display: '设备厂家', name: 'FactoryName', align: 'left', wdith: "10%" },
+                { display: '系统编号', name: 'IBNumber', align: 'left', wdith: "10%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', wdith: "10%" },
+                { display: '费用', name: 'Money', align: 'left', wdith: "5%" },
+                { display: '检测日期', name: 'CheckTime', align: 'left', wdith: "13%", render: renderTimeStatus1 },
+                { display: '下次检测日期', name: 'NextTime', align: 'left', wdith: "13%" },
+                { display: '检定结论', name: 'Result', align: 'left', wdith: "5%" },
+                { display: '主管人', name: 'Manager', align: 'left', wdith: "5%" },
+                { display: '审核人', name: 'Checker', align: 'left', wdith: "5%" },
+                { display: '检定人', name: 'Tester', align: 'left', wdith: "10%" },
+                { display: '操作', isAllowHide: false, align: 'left', width: 80,
+                    render: function (rowdata, rowindex, value, column) {
+                        return '<div class="padding_top4 padding_left5">'
+                        //	                                 + '<span class="img_edit hand" title="审核" onclick="onEditCheck(' + rowdata.Id + ')"></span>'
+                         + '<span class="img_list hand" title="查看" onclick="onViewCheck(' + rowdata.Id + ')"></span>'
+	                             + '</div>';
+                    }
+                }
+			  ],
+            alternatingRow: false,
+            //行渲染 实质是对该行的tr标签进行属性的设置
+            rowAttrRender: function (rowdata, rowid) {
+                if (rowdata.State == '已检测') {
+                    //return "style=\"background-color:#bcfcb1;\"";
+                }
+            },
+            url: 'Handler/CheckInfo.ashx?UserId=20036&FirstPage=FirstPage&type=Remind&date=' + new Date().getTime(),
+            sortName: 'Id',
+            rownumbers: true,
+            height: 300, width: "100%", pageSize: 20,
+            percentWidthMode: true,
+            sortOrder: "desc"
+        });
+    }
+
+    function renderTimeStatus1(rowdata, rowindex, value, column) {
+        //            var projectDate = new Date(value);
+        //            var now = new Date();
+        //            var dateT = parseInt((projectDate - now) / (1000 * 60 * 60 * 24));
+
+        // add by wangpc
+        s1 = new Date(value.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var dateT = parseInt(days / (1000 * 60 * 60 * 24));
+        //
+
+        if (rowdata.State == "未检测") {
+            if ((dateT >= 0 && dateT < 7)) {
+                return "<div style='background-color:yellow;'>" + value + "</div>";
+            }
+            //            if (dateT >= 7 && dateT <= 30) {
+            //                return "<div style='background-color:yellow;'>" + value + "</div>";
+            //            }
+
+            else if (dateT < 0 && dateT > -7) {
+                return "<div style='background-color:Red;'>" + value + "</div>";
+            }
+            //            else {
+            //                return "<div style='background-color:#DDD;'>" + value + "</div>";
+            //            }
+            else {
+                return "<div>" + value + "</div>";
+            }
+        }
+        else {
+            return "<div >" + value + "</div>";
+        }
+    }
+
+    //修改
+    function onEditCheck(rowid) {
+        top.Dialog.open({
+            URL: "Check/CheckInfo.aspx?type=Edit&id=" + rowid,
+            Title: "查看设备信息",
+            Width: 600,
+            ID: "a1",
+            Height: 450
+        });
+
+    }
+    //查看
+    function onViewCheck(rowid) {
+        top.Dialog.open({
+            URL: "Check/CheckInfo.aspx?type=View&id=" + rowid,
+            Title: "查看设备信息",
+            Width: 600,
+            Height: 450
+        });
+    }
+
+    //报废审批
+    function initGridRetire() {
+        grid = $("#initGridRetire").quiGrid({
+            columns: [
+				    { display: '系统编号', name: 'IBNumber', align: 'left', width: "15%", showTitle: true },
+                    { display: '申请日期', name: 'ApplyDate', align: 'left', width: "15%" },
+			        { display: '申请人', name: 'ApplyUserName', align: 'left', width: "10%" },
+			        { display: '报废原因', name: 'RetireReason', align: 'left', width: "10%", showTitle: true },
+			        { display: '报废日期', name: 'RetireDate', align: 'center', width: "10%" },
+                    { display: '备注', name: 'Remark', align: 'left', width: "10%", showTitle: true },
+                    { display: '审批人', name: 'CheckUserName', align: 'left', width: "10%" },
+                    { display: '审批时间', name: 'CheckTime', align: 'left', width: "10%" },
+                    { display: '审批意见', name: 'CheckRemark', align: 'center', width: "5%", showTitle: true },
+                    { display: '状态', name: 'StateName', align: 'left', width: "5%", showTitle: true },
+           		    { display: '审批', isAllowHide: false, align: 'center', width: 80,
+           		        render: function (rowdata, rowindex, value, column) {
+           		            return '<div class="padding_top4 padding_left5">'
+	                            + '<span class="img_edit hand" title="审批" onclick="onRetire(' + rowdata.id + ')"></span>' + '</div>';
+           		        }
+           		    }
+			  ],
+            url: 'Handler/Retire.ashx?UserId=20036&type=GetAuditList&date=' + new Date().getTime(),
+            sortName: 'Id',
+            rownumbers: true,
+            height: 300, width: "100%", pageSize: 20,
+            percentWidthMode: true,
+            sortOrder: "desc",
+            params: [
+                    { name: "status", value: "1" }
+                ]
+        });
+    }
+
+    //审核
+    function onRetire(rowid) {
+        top.Dialog.open({
+            URL: "EquRetire/RetireCheck.aspx?type=Audit&IfFast=1&id=" + rowid,
+            Title: "设备报废审批",
+            Width: 1000,
+            ID: "a1",
+            Height: 650
+        })
+
+    }
+</script>

@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设备管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script src="../libs/js/form/suggestion.js" type="text/javascript"></script>
+
+     <!-- 弹窗start -->
+    <script src="../libs/js/artDialog/jquery.artDialog.js" type="text/javascript"></script>
+    <script src="../libs/js/artDialog/iframeTools.js" type="text/javascript"></script>
+    <link href="../libs/js/artDialog/skins/blue.css" rel="stylesheet" type="text/css" />
+    <!-- 弹窗end -->
+    <script type="text/javascript">
+        $(function () {
+            if ('' == "1") {
+                $("#SearchImg").attr("style", "display:none");
+            }
+            //$("#divRepairPreson").setValue('');
+
+            if ('Edit' == "Edit") {
+                $("#SearchImg").attr("style", "display:none");
+            }
+        });
+        function reflesh() {
+
+            if ('' == "1") {
+                top.Dialog.close();
+            } else {
+                top.frmright.page_225.refresh();
+                top.Dialog.close();
+            }
+
+        }
+        function initComplete() {
+
+            //var Url = "../Handler/Repairs.ashx";
+            //$.post(Url, { Type: "GetRepairName", Items: '' }, function (result) {
+
+                //绑定报修人
+                //$("#divRepairPreson").data("data", result);
+
+//              $("#divRepairPreson").addItem({ key: '', value: '', suggest: '' });
+//                $("#divRepairPreson").setValue('');
+               // $("#divRepairPreson").render();
+            //}, "json");
+
+//            $("#divRepairPreson").bind("change", function () {
+//                $("#hfRepairPreson").val($(this).attr("relText"));
+//                $("#hfRepairPresonId").val($(this).attr("relValue"));
+//            })
+           
+            $("#divDepartment").bind("change", function () {
+                $("#hfdDepartment").val($(this).attr("relValue"));
+            });
+            $("#divDepartment").setValue('30487');
+            $("#hfdDepartment").setValue('30487');
+            $("#CategoryID").setValue('10249');
+            if ('Edit' == "Look") {
+                $("#btnSave").css("display", "none");
+            }
+        }
+        //获取界面填充的数据
+        function RepairObj() {
+            var obj = new Object();
+            if ('Edit' == "Add") {
+                obj.Id = -1;
+            }
+            else {
+                obj.Id = '492';
+            }
+            obj.DepartmentID = $("#hfdDepartment").val();
+            obj.EquCode = $("#txtEquCode").val();
+            obj.EquName = $("#txtEquName").val();
+            obj.FactoryID = $('select#ddlFactory option:selected').val();
+            obj.FaultDescription = $("#txtDescription").val();
+            obj.MaintenDate = $("#txtMaintenDate").val();
+            obj.Remark = $("#txtRemark").val();
+            obj.RepairDate = $("#txtRepairDate").val();
+           
+            //obj.RepairPerson = $("#divRepairPreson").attr("editValue");
+            obj.RepairPerson = $("#txtRepairPerson").val();
+            obj.RepairStatus = "报修中";
+            obj.RepairTel = $("#txtTel").val();
+            obj.EquipmentGG = $("#txtEquGG").val();
+            obj.CreateName = '系统管理员';
+
+            return obj;
+        }
+        //保存
+        function Save() {
+
+            var CheckData = true;
+
+            if ($("#txtEquCode").val() == "") {
+                top.Dialog.alert("请选择系统编号！");
+                CheckData = false;
+                return false;
+            }
+            if ($("#txtRepairDate").val() == "") {
+                top.Dialog.alert("请选择报修日期！");
+                CheckData = false;
+                return false;
+            }
+            if ($("#txtRepairPerson").val() == "") {
+                top.Dialog.alert("请选择报修人！");
+                CheckData = false;
+                return false;
+            }
+            if (CheckData) {
+                infoObj = JSON.stringify(RepairObj());
+                var postData = { infoObj: infoObj };
+                var Url = "../Handler/Repairs.ashx?Type=Save&t=" + Date.parse(new Date());
+                $.ajax({
+                    url: Url,
+                    data: postData,
+                    dataType: 'text',   //返回的数据类型
+                    type: "POST",       //请求方式
+                    async: false,
+                    cache: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (result) {
+                        if (result == "ok") {
+                            if ('0' == "1") {
+                                top.Dialog.alert("报修成功!|报修成功", function () { top.Dialog.close(); });
+                            }
+                            else {
+                                top.Dialog.alert("报修成功!|报修成功", function () { top.frmright.page_225.refresh(); top.Dialog.close(); });
+                            }
+                        }
+                        else {
+                            top.Dialog.alert("保存失败");
+                        }
+                    },
+                    error: function (result) {
+                        top.Dialog.alert("数据传输错误");
+                    }
+                })
+            }
+        }
+
+        function Open() {
+            top.Dialog.open({
+                URL: "SearchPage/SelectEqument.aspx?Command=ApplyInfo",
+                Title: "选择设备", ShowMaxButton: true, Width: 950, Height: 530
+            });
+        }
+
+        function OpenUser() {
+            if ('0'=="1") {
+                art.dialog.open("../SearchPage/SelectUser.aspx?Type=1", {
+                    title: "选择用户",
+                    width: 850,
+                    height: 500,
+                    close: function () {
+                        var ename = art.dialog.data('arr');
+                        $("#txtRepairPerson").val(ename);
+                        art.dialog.removeData('arr'); //移除上次选择
+                    }
+                });
+            } else {
+                top.Dialog.open({
+                    URL: "SearchPage/SelectUser.aspx?Type=2",
+                    Title: "选择用户", ShowMaxButton: true, Width: 850, Height: 500
+                });
+            }
+        }
+
+        function setvalue(ibNumber, EquName, Specification, CategoryID, DepartmentID,temp) {
+            if (ibNumber != null) {
+                $("#divDepartment").setValue(DepartmentID);
+                $("#txtEquCode").val(ibNumber);
+                $("#txtEquName").val(EquName);
+                $("#txtEquGG").val(Specification);
+                $("#txtEquCode").val(ibNumber);
+                $("#CategoryID").setValue(CategoryID);
+                $("#hfdDepartment").val(DepartmentID);
+                $("#txtRepairPerson").val(temp);
+            }
+        }
+
+//        function ReBind() {
+//            if ($("#divRepairPreson").attr("editValue") != "" && $("#divRepairPreson").attr("editValue")!="请选择") {
+//                var Url = "../Handler/Users.ashx?type=UserDepartments";
+//                $.post(Url, { UserName: $("#divRepairPreson").attr("editValue") }, function (result) {
+
+//                    //赋给data
+//                    $("#divRepairPreson").data("data", result)
+
+//                    //刷新下拉框
+//                    $("#divRepairPreson").render();
+
+//                }, "json");
+//            } else {
+//                var Url = "../Handler/Users.ashx?type=UserDepartments";
+//                $.post(Url, {}, function (result) {
+
+//                    //赋给data
+//                    $("#divRepairPreson").data("data", result)
+
+//                    //刷新下拉框
+//                    $("#divRepairPreson").render();
+
+//                }, "json");
+//            }
+//        
+//        }
+    </script>
+</head>
+<body>
+    <form method="post" action="ApplyInfo.aspx?Type=Edit&amp;id=492" id="myFormId">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJNjk4OTY3NzkwD2QWAmYPZBYIAgEPDxYCHgRUZXh0BQoyMDE2MDEwMDAxZGQCBQ8PFgIfAAUKMjAxNTA3MTQwNGRkAgcPDxYCHwAFIeWkmuWKn+iDveelnue7j+W6t+WkjeiviueWl+ezu+e7n2RkAgkPDxYCHwAFCldPTkQyMDAwRjBkZGQomcor3UGmhwfomZOgFEn0F85p8zMzAjm7hVwBk4jcpA==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWDQLamZiLBAK3lOzWDwLUxaHADQKugaO2DQK+i4aDDgKsva2nBAKRyee0BQKL+4qxCwKri8+EBgKxiYmbDAKRleKuDwKE3ev/AwKZvIvlBFMR+vXlIe2qYYkdBQKslcZCcGJBUhzcQsr5455U6c9u" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td>
+                维修单号：
+            </td>
+            <td>
+                <span id="lblCode">2016010001</span>
+            </td>
+            <td>
+                报修科室：
+            </td>
+            <td>
+                <input type="hidden" name="hfdDepartment" id="hfdDepartment" value="30487" />
+                <div class="selectTree" selectedvalue="" id="divDepartment" url="../Handler/Departments.ashx?Command=Tree"
+                    disabled="false">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                系统编号：
+            </td>
+            <td>
+                <input name="txtEquCode" type="text" value="2015071404" readonly="readonly" id="txtEquCode" class="validate[required]" />
+                <span style="color: red">*</span><img id="SearchImg" src="../skin/icons/list-se.png" alt="" onclick="Open();" />
+            </td>
+            <td>
+                设备名称：
+            </td>
+            <td>
+                <input name="txtEquName" type="text" value="多功能神经康复诊疗系统" id="txtEquName" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备型号：
+            </td>
+            <td>
+                <input name="txtEquGG" type="text" value="WOND2000F0" id="txtEquGG" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                设备分类：
+            </td>
+            <td>
+                <div class="selectTree" selectedvalue="" id="CategoryID" url="../Handler/WordBook.ashx?Command=Tree&ParentID=10000"
+                    disabled="false">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="height_25">
+                报修日期：
+            </td>
+            <td class="height_25">
+                <input name="txtRepairDate" type="text" value="2016-01-04 15:20" id="txtRepairDate" class="date validate[required]" dateFmt="yyyy-MM-dd HH:mm" />
+                <span style="color: red">*</span>
+            </td>
+            <td class="height_25">
+                维修期限：
+            </td>
+            <td class="height_25">
+                <input name="txtMaintenDate" type="text" id="txtMaintenDate" class="date" dateFmt="yyyy-MM-dd HH:mm" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                报修电话：
+            </td>
+            <td>
+                <input name="txtTel" type="text" id="txtTel" class="validate[required]" />
+                <span style="color: red">*</span>
+            </td>
+            <td>
+                报修人：
+            </td>
+            <td>
+                  <input type="hidden" name="hfRepairPreson" id="hfRepairPreson" />
+                  <input type="hidden" name="hfRepairPresonId" id="hfRepairPresonId" />
+               
+               
+                 
+               
+                <input name="txtRepairPerson" type="text" value="系统管理员" id="txtRepairPerson" />
+                 <span style="color: red">*</span>
+                 <img id="Img1" src="../skin/icons/list-se.png" alt="" onclick="OpenUser();" />
+            
+               
+            </td>
+        </tr>
+        <tr>
+            <td>
+                故障描述：
+            </td>
+            <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <textarea name="txtDescription" rows="2" cols="20" id="txtDescription">
+呵呵呵</textarea>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+                备注：
+            </td>
+            <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+此条记录有系统生成，来源于设备计量异常处理</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input type="button" value="保存" id="btnSave" onclick="Save();" />
+                <input type="button" value="取消" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

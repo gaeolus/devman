@@ -1,0 +1,275 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>保养计划管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="/assets/libs/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/framework.js"></script>
+    <link href="/assets/libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="/assets/" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="/assets/libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="/assets/libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="/assets/libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="/assets/libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="/assets/libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+</head>
+<body>
+<div id="layout1">
+    <div id="leftCon" position="left" style="" paneltitle="科室结构树">
+        <div class="orgTreeContainer">
+            <ul id="tree" class="ztree">
+            </ul>
+        </div>
+    </div>
+    <div id="centerCon" position="center" style="">
+        <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+            <form method="post" action="ExceptionHandlingList.aspx" id="queryForm">
+             
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            计划名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtTitle" />
+                        </td>
+                        <td>
+                            处理方式：
+                        </td>
+                        <td>
+                            <select name="ddlStatus" id="ddlStatus">
+                                <option value="">--请选择--</option>
+                                <option value="10064">转维修</option>
+                                <option value="10065">转报废</option>
+                                <option value="10066">转不良事件</option>
+                                <option value="10067">不处理</option>
+
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" id="btnSearch">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="padding_right5">
+            <div id="dataBasic">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "科室结构", open: true, icon: "/assets/libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodes = treeObj.getSelectedNodes()[0];
+            var nodeid = 0;
+            if (nodes) {
+                nodeid = nodes.id;
+            }
+
+            RefreshGrid(nodeid);
+        }
+        //初始化函数
+        function initComplete() {
+            initTree();
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'GET',
+                url: '/departments/list',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '计划名称', name: 'PMTitle', align: 'left', width: "15%", showTitle: true },
+			    { display: '预计执行时间', name: 'ExeTime', align: 'left', width: "10%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', width: "5%", showTitle: true },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+                { display: '设备型号', name: 'Specification', align: 'left', width: "10%" },
+
+
+                { display: '医院名称', name: 'HospitalName', align: 'center', width: "5%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'center', width: "10%" },
+                { display: '设备厂家', name: 'FactoryName', align: 'center', width: "5%" },
+
+
+                { display: '异常情况', name: 'Unusual', align: 'left', width: "5%", showTitle: true },
+                { display: '处理方式', name: 'UnsualSolution', align: 'center', width: "10%", showTitle: true },
+                { display: '处理说明', name: 'Remark', align: 'left', width: "15%", showTitle: true },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        var operate = '<div class="padding_top4 padding_left5">'
+	                                 + '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.ID + ',' + rowdata.PEID + ')"></span>'
+           		        if (rowdata.UnsualSolution == "" || rowdata.UnsualSolution == null) {
+           		            operate += '<span class="img_edit hand" title="修改" onclick="onEdit(' + rowdata.ID + ',' + rowdata.PEID + ')"></span>';
+           		        }
+           		        operate += '</div>';
+           		        return operate;
+           		    }
+           		}
+			  ],
+                url: '../Handler/ExceptionHandling.ashx?type=GetList&date=' + new Date().getTime(),
+                sortName: 'id',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: true,
+                sortOrder: "desc"
+
+            });
+        }
+
+        //查看
+        function onView(rowid, peid) {
+
+            top.Dialog.open({
+                URL: "/assets/Maintenance/ExceptionHandling.html?type=View&id=" + rowid + "&peid=" + peid,
+                Title: "查看异常处理",
+                Width: 900,
+                Height: 650
+            });
+        }
+        //修改
+        function onEdit(rowid, peid) {
+            top.Dialog.open({
+                URL: "/assets/Maintenance/ExceptionHandling.html?type=Edit&id=" + rowid + "&peid=" + peid,
+                Title: "修改异常处理",
+                Width: 900,
+                ID: "a1",
+                Height: 650
+            });
+
+        }
+
+
+        //点击树节点刷选对应的表格数据
+        function zTreeSelect(event, treeId, treeNode) {
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            RefreshGrid(treeNode.id);
+        }
+
+        function RefreshGrid(nodeid) {
+            grid.setNewPage(1);
+            grid.setOptions(
+            {
+                url: '../Handler/ExceptionHandling.ashx?type=GetList',
+                params: [
+                    { name: "title", value: encodeURIComponent($("#txtTitle").val()) },
+                    { name: "category", value: nodeid },
+                    { name: "solution", value: encodeURIComponent($("#ddlStatus").find("option:selected").text()) },
+                    { name: "DeptId", value: $("#Id").val() },
+                    { name: "DeptParentId", value: $("#ParentId").val() }
+                ]
+            });
+            //刷新表格数据
+            grid.loadData();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#queryForm")[0].reset();
+            $("#ddlStatus").setValue("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

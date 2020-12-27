@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	设备移科
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+
+        function reflesh() {
+            top.frmright.page_211.refresh();
+            top.Dialog.close();
+        }
+     
+    </script>
+</head>
+<body>
+    <form method="post" action="TransferLook.aspx?id=370" id="myFormId">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTM2NzU3MjAyOA9kFgICAw9kFh4CBw8PFgIeBFRleHQFCeebkeaKpOS7qmRkAgkPDxYCHwAFCTE1MTIyOTYwMGRkAgsPDxYCHwAFEuWfuuehgOWkluenkeeUqOmSs2RkAg0PDxYCHwAFCemZoumVv+WupGRkAg8PDxYCHwAFD+ezu+e7n+euoeeQhuWRmGRkAhEPDxYCHwAFEDIwMTYtMDEtMDUgMTA6MzFkZAITDw8WAh8AZWRkAhUPDxYCHwBlZGQCFw8PFgIfAAUM5ZaJ56eR55eF5oi/ZGQCGQ8PFgIfAAUP6L2s56eR55Sz6K+35LitZGQCGw8PFgIfAGVkZAIdDw8WAh8AZWRkAiEPDxYCHwAFBueOi+mYs2RkAiMPDxYCHwAFAjU1ZGQCJQ8PFgIfAGVkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUIY2J4QWR1aXSq0zBAiw0F0P/zGeLmvZEDzzV8Af2uZJS/SIQHReYRGg==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBQKXtNDKBQLVmdGhAQK83LDBDAKFzL3mCwKqnNe/AptPw21IjEfJpq0a4n2yhr7X4MHLSFmfiYDYYuhj6vWu" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <input type="hidden" name="txtFactory" id="txtFactory" />
+            <input type="hidden" name="txtSpecification" id="txtSpecification" />
+            <input type="hidden" name="hdDeptID" id="hdDeptID" />
+            <td width="15%">
+                设备名称：
+            </td>
+            <td width="35%">
+                <span id="txtEquName">监护仪</span>
+            </td>
+            <td width="15%">
+                系统编号：
+            </td>
+            <td width="35%">
+                <span id="txtIBNumber">151229600</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备分类：
+            </td>
+            <td>
+                <span id="txtEquipMentType">基础外科用钳</span>
+            </td>
+            <td>
+                目前所属科室：
+            </td>
+            <td>
+                <span id="txtDeptName">院长室</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                申请人：
+            </td>
+            <td>
+                <span id="txtAuditPerson">系统管理员</span>
+            </td>
+            <td>
+                申请时间：
+            </td>
+            <td>
+                <span id="txtApplyDate">2016-01-05 10:31</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                原科室负责人：
+            </td>
+            <td>
+                <span id="txtDeptPersonOne"></span>
+            </td>
+            <td>
+                负责人电话：
+            </td>
+            <td>
+                <span id="txtPhoneOne"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                新科室：
+            </td>
+            <td>
+                <span id="hfdDepartment">喉科病房</span>
+            </td>
+            <td>
+                审核状态：
+            </td>
+            <td>
+                <span id="txtAuditStatus">转科申请中</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                新科室负责人：
+            </td>
+            <td>
+                <span id="txtPersonTwo"></span>
+            </td>
+            <td>
+                负责人电话：
+            </td>
+            <td>
+                <span id="txtPhoneTwo"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                是否审核：
+            </td>
+            <td>
+                <span disabled="true"><input id="cbxAduit" type="checkbox" name="cbxAduit" checked="checked" /></span>
+            </td>
+            <td>
+                审核人：
+            </td>
+            <td>
+                <span id="hfdUserRealName">王阳</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                目前摆放地点：
+            </td>
+            <td>
+                <span id="txtAddress">55</span>
+            </td>
+            <td>
+                备注：
+            </td>
+            <td style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <span id="txtRemark"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input type="button" value="返回" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

@@ -1,0 +1,147 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	设备移科
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+        function reflesh() {
+            top.Dialog.close();
+        }
+    </script>
+</head>
+<body>
+    <form method="post" action="EquBorrowLook.aspx?id=151" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMjA4MjAyMjcxOQ9kFgICAw9kFhwCAQ8PFgIeBFRleHQFDOa1i+ivleiuvuWkh2RkAgMPDxYCHwAFDTY4MDIxNTEyMzA3MjJkZAIFDw8WAh8ABRjmmL7lvq7lpJbnp5HmiYvmnK/lmajmorBkZAIHDw8WAh8ABQnmtYvlkKzlrqRkZAIJDw8WAh8ABQ/ns7vnu5/nrqHnkIblkZhkZAILDw8WAh8ABREyMDE2LzEvNSAxMToyNTowMGRkAg0PDxYCHwAFD+a1i+WQrOWupOS4u+S7u2RkAg8PDxYCHwAFBTEwMDg2ZGQCEQ8PFgIfAAUJ5pS+5bCE56eRZGQCEw8PFgIfAGVkZAIVDw8WAh8ABfQDMDEwMSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZAIXDw8WAh8ABQnlvoXlgJ/lh7pkZAIZDw8WAh8AZWRkAhsPDxYCHwBlZGRkfuW66D65rj9Gx7QGba/gSEsSYDcjiGyA2D6uVgNjyNM=" />
+</div>
+
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td>
+                设备名称：
+            </td>
+            <td>
+                <span id="txtEquName">测试设备</span>
+            </td>
+            <td>
+                系统编号：
+            </td>
+            <td>
+                <span id="txtIBNumber">6802151230722</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备分类：
+            </td>
+            <td>
+                <span id="txtEquipMentType">显微外科手术器械</span>
+            </td>
+            <td>
+                目前所属科室：
+            </td>
+            <td>
+                <span id="txtDeptSourceName">测听室</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                借用人：
+            </td>
+            <td>
+                <span id="txtBorrowPerson">系统管理员</span>
+            </td>
+            <td>
+                借用时间：
+            </td>
+            <td>
+                <span id="txtBorrowDate">2016/1/5 11:25:00</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                原科室负责人：
+            </td>
+            <td>
+                <span id="txtDeptSourcePerson">测听室主任</span>
+            </td>
+            <td>
+                负责人电话：
+            </td>
+            <td>
+                <span id="txtPhoneOne">10086</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                借用科室：
+            </td>
+            <td>
+                <span id="txtDeptTailName">放射科</span>
+            </td>
+            <td>
+                借用科室负责人：
+            </td>
+            <td>
+                <span id="txtDeptTailPerson"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                目前摆放地点：
+            </td>
+            <td>
+                <span id="txtEquPut">0101                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </span>
+            </td>
+            <td>
+                状态：
+            </td>
+            <td>
+                <span id="txtStatus">待借出</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                申请备注：
+            </td>
+            <td  style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <span id="txtRemark"></span>
+            </td>
+             <td>
+                归还备注：
+            </td>
+            <td  style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <span id="txtRRemark"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input type="button" value="取消" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

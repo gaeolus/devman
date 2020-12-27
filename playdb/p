@@ -1,0 +1,29 @@
+#chmod +x /root/work/playdb/p
+#APP_COMMAND="/root/work/playdb/target/universal/stage/bin/play -Dplay.evolutions.db.default.autoApply=true -Dplay.#evolutions.db.default.autoApplyDowns=true "\
+#"-Dhttp.port=80 "\
+#"-Dconfig.resource=openshift.conf "\
+#"-Dpidfile.path=/root/work/play.pid "
+
+
+#LOG_FILE="/root/work/play.log"
+#kill $(cat /root/work/play.pid)
+#rm /root/work/play.log
+#echo $APP_COMMAND &>> $LOG_FILE
+#nohup bash -c "${APP_COMMAND} &>> ${LOG_FILE} 2>&1" &> /dev/null &
+
+
+APP_COMMAND="/opt/devman/playdb/target/universal/stage/bin/play "\
+"-Dhttp.port=1080 "\
+"-Dplay.evolutions.db.default.autoApply=true -Dplay.evolutions.db.default.autoApplyDowns=true "\
+"-Dpidfile.path=/opt/devman/play.pid "
+
+
+LOG_FILE="/opt/devman/play.log"
+kill $(cat /opt/devman/play.pid)
+rm /opt/devman/play.log
+rm /opt/devman/play.pid
+echo $APP_COMMAND &>> $LOG_FILE
+nohup bash -c "${APP_COMMAND} &>> ${LOG_FILE} 2>&1" &> /dev/null &
+
+echo [Start finished \\o/]
+

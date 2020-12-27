@@ -1,0 +1,634 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="/assets/libs/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/framework.js"></script>
+    <link href="/assets/libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="/assets/" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="/assets/libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="/assets/libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="/assets/libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="/assets/libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="/assets/libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <!--基本选项卡start-->
+    <script type="text/javascript" src="/assets/libs/js/nav/basicTab.js"></script>
+    <!--基本选项卡end-->
+    <!--评星级控件start-->
+    <script src="/assets/libs/js/form/rating.js" type="text/javascript"></script>
+    <!--评星级控件end-->
+    <!-- 表单start -->
+    <script src="/assets/libs/js/popup/dialog.js" type="text/javascript"></script>
+    <script src="/assets/libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <!--单图区域放大start-->
+    <script type="text/javascript" src="/assets/libs/js/pic/imgZoom.js"></script>
+    <!--单图区域放大end-->
+    <script type="text/javascript">
+        $(function () {
+            $("#ratings").attr("value", '');
+            $("#ratings").render();
+
+            // 遍历附件
+            for (var i = 0; i < ''.split('|').length - 1; i++) {
+                addHandler(''.split('|')[i]);
+            }
+        })
+
+        //添加行
+        function addHandler(FileName) {
+            var val1 = FileName;
+
+            var $tr = addNewRowHandler(val1);
+            $("#list").append($tr);
+            //重新渲染表格
+            $("#list").render();
+        }
+
+        //添加行处理
+        function addNewRowHandler(val1) {
+            var $tr = $("<tr><td><img src='../AppPhoto/Repair/" + val1 + "' class='view' width='80' height='60'/></td><td name=FileName class=FileName>" + val1 + "</td><td><span class='img_btn_down hand' title='下载'></span></td></tr>");
+            var $loadBtn = $tr.find(".img_btn_down");
+
+            var $view = $tr.find(".view");
+            $loadBtn.click(function () {
+                modiHandler($(this));
+            })
+            $view.click(function () {
+                viewHandler($(this));
+            })
+            enableTooltips();
+            return $tr;
+        }
+
+        // 预览
+        function viewHandler($obj) {
+            var fileName = $obj.parents("tr").find("td").eq(1).html();
+            top.Dialog.open({ URL: "Repair/PicView.aspx?UploadName=" + fileName, ShowMaxButton: true, Title: "预览工单" });
+        }
+
+        //下载
+        function modiHandler($obj) {
+            var fileName = $obj.parents("tr").find("td").eq(1).html();
+            var form = $("<form>");   //定义一个form表单
+            form.attr('style', 'display:none');   //在form表单中添加查询参数
+            form.attr('target', '');
+            form.attr('method', 'post');
+            form.attr('action', "../Handler/Repairs.ashx?Type=DownFile&date=" + new Date().getMilliseconds() + "&FileName=" + fileName);
+            var input1 = $('<input>');
+            input1.attr('type', 'hidden');
+            input1.attr('name', 'exportPostTime');
+            input1.attr('value', (new Date()).getMilliseconds());
+            $('body').append(form);  //将表单放置在web中 
+            form.append(input1);   //将查询参数控件提交到表单上
+            form.submit();   //表单提交 
+        }     
+
+    </script>
+</head>
+<body>
+    <form method="post" action="LookInfo.aspx?Type=Edit&amp;id=498&amp;RepairCode=2016010007" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMTUwMzM5NDEwD2QWAmYPZBZQAgEPDxYCHgRUZXh0BQoyMDE2MDEwMDA3ZGQCAw8PFgIfAAUJ5omL5pyv5a6kZGQCBQ8PFgIfAAUQMjAxNi0wMS0wNyAxMDozMmRkAgcPDxYCHwAFDzY4MDEtNzE2MDEwNzU5M2RkAgkPDxYCHwAFFeWPsOW8j+S9jumAn+emu+W/g+acumRkAgsPDxYCHwAFDOiuvuWkh+Wei+WPt2RkAg0PDxYCHwAFGOWfuuehgOWkluenkeWFtuWug+WZqOaisGRkAg8PDxYCHwBkZGQCEQ8PFgIfAAUP57O757uf566h55CG5ZGYZGQCEw8PFgIfAAUJ5oql5L+u5LitZGQCFQ8PFgIfAAUS55uu5YmN5pGG5pS+5Zyw54K5ZGQCFw8PFgIfAAUEYmRzYmRkAhkPDxYCHwAFP+atpOadoeiusOW9leacieezu+e7n+eUn+aIkO+8jOadpea6kOS6juiuvuWkh+iuoemHj+W8guW4uOWkhOeQhmRkAhsPDxYCHwBlZGQCHQ8PFgIfAGRkZAIfDw8WAh8AZWRkAiEPDxYCHwBlZGQCIw8PFgIfAGRkZAIlDw8WAh8AZGRkAicPDxYCHwBkZGQCKQ8PFgIfAGRkZAItDzwrABECAA8WBB4LXyFEYXRhQm91bmRnHgtfIUl0ZW1Db3VudGZkARAWABYAFgBkAk0PPCsAEQIADxYEHwFnHwJmZAEQFgAWABYAZAJPDw8WAh8AZGRkAlEPDxYCHwBkZGQCUw8PFgIfAGRkZAJVDw8WAh8AZWRkAlcPDxYCHwBlZGQCWQ8PFgIfAGVkZAJbDw8WAh8AZWRkAl0PDxYCHwBlZGQCXw8PFgIfAGRkZAJhDw8WAh8AZGRkAmMPDxYCHwBkZGQCZQ8PFgIfAGRkZAJnDw8WAh8AZWRkAmkPDxYCHwBkZGQCaw8PFgIfAGRkZAJtDw8WAh8AZWRkAm8PDxYCHwBkZGQYAgUGZ3ZQYXJ0DzwrAAwBCGZkBQ9ndlJlcGFpclByb2Nlc3MPPCsADAEIZmT+m6FUW16D34Crq8imudkaknh1oSMuObDkw/q9e+Xzig==" />
+</div>
+
+    <div class="basicTab">
+        <div name="报修申请信息" style="width: 99%; height: 550px;">
+            <table class="tableStyle" formmode="view">
+                <tr>
+                    <td width="15%">
+                        维修单号：
+                    </td>
+                    <td width="35%">
+                        <span id="lblRepairCode">2016010007</span>
+                    </td>
+                    <td width="15%">
+                        目前所属科室：
+                    </td>
+                    <td>
+                        <span id="lblDepartment">手术室</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        报修时间：
+                    </td>
+                    <td>
+                        <span id="lblRepairDate">2016-01-07 10:32</span>
+                    </td>
+                    <td>
+                        系统编号：
+                    </td>
+                    <td>
+                        <span id="lblEquNo">6801-7160107593</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        设备名称：
+                    </td>
+                    <td>
+                        <span id="lblEquName">台式低速离心机</span>
+                    </td>
+                    <td>
+                        设备型号：
+                    </td>
+                    <td>
+                        <span id="lblEqugg">设备型号</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        设备分类：
+                    </td>
+                    <td>
+                        <span id="lblCategory">基础外科其它器械</span>
+                    </td>
+                    <td>
+                        报修电话：
+                    </td>
+                    <td>
+                        <span id="lblTel"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        报修人：
+                    </td>
+                    <td>
+                        <span id="lblPerson">系统管理员</span>
+                    </td>
+                    <td>
+                        维修状态：
+                    </td>
+                    <td>
+                        <span id="lblRepairStatus">报修中</span>
+                    </td>
+                </tr>
+                     <tr>
+                        <td>
+                            目前摆放地点：
+                        </td>
+                        <td colspan="3">
+                            <span id="lblEquput">目前摆放地点</span>
+                        </td>
+                    </tr>
+                <tr>
+                    <td>
+                        故障描述：
+                    </td>
+                    <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                        <span id="lblDescription">bdsb</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        备注：
+                    </td>
+                    <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                        <span id="lblRemark">此条记录有系统生成，来源于设备计量异常处理</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div name="维修响应信息" style="width: 99%; height: 550px;">
+            <table class="tableStyle" formmode="view">
+                <tr>
+                    <td width="15%">
+                        响应时间：
+                    </td>
+                    <td width="35%">
+                        <span id="lblReplyTime"></span>
+                    </td>
+                    <td width="15%">
+                        响应人 ：
+                    </td>
+                    <td>
+                        <span id="lblReplyPerson"></span>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        预计费用：
+                    </td>
+                    <td>
+                        <span id="lblMoney"></span>
+                    </td>
+                    <td width="15%">
+                        维修期限：
+                    </td>
+                    <td width="35%">
+                        <span id="lblQiDate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        故障类型：
+                    </td>
+                    <td>
+                        <span id="lblGuZhang"></span>
+                    </td>
+                    <td>
+                        维修性质：
+                    </td>
+                    <td>
+                        <span id="lblRepair"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        故障问题：
+                    </td>
+                    <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                        <span id="lblProblem"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        检修意见：
+                    </td>
+                    <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                        <span id="lblYiJian"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        审核记录：
+                    </td>
+                    <td colspan="4">
+                        <span id="lblAuditHistory"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div name="维修过程记录" style="width: 99%; height: 550px;">
+            <div>
+	<table class="tableStyle" cellspacing="0" id="gvRepairProcess" style="width:100%;border-collapse:collapse;">
+		<tr>
+			<td colspan="5">
+                    <table style="width: 100%;" class="tableStyle">
+                        <tr>
+                            <th>
+                                处理内容
+                            </th>
+                            <th>
+                                处理日期
+                            </th>
+                            <th>
+                                开始时间
+                            </th>
+                            <th>
+                                结束时间
+                            </th>
+                            <th>
+                                维修工时
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align: center; font-weight: bold;">
+                                暂无记录
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+		</tr>
+	</table>
+</div>
+        </div>
+
+        <div name="技术支持信息" style="width: 100%; height: 100%;">
+            <fieldset>
+            <legend><span id="spantitle">申请技术支持</span></legend>
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td width="15%">
+                            技术经理：
+                        </td>
+                        <td width="35%">
+                            <span id="divRepairPreson">吴建新</span>
+                        </td>
+                        <td width="15%">
+                            经理联系电话：
+                        </td>
+                        <td>
+                            <span id="txtManagerTel">13808933040</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            机器状态：
+                        </td>
+                        <td>
+                            <span id="ddlMachineState"></span>
+                        </td>
+                        <td>
+                            是否在场地：
+                        </td>
+                        <td>
+                            <span id="ddlArea"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            工程师：
+                        </td>
+                        <td>
+                            <span id="txtEngineer"></span>
+                        </td>
+                        <td>
+                            间隙性故障：
+                        </td>
+                        <td>
+                            <span id="ddlFault"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            工程师联系电话：
+                        </td>
+                        <td>
+                            <span id="txtEngineerTel"></span>
+                        </td>
+                        <td>
+                            问题出现的日期：
+                        </td>
+                        <td>
+                            <span id="TxtProAppearDate"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            故障描述：
+                        </td>
+                        <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="TxtSymptom"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            维修内容：
+                        </td>
+                        <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="TxtServicePerform"></span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset>
+                <legend>技术经理处理信息</legend>
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td width="15%">
+                            申请的原因：
+                        </td>
+                        <td width="35%" colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="TxtAppliyReason"></span>
+                        </td>
+                        <td width="15%">
+                            处理经过：
+                        </td>
+                        <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="TxtDealProc"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            技术总结：
+                        </td>
+                        <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="TxtTechSum"></span>
+                        </td>
+                        <td>
+                            技术类型：
+                        </td>
+                        <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="ddlTechnologyType"></span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+
+        <div name="配件使用记录" style="width: 99%; height: 550px;">
+            <div>
+	<table class="tableStyle" cellspacing="0" id="gvPart" style="width:100%;border-collapse:collapse;">
+		<tr>
+			<td colspan="7">
+                    <table style="width: 100%;" class="tableStyle">
+                        <tr>
+                            <th>
+                                配件名称
+                            </th>
+                            <th>
+                                配件货号
+                            </th>
+                            <th>
+                                配件序列号
+                            </th>
+                            <th>
+                                配件数量
+                            </th>
+                            <th>
+                                配件单价
+                            </th>
+                             <th>
+                                配件总价
+                            </th>
+                            <th>
+                                备注
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align: center; font-weight: bold;">
+                                暂无记录
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+		</tr>
+	</table>
+</div>
+        </div>
+        <div name="维修结果记录" style="width: 99%; height: 550px;">
+            <table class="tableStyle" formmode="view">
+                <tr>
+                    <td width="15%">
+                        维修性质：
+                    </td>
+                    <td width="35%">
+                        <span id="lblResultRepairProperty"></span>
+                    </td>
+                    <td width="15%">
+                        维修结果：
+                    </td>
+                    <td>
+                        <span id="lblRepairResult"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        损坏原因：
+                    </td>
+                    <td width="35%">
+                        <span id="lblDamageReason"></span>
+                    </td>
+                    <td width="15%">
+                        维修日期：
+                    </td>
+                    <td>
+                        <span id="lblRepairBeginDate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        修复日期：
+                    </td>
+                    <td width="35%">
+                        <span id="lblRepairEndDate"></span>
+                    </td>
+                    <td width="15%">
+                        维修工时：
+                    </td>
+                    <td>
+                        <span id="lblRepairTime"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        维修费用：
+                    </td>
+                    <td width="35%">
+                        <span id="lblRepairMoeny"></span>
+                    </td>
+                    <td width="15%">
+                        配件费用：
+                    </td>
+                    <td>
+                        <span id="lblPartMoeny"></span>
+                    </td>
+                </tr>
+                <tr>
+                  <td width="15%">
+                        技术支持：
+                    </td>
+                    <td colspan="3">
+                        <span id="lblSupport"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        故障分析：
+                    </td>
+                    <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                        <span id="lblFaultAnalysis"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                        解决方案：
+                    </td>
+                    <td colspan="3">
+                        <span id="lblRepairSolution"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div name="维修工单" style="width: 99%; height: 550px;">
+             <table class='tableStyle' useclick="false" mode="list" id="list">
+                    <tr>
+                         <th style="width: 20%">
+                            缩略图
+                        </th>
+                        <th style="width: 50%">
+                            文件名
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                </table>
+        </div>
+        <div name="维修考评" style="width: 99%; height: 550px;">
+            <table class="tableStyle" formmode="view">
+                <tr>
+                    <td width="15%">
+                        验收人：
+                    </td>
+                    <td width="35%">
+                        <span id="lblAcceptName"></span>
+                    </td>
+                    <td width="15%">
+                        验收时间：
+                    </td>
+                    <td>
+                        <span id="lblAcceptDate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        满意度：
+                    </td>
+                    <td>
+                        <span id="lblsatisfaction"></span>
+                    </td>
+                          <td width="15%">
+                        是否完成：
+                    </td>
+                    <td width="35%">
+                        <span id="lblFinsh"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        服务满意评分：
+                    </td>
+                    <td colspan="3">
+                         <span id="lblScore"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        验收情况：
+                    </td>
+                    <td colspan="3">
+                        <span id="lblAccpetRemark"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <table class="tableStyle" formmode="transparent">
+        <tr>
+            <td>
+                <button type="button" onclick="top.Dialog.close();" style="float: right; margin-right: 50px">
+                    <span class="icon_exit">返回</span></button>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

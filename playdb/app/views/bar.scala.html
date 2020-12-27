@@ -1,0 +1,33 @@
+@(ean: String)
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+    <ul class="nav navbar-nav">
+
+
+
+
+
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+    </ul>
+
+
+
+</div>
+}
+
+@main(null)(navbar){
+
+</br>
+<p>
+    可打印设备条码,贴于设备上,用于手机APP通过扫描快捷查询设备台账信息,查询历史维护维修情况,提交维护 维修记录,手机App未开发前,可通过手机上的淘宝 微信 等客户端App的扫一扫功能尝试
+</p>
+
+  @tags.bar(ean)
+
+}

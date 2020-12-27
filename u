@@ -1,0 +1,6 @@
+cd /opt/devman
+cd playdb
+git pull origin master
+./p
+cd ..
+

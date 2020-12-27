@@ -1,0 +1,192 @@
+@(currentPage: com.avaje.ebean.PagedList[Purchase], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@head = {
+<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/db.css")">
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+}
+
+@* general template parameters*@
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+
+var sortBy = currentSortBy
+var order = currentOrder
+
+if(newSortBy != null) {
+sortBy = newSortBy
+if(currentSortBy == newSortBy) {
+if(currentOrder == "asc") {
+order = "desc"
+} else {
+order = "asc"
+}
+} else {
+order = "asc"
+}
+}
+
+// Generate the link
+routes.Products.list(newPage, sortBy, order, currentFilter)
+
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+<th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+<a href="@link(0, key)">@title</a>
+</th>
+}
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+    <ul class="nav navbar-nav">
+
+        <li class="dropdown">
+            <a href="http://101.200.82.40" class="dropdown-toggle" data-toggle="dropdown">采购管理<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="/products">产品管理</a></li>
+                <li><a href="/purchases">采购申请</a></li>
+                <li><a href="#">审批流程</a></li>
+                <li><a href="#">合同管理</a></li>
+
+                <li class="divider"></li>
+                <li ><a href="#">供方资质</a></li>
+                <li ><a href="#">招标管理</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+    </ul>
+
+
+
+</div>
+}
+
+
+@content = {
+
+
+
+<h1 id="homeTitle">订单: @currentPage.getTotalRowCount</h1>
+
+@if(flash.containsKey("success")) {
+<div class="alert-message warning">
+    <strong>Done!</strong> @flash.get("success")
+</div>
+}
+
+<div id="actions">
+
+    <form action="@link(0, "name")" method="GET">
+    <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by device name...">
+    <input type="submit" id="searchsubmit" value="过滤" class="btn primary">
+    </form>
+
+    <a class="btn success" id="add" href="@routes.Products.create()"><i class="icon-large icon-plus"></i> New Product</a>
+
+</div>
+
+@if(currentPage.getTotalRowCount == 0) {
+
+<div class="well">
+    <em>Nothing to display</em>
+</div>
+
+} else {
+
+<script>
+    function del(urlToDelete) {
+      $.ajax({
+      url: urlToDelete,
+      type: 'DELETE',
+      success: function(results) {
+        location.reload();
+      }
+      });
+
+    }
+
+</script>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        @header("id", "申请单号")
+
+        @header("department", "申请科室")
+        @header("employee", "申请人")
+
+        @header("created","申请日期")
+        @header("status","状态")
+
+
+
+    </tr>
+    </thead>
+    <tbody>
+
+    @for(product <- currentPage.getList) {
+
+    <td><a href="@routes.Purchases.order(product.id)">@product.id</a></td>
+        <td>@product.department</td>
+        <td>@product.employee</td>
+
+
+       <td> @product.created.format("yy-MM-dd HH:mm")</td>
+    <td></td>
+     </tr>
+    }
+
+    </tbody>
+</table>
+
+
+<div id="pagination" class="pagination">
+    <ul>
+        @if(currentPage.hasPrev) {
+        <li class="prev">
+            <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+        </li>
+        } else {
+        <li class="prev disabled">
+            <a>&larr; Previous</a>
+        </li>
+        }
+        <li class="current">
+            <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+        </li>
+        @if(currentPage.hasNext) {
+        <li class="next">
+            <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+        </li>
+        } else {
+        <li class="next disabled">
+            <a>Next &rarr;</a>
+        </li>
+        }
+    </ul>
+</div>
+
+
+}
+
+}
+
+@main(head)(navbar)(content)
+
+
+
+
+
+

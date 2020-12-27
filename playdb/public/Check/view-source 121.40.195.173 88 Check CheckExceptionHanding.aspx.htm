@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>计量信息管理</title>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" scrollery="false" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <link href="../libs/js/artDialog/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="../libs/js/tree/ztree/ztree.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <!--框架必需start-->
+    <script src="../libs/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../libs/js/language/cn.js" type="text/javascript"></script>
+    <script src="../libs/js/framework.js" type="text/javascript"></script>
+    <!--框架必需end-->
+    <!--树组件start -->
+    <script src="../libs/js/tree/ztree/ztree.js" type="text/javascript"></script>
+    <!--树组件end -->
+    <!--布局控件start-->
+    <script src="../libs/js/nav/layout.js" type="text/javascript"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!-- 表单start -->
+    <script src="../libs/js/popup/dialog.js" type="text/javascript"></script>
+    <script src="../libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <!-- 弹窗start -->
+    <script src="../libs/js/artDialog/jquery.artDialog.js" type="text/javascript"></script>
+    <script src="../libs/js/artDialog/iframeTools.js" type="text/javascript"></script>
+    <!-- 弹窗end -->
+</head>
+<body>
+    <div id="layout1">
+        <div id="leftCon" position="left" style="" paneltitle="科室结构树">
+            <div class="orgTreeContainer">
+                <ul id="tree" class="ztree">
+                </ul>
+            </div>
+        </div>
+        <div id="centerCon" position="center" style="">
+            <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+                <form method="post" action="CheckExceptionHanding.aspx" id="queryForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTIwNjM4NDg4MDcPZBYCZg9kFgICAQ8QDxYGHg1EYXRhVGV4dEZpZWxkBQhXb3JkTmFtZR4ORGF0YVZhbHVlRmllbGQFAklkHgtfIURhdGFCb3VuZGdkEBUFDS0t6K+36YCJ5oupLS0J6L2s57u05L+uCei9rOaKpeW6nw/ovazkuI3oia/kuovku7YJ5LiN5aSE55CGFQUABTEwMDY0BTEwMDY1BTEwMDY2BTEwMDY3FCsDBWdnZ2dnZGRkND8WLP5UBjkDITxqD6yQ2wCSDszb5DQ1X4FT8yFt/og=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBgKggqrEBgLyn9n2CgL5i+mKDAL+i+mKDAL/i+mKDAL8i+mKDO0wSXM3Q/STdiQPUrQ609wVxfNqrj/eDKDjgh+fp4tC" />
+</div>
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            设备名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtEquName" />
+                        </td>
+                        <td>
+                            处理方式：
+                        </td>
+                        <td>
+                            <select name="ddlStatus" id="ddlStatus">
+	<option value="">--请选择--</option>
+	<option value="10064">转维修</option>
+	<option value="10065">转报废</option>
+	<option value="10066">转不良事件</option>
+	<option value="10067">不处理</option>
+
+</select>
+                        </td>
+                        <td>
+                            <button type="button" id="btnSearch">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+            <div class="padding_right5">
+                <div id="dataBasic">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+
+
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "科室结构", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+            var parm = "&EquName=" + encodeURIComponent($("#txtEquName").val());
+            parm += "&DeptId=" + $("#Id").val();
+            parm += "&DeptParentId=" + $("#ParentId").val();
+            parm += "&EquException=" + encodeURIComponent($("#ddlStatus option:selected").text());
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/CheckInfo.ashx?type=ExceSearch' + parm });
+            
+            //刷新表格数据 
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+
+            //初始化tree
+            initTree();
+
+            //初始化grid组件
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+            //监听查询框的回车事件
+            $("#EquipmentName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    searchHandler();
+                }
+            })
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/Departments.ashx?Command=List',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '证书编号', name: 'BookSn', align: 'left', width: "15%" },
+                { display: '检测产品', name: 'CheckProduct', align: 'left', width: "5%" },
+                { display: '备件名称', name: 'PartName', align: 'left', width: "5%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "15%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', width: "15%" },
+			    { display: '设备厂家', name: 'FactoryName', align: 'left', width: "15%" },
+                { display: '系统编号', name: 'IBNumber', align: 'left', width: "15%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', width: "15%" },
+                { display: '处理方式', name: 'UnsualSolution', align: 'left', width: 100 },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        var operate = '<div class="padding_top4 padding_left5">'
+	                                 + '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.Id + ')"></span>';
+
+           		        if (rowdata.UnsualSolution == "" || rowdata.UnsualSolution == null && '3094' != 3004 && '3094' != 3002) {
+           		            operate += '<span class="img_edit hand" title="修改" onclick="onEdit(' + rowdata.Id + ')"></span>';
+           		        }
+           		        operate += '</div>';
+           		        return operate;
+           		    }
+           		}
+			  ],
+                url: '../Handler/CheckInfo.ashx?type=ExceSearch&date=' + new Date().getTime(),
+                sortName: 'Id',
+                rownumbers: true,
+
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: true,
+                sortOrder: "desc"
+            });
+        }
+
+
+        //查看
+        function onView(rowid, peid) {
+            top.Dialog.open({
+                URL: "Check/CheckExceptionLook.aspx?id=" + rowid,
+                Title: "查看异常处理",
+                Width: 900,
+                Height: 450
+            });
+        }
+        //修改	
+        function onEdit(rowid, peid) {
+            top.Dialog.open({
+                URL: "Check/CheckExceptionInfo.aspx?type=Edit&id=" + rowid,
+                Title: "修改异常处理",
+                Width: 900,
+                ID: "a1",
+                Height: 450
+            });
+
+        }
+
+
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
+        function getSelectIds(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].Id + ",";
+            }
+
+            return ids + "0";
+        }
+
+
+
+        //点击树节点刷选对应的表格数据 
+        function zTreeSelect(event, treeId, treeNode) {
+
+            selectTreeNode = treeNode;
+
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            searchHandler();
+        }
+
+
+
+        //重置查询
+        function resetSearch() {
+            $("#queryForm")[0].reset();
+            $("#ddlStatus").setValue("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

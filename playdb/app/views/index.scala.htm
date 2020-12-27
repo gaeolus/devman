@@ -1,0 +1,159 @@
+@head = {
+
+}
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+  <ul class="nav navbar-nav">
+
+
+
+
+
+
+  </ul>
+  <ul class="nav navbar-nav navbar-right hidden-sm">
+    <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+  </ul>
+
+
+
+</div>
+}
+
+
+@content = {
+<div class="jumbotron masthead">
+      <div class="container">
+
+        <h1>欣云医疗</h1>
+        <h2>简洁、直观、强悍的医疗器械设备全生命周期管理系统,建立信息化的覆盖医疗器械质量管理全过程的使用质量管理,符合《医疗器械使用质量监督管理办法》,提升医院设备管理效能</h2>
+        <p class="masthead-button-links">
+          <a class="btn btn-lg btn-primary btn-shadow" href="http://www.sda.gov.cn/WS01/CL1343/132880.html" target="_blank" role="button" >了解更多 &raquo;</a>
+        </p>
+        
+      </div>
+    </div>
+    
+
+    <div class="container projects">
+
+      <div class="projects-header page-header">
+        <h2>设备全生命周期管理中控台</h2>
+        <p>请选择功能入口</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-6 col-md-3 col-lg-4 ">
+          <div class="thumbnail">
+            <a href="/products" title="" target="_blank" ><img class="lazy" src="@routes.Assets.at("images/flat-ui.png")" width="300" height="150"  alt="采购管理管理"></a>
+            <div class="caption">
+              <h3>
+                <a href="/products" title="" target="_blank" >采购管理</a>
+              </h3>
+              <p>
+                  涵盖设备采购申请,论证,审批流程;提供合同管理,合格供方资质管理,招标资质管理
+              </p>
+            </div>
+          </div>
+        </div>
+
+      	<div class="col-sm-6 col-md-3 col-lg-4 ">
+          <div class="thumbnail">
+            <a href="/assets/main.html" title="设备台账管理" target="_blank" ><img class="lazy" src="@routes.Assets.at("images/icheck.png")" width="300" height="150"  alt="设备台账管理"></a>
+            <div class="caption">
+              <h3> 
+                <a href="/assets/main.html" title="设备台账管理" target="_blank" >设备台账管理<br></a>
+              </h3>
+              <p>
+              完整准确地记录验收,核实储运条件,进货查验等记录,确保信息具备可追溯性</br>
+
+              设备资产台账,条码管理,领用调拨,外借,效期管理,报废管理
+              </p>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 ">
+          <div class="thumbnail">
+            <a href="/checklists" title="" target="_blank" ><img class="lazy" src="@routes.Assets.at("images/git-guide.png")" width="300" height="150" data-src="http://static.bootcss.com/www/assets/img/expo.png" alt="Bootstrap优站精选"></a>
+            <div class="caption">
+              <h3>
+                <a href="/checklists" title="" target="_blank" >设备绩效管理</a>
+              </h3>
+              <p>自动从HIS PACS RIS LIS HRP系统中采集相关信息</br>
+                提供检查单查询,设备收费查询,工作量分析,成本核算,效能分析
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 ">
+          <div class="thumbnail">
+            <a href="/crm" title="" target="_blank" ><img class="lazy" src="@routes.Assets.at("images/gulpjs.png")" width="300" height="150"  alt="设备运行管理"></a>
+            <div class="caption">
+              <h3>
+                <a href="/crm" title="" target="_blank" >设备运行管理</a>
+              </h3>
+              <p>
+                使用前质量检查记录,植介入类器械使用记录</br>
+                检查,检验,校准,保养,维护,维修记录</br>
+                计量,校准</br>
+                分析评估</br>
+
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="col-sm-6 col-md-3 col-lg-4 ">
+          <div class="thumbnail">
+            <a href="/worktime" title="" target="_blank" ><img class="lazy" src="@routes.Assets.at("images/grumblejs.png")" width="300" height="150"  alt="基础数据维护"></a>
+            <div class="caption">
+              <h3>
+                <a href="/worktime" title="" target="_blank" >特殊设备管理</a>
+              </h3>
+              <p>
+                大型医疗器械使用档案</br>
+                一次性器械销毁记录</br>
+                培训档案
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-4 ">
+          <div class="thumbnail">
+            <a href="/" title="" target="_blank" ><img class="lazy" src="@routes.Assets.at("images/font-awesome.png")" width="300" height="150"  alt="基础数据维护"></a>
+            <div class="caption">
+              <h3>
+                <a href="/" title="" target="_blank" >系统管理</a>
+              </h3>
+              基础数据维护</br>
+                器械质量管理工作自查报告
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+    </div><!-- /.container -->
+
+}
+
+@main(head)(navbar)(content)

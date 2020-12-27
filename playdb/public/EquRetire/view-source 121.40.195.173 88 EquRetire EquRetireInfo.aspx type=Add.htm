@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设备报废申请</title>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" scrollery="false" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <link type="text/css" rel="stylesheet" href="../Styles/Site.css" />
+    <link href="../libs/js/artDialog/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="../libs/js/tree/ztree/ztree.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../libs/js/form/datePicker/skin/WdatePicker.css" />
+    <script src="../libs/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../libs/js/language/cn.js" type="text/javascript"></script>
+    <script src="../libs/js/framework.js" type="text/javascript"></script>
+    <script src="../libs/js/tree/ztree/ztree.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <script src="../libs/js/nav/layout.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="../libs/js/jquery.validate.js"></script>
+    <script type="text/javascript">
+
+        $(function () { 
+
+            $("#divAuditUser").setValue($("#hdAuditUser").val());
+            $("#divAuditUser").bind("change", function () {
+                $("#hdAuditUser").val($(this).attr("relValue"));
+            });
+            $("#btnSave").click(function () {
+                Save();
+            });
+            $("#btnOk").click(function () {
+                Save("submit");
+            });
+            $("#btnLookUp").click(function () {
+                lookupEqu();
+            });
+            $("#btnCancel").click(function () {
+                top.Dialog.close();
+            })
+
+            if ('Add' == "View") {
+                $("#SearchImg").attr("style", "display:none");
+            }
+            if ('' == "1") {
+                $("#SearchImg").attr("style", "display:none");
+            }
+
+        })
+
+        function validateForm() {
+            return $("#Form1").validate({
+                invalidHandler: function () {
+                    return false;
+                },
+                submitHandler: function () { return false; },
+                debug: true
+            }).form();
+        }
+
+        function Open() {
+            top.Dialog.open({
+                URL: "SearchPage/SelectEqument.aspx?Command=retire",
+                Title: "选择医院设备",
+                ShowMaxButton: true,
+                Width: 950,
+                Height: 600
+            });
+        }
+
+        function setvalue(ibNumber) {
+            if (ibNumber != null) {
+                $("#txtIBNumber").val(ibNumber);
+            }
+        }
+
+        function Save() {
+            var entity = GetEntity();
+            var flag = arguments[0];
+            if (flag) {
+             
+                if ($("#ddlIfCheck").find("option:selected").val() == "1") 
+                {
+                    if (!entity.CheckUser) {
+                        top.Dialog.alert("请选择审核人！");
+                        return;
+                    } else {
+                        entity.Status = 1;
+                    }
+                }
+                else 
+                {
+                    entity.Status = 2;
+                }
+            } else {
+                entity.Status = 0;
+            }
+            infoObj = JSON.stringify(entity);
+
+            $.ajax({
+                type: 'POST',
+                async: false,
+                url: '../Handler/Retire.ashx',
+                dataType: 'json',
+                data: {
+                    type: "Save",
+                    data: infoObj
+                },
+                success: function (result) {
+                    if ('' == "1") {
+                        top.document.getElementById("_DialogFrame_a1").contentWindow.ReLoad('');
+                        top.Dialog.close();
+                    } else {
+                        top.frmright.page_244.refresh();
+                        top.Dialog.close();
+                    }
+
+
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                }
+            });
+        }
+
+        function GetEntity() {
+            var entity = {};
+            entity.Id = $("#hdID").val() == "" ? "-1" : $("#hdID").val();
+            entity.IBNumber = $("#txtIBNumber").val();
+            entity.ApplyDate = $("#txtApplyDate").val();
+            entity.RetireReason = $("#txtRetireReason").val();
+            entity.RetireDate = $("#txtRetireDate").val();
+            entity.Remark = $("#txtRemark").val();
+            entity.IfCheck = $("#ddlIfCheck").find("option:selected").val();
+            entity.CheckUser = $("#hdAuditUser").val();
+            entity.ApplyPerson = '20036';
+            return entity;
+        }
+
+    </script>
+</head>
+<body>
+    <form method="post" action="EquRetireInfo.aspx?type=Add" id="Form1" target="frmright">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTEyNDY5NzgwOQ9kFgJmD2QWAgIFDw8WAh4EVGV4dAUP57O757uf566h55CG5ZGYZGRksrG83T7wYTGeVEKYp5UNNkoVJJh1a8MzK90aihVmzmo=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWDQLihv+BDAK17crhAQKzkffwAwKGrMXWBgKBw9LwDgLT/tmaBwLM/tmaBwLvuvqQBwKZvIvlBAKx5dOnDgKct7iSDAL9kpmPAQKQ9M/rBRmvL8GQGIZ1QgMb98X10lQqkbTgqxXFICZDwo9iK3Aq" />
+</div>
+    <div>
+        <table class="tableStyle" formmode="view">
+            <tr>
+                <td>
+                    系统编号：
+                </td>
+                <td>
+                    <input type="hidden" name="hdID" id="hdID" />
+                    <input name="txtIBNumber" type="text" id="txtIBNumber" class="required" readonly="true" />
+                    <img id="SearchImg" src="../skin/icons/list-se.png" alt="" onclick="Open();" />
+                </td>
+                <td>
+                    申请人：
+                </td>
+                <td>
+                    <span id="txtApplyUser">系统管理员</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    申请日期：
+                </td>
+                <td>
+                    <input name="txtApplyDate" type="text" id="txtApplyDate" class="date required" dateFmt="yyyy-MM-dd HH:mm" value="2016-01-11 14:51" /><span
+                        class="red">*</span>
+                </td>
+                <td>
+                    报废日期：
+                </td>
+                <td>
+                    <input name="txtRetireDate" type="text" id="txtRetireDate" class="date" dateFmt="yyyy-MM-dd HH:mm" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    是否需要审批：
+                </td>
+                <td>
+                    <select name="ddlIfCheck" id="ddlIfCheck">
+	<option selected="selected" value="1">是</option>
+	<option value="0">否</option>
+
+</select>
+                </td>
+                <td>
+                    状态：
+                </td>
+                <td>
+                    <span id="txtStatus"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    报废原因：
+                </td>
+                <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                    <textarea name="txtRetireReason" rows="3" cols="20" id="txtRetireReason" style="width:98%;">
+</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    备注：
+                </td>
+                <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                    <textarea name="txtRemark" rows="3" cols="20" id="txtRemark" style="width:98%;">
+</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    审批人：
+                </td>
+                <td colspan="3">
+                    <input type="hidden" name="hdAuditUser" id="hdAuditUser" />
+                    <div class="selectTree" name="selecttree" selectedvalue="" id="divAuditUser" url="../Handler/Users.ashx?type=UserDepartments">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input name="btnSave" type="button" id="btnSave" value="保存" />&nbsp;<input name="btnOk" type="button" id="btnOk" value="提交" />&nbsp;
+                    <input name="btnCancel" type="button" id="btnCancel" value="返回" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	配件信息管理
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!--弹窗组件start-->
+    <script type="text/javascript" src="../libs/js/popup/drag.js"></script>
+    <script type="text/javascript" src="../libs/js/popup/dialog.js"></script>
+    <!--弹窗组件end-->
+      <script src="../libs/js/form/suggestion.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="layout1">
+        <div id="centerCon" position="center" style="">
+            <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+                <form method="post" action="PartLibraryList.aspx" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTE3MTc2NTAwNDdkZLBXcPMUTPf0Xne8B1F6WS/Q5lTNiDiwnDrUpzXQzxJA" />
+</div>
+
+                <table>
+                    <tr>
+                        <td>
+                            配件名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtPartName" name="userinfor.userName" />
+                        </td>
+                        <td>
+                            配件分类：
+                        </td>
+                        <td>
+                            <input type="text" id="txtPartCategory" name="userinfor.userName" />
+                        </td>
+                        <td>
+                            配件货号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtPartNo" name="userinfor.userName" />
+                        </td>
+                        <td>
+                            配件序列号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtPartNum" name="userinfor.userName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            配件厂家：
+                        </td>
+                        <td>
+                            <div class="suggestion" id="ddlFactory" keepdefaultstyle="true" showlist="true">
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" onclick="searchHandler()">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+            <div class="padding_right5">
+                <div id="dataBasic">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+        document.onkeydown = function () {
+            var oEvent = window.event;
+            if (oEvent.keyCode == 13) {
+                searchHandler();
+            }                                                                                              
+        }
+
+        function searchHandler() {
+
+            var parm = "&PartFactory=" + encodeURIComponent($('#ddlFactory').val());
+            //alert(parm);
+            parm += "&PartName=" + encodeURIComponent($("#txtPartName").val());
+            parm += "&PartCategory=" + encodeURIComponent($("#txtPartCategory").val());
+            parm += "&PartModel=" + encodeURIComponent($("#txtPartNo").val());
+            parm += "&PartNum=" + encodeURIComponent($("#txtPartNum").val());
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/PartLibrary.ashx?Type=GetPartList' + parm });
+            //刷新表格数据 
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+            //绑定厂商
+            $.post("../Handler/Factory.ashx", { Type: "GetFacoryName" }, function (result) {
+                $("#ddlFactory").data("data", result);
+                $("#ddlFactory").render();
+            }, "json");
+            initGrid();
+        }
+        //初始化Grid处理
+        function initGrid() {
+
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '配件分类', name: 'PartCategory', align: 'center', width: "15%" },
+				{ display: '配件名称', name: 'PartName', align: 'center', width: "10%" },
+                { display: '配件货号', name: 'PartModel', align: 'center', width: "10%" },
+			    { display: '配件序列号', name: 'PartNum', align: 'center', width: "10%" },
+                { display: '配件单价', name: 'PartPrice', align: 'center', width: "10%" },
+			    { display: '配件厂家', name: 'PartFactory', align: 'center', width: "10%" },
+                { display: '厂家联系人', name: 'PartFactoryLink', align: 'center', width: "15%" },
+                { display: '数量', name: 'Quantity', align: 'center', width: "10%" },
+                { display: '入库日期', name: 'InDate', align: 'center', width: "10%" },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: "80",
+           		    render: function (rowdata, rowindex, value, column) {
+           		        return '<div class="padding_top4 padding_left5">'
+           		        + '<span class="img_edit hand" title="修改" onclick="onEdit(' + rowdata.Id + ',' + "'" + rowdata.CheckStatusCode + "'" + ')"></span>'
+                        + '<span class="img_list hand" title="查看" onclick="onView(' + "'" + rowdata.Id + "'" + ')"></span>'
+	                    + '<span class="img_delete hand" title="删除" onclick="onDelete(' + "'" + rowdata.Id + "'" + ')"></span>'
+                        + '</div>';
+           		    }
+           		}
+			  ],
+           		url: '../Handler/PartLibrary.ashx?Type=GetPartList&date=' + new Date().getTime(), checkbox: true,
+                sortName: 'Id',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: false,
+                sortOrder: "desc",
+                toolbar: {
+                    items: [
+        		  { text: '新增', click: addUnit, iconClass: 'icon_add' },
+        		  { line: true },
+                   { text: '批量删除', click: deleteUnit, iconClass: 'icon_delete' },
+        		  { line: true }
+        		]
+                }
+            });
+
+        }
+
+
+        //新增
+        function addUnit() {
+            top.Dialog.open({
+
+                URL: "system/PartLibraryAdd.aspx?Type=Add",
+                Title: "添加", ShowMaxButton: true, Width: 600, Height: 450
+            });
+        }
+        //修改	
+        function onEdit(rowid, CheckStatus) {
+            // alert(rowid);
+                top.Dialog.open({
+                    URL: "system/PartLibraryAdd.aspx?Type=Edit&Id=" + rowid,
+                    Title: "编辑配件信息", Width: 600, Height: 450
+                });
+        }
+        //查看
+        function onView(rowid) {
+            top.Dialog.open({
+                URL: "system/PartLibraryAdd.aspx?Type=Look&Id=" + rowid,
+                Title: "查看配件信息", Width: 600, Height: 450, ShowMaxButton: true
+            });
+        }
+        //查看
+        function onView1(rowid) {
+            top.Dialog.open({
+                URL: "system/PartLibraryAdd.aspx?Type=Look&Id=" + rowid,
+                Title: "查看配件信息", Width: 600, Height: 450, ShowMaxButton: true
+            });
+        }
+        //删除
+        function onDelete(rowid, rowidx) {
+            top.Dialog.confirm("确定要删除该记录吗？", function () {
+                //此处进行ajax后台数据处理
+                $.ajax({
+                    url: '../Handler/PartLibrary.ashx',
+                    dataType: 'text',
+                    data: { Id: rowid, Type: "Del", CheckStatusCode: rowidx },
+                    success: function (result) {
+                        if (result == "OK") {
+                            grid.loadData();
+                        } 
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+
+            });
+        }
+
+        //批量删除
+        function deleteUnit() {
+            var rows = grid.getSelectedRows();
+            var rowsLength = rows.length;
+            var ids = getSelectIds(grid);
+            var CheckStatusCode = getSelectCheckStatus(grid);
+            if (rowsLength == 0) {
+                //top.Dialog.alert("请选中要删除的记录!");
+                //return;
+            }
+            top.Dialog.confirm("确定要删除吗？", function () {
+                $.ajax({
+                    url: '../Handler/PartLibrary.ashx',
+                    dataType: 'json',
+                    data: { Id: ids, Type: "Del", CheckStatusCode: CheckStatusCode },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+
+        //删除后的提示
+        function handleResult(result) {
+            if (result == 1) {
+                top.Dialog.alert("删除成功！", null, null, null, 1);
+                grid.loadData();
+            } else {
+                top.Dialog.alert("删除失败！");
+            }
+        }
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
+        function getSelectIds(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].Id + ",";
+            }
+
+            return ids + "0";
+        }
+        //获取所有选中行获取选中行的盘点状态
+        function getSelectCheckStatus(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var CheckStatus = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                CheckStatus += selectedRows[i].CheckStatusCode + ",";
+            }
+
+            return CheckStatus + "0";
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#ddlFactory").val("");
+            $("#txtPartName").val("");
+            $("#txtPartCategory").val("");
+            $("#txtPartNo").val("");
+            $("#txtPartNum").val("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

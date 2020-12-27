@@ -1,0 +1,200 @@
+
+
+<!DOCTYPE html />
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>计量管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+
+        $(function () {
+            $("#btnCancel").click(function () {
+                top.Dialog.close();
+            })
+        })
+
+        $(function () {
+            var lbl7 = document.getElementById("txtCheckProduct").innerText;
+          //  alert(lbl7);
+            if (lbl7 == "整机") {
+                $("#peijianNo").hide();
+                $("#peijian").hide();
+            } else {
+                $("#peijianNo").show();
+                $("#peijian").show();
+            }
+        })
+    </script>
+</head>
+<body>
+    <form method="post" action="CheckLook.aspx?id=700465" id="myFormId" target="frmright">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUINzcyMDI4MzMPZBYCAgEPZBYmAgEPDxYCHgRUZXh0BQoxMjM0NTY3ODkwZGQCAw8PFgIfAAUP5omL5pyv5peg5b2x54GvZGQCBQ8PFgIfAAUMRG9tZUx1eC02MjYyZGQCBw8PFgIfAAUM5Y+w5rm+5LiJ5LiwZGQCCQ8PFgIfAAUKMjAxNTA3MTQ0NmRkAgsPDxYCHwAFDOW/g+eUteWbvuWupGRkAg0PDxYCHwAFBjAuMDAwMGRkAg8PDxYCHwAFEDIwMTctMTItMDggMTA6MDFkZAIRDw8WAh8AZWRkAhMPDxYCHwBlZGQCFQ8PFgIfAGVkZAIXDw8WAh8AZWRkAhkPDxYCHwBlZGQCGw8PFgIfAAUJ5pyq5qOA5rWLZGQCHQ8PFgIfAAUG5pW05py6ZGQCHw8PFgIfAGVkZAIhDw8WAh8AZGRkAiMPDxYCHwBkZGQCJQ8PFgIfAGRkZGRP4gWcbiG+jG9Z447dyvq9VZj+zUe4XfbFvBzO7F+jBg==" />
+</div>
+
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td>
+                证书编号：
+            </td>
+            <td>
+                <span id="txtBookSn">1234567890</span>
+            </td>
+            <td>
+                设备名称：
+            </td>
+            <td>
+                <span id="txtEquName">手术无影灯</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备型号：
+            </td>
+            <td>
+                <span id="txtSpecification">DomeLux-6262</span>
+            </td>
+            <td>
+                设备厂家：
+            </td>
+            <td>
+                <span id="txtFactory">台湾三丰</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                系统编号：
+            </td>
+            <td>
+                <span id="txtIBNumber">2015071446</span>
+            </td>
+            <td>
+                目前使用科室：
+            </td>
+            <td>
+                <span id="txtDeptName">心电图室</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                费用：
+            </td>
+            <td>
+                <span id="txtMoney">0.0000</span>
+            </td>
+            <td>
+                检测时间：
+            </td>
+            <td>
+                <span id="txtCheckTime">2017-12-08 10:01</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                下次检测时间：
+            </td>
+            <td>
+                <span id="txtNextTime"></span>
+            </td>
+            <td>
+                检测结论：
+            </td>
+            <td>
+                <span id="txtResult"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                主管人：
+            </td>
+            <td>
+                <span id="txtManager"></span>
+            </td>
+            <td>
+                审核人：
+            </td>
+            <td>
+                <span id="txtChecker"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                检定人：
+            </td>
+            <td>
+                <span id="txtTester"></span>
+            </td>
+            <td>
+                处理状态：
+            </td>
+            <td>
+                <span id="rblState">未检测</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                检测产品：
+            </td>
+            <td>
+                <span id="txtCheckProduct">整机</span>
+            </td>
+            <td>
+                备注：
+            </td>
+            <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <span id="txtRemark"></span>
+            </td>
+        </tr>
+        <tr id="peijianNo">
+            <td>
+                配件货号：
+            </td>
+            <td>
+                <span id="txtPartsArtNo"></span>
+            </td>
+            <td>
+                配件序列号：    
+            </td>
+            <td>
+                <span id="txtPartsSerialNo"></span>
+            </td>
+        </tr>
+        <tr id="peijian">
+            <td>
+                配件名称：
+            </td>
+            <td>
+                <span id="txtPartsName"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input type="button" value="取消" id="btnCancel" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

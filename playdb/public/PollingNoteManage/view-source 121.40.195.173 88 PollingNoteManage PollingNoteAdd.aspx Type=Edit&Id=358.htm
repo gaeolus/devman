@@ -1,0 +1,620 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新建巡检任务</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <!--基本选项卡start-->
+    <script type="text/javascript" src="../libs/js/nav/basicTab.js"></script>
+    <!--基本选项卡end-->
+    <!-- 双向选择器start -->
+    <script type="text/javascript" src="../libs/js/form/lister.js"></script>
+    <!-- 双向选择器end -->
+    <script type="text/javascript">
+
+        function getRadioValue() {
+            var RadValue = $("input:radio[name=PollingType]").filter("[checked]").val();
+
+            if (RadValue == "InstalledTime") {
+                document.getElementById('trInstall').style.display = "block";
+                document.getElementById('trDept').style.display = "none";
+                document.getElementById('trEqu').style.display = "none";
+            }
+            else if (RadValue == "Department") {
+                document.getElementById('trDept').style.display = "block";
+                document.getElementById('trInstall').style.display = "none";
+                document.getElementById('trEqu').style.display = "none";
+            }
+            else if (RadValue == "Equipment") {
+                document.getElementById('trEqu').style.display = "block";
+                document.getElementById('trDept').style.display = "none";
+                document.getElementById('trInstall').style.display = "none";
+            }
+            else {
+                document.getElementById('trInstall').style.display = "none";
+                document.getElementById('trDept').style.display = "none";
+                document.getElementById('trEqu').style.display = "none";
+            }
+        }
+
+
+        function getTypeRadioValue() {
+            var RadValue = $("input:radio[name=PollingEquType]").filter("[checked]").val();
+
+            if (RadValue == "Main") {
+                document.getElementById('tr1').style.display = "block";
+                document.getElementById('tr2').style.display = "block";
+                document.getElementById('tr3').style.display = "block";
+                document.getElementById('tr4').style.display = "block";
+                document.getElementById('tr5').style.display = "none";
+                document.getElementById('tr6').style.display = "none";
+                document.getElementById('tr7').style.display = "none";
+                document.getElementById('tr8').style.display = "none";
+                document.getElementById('tr9').style.display = "none";
+
+
+             
+            }
+            else if (RadValue == "Aid") {
+
+                document.getElementById('tr1').style.display = "none";
+                document.getElementById('tr2').style.display = "none";
+                document.getElementById('tr3').style.display = "none";
+                document.getElementById('tr4').style.display = "none";
+                document.getElementById('tr5').style.display = "block";
+                document.getElementById('tr6').style.display = "block";
+                document.getElementById('tr7').style.display = "block";
+                document.getElementById('tr8').style.display = "block";
+                document.getElementById('tr9').style.display = "none";
+              
+            }
+            else if (RadValue == "Nomal") {
+                document.getElementById('tr1').style.display = "none";
+                document.getElementById('tr2').style.display = "none";
+                document.getElementById('tr3').style.display = "none";
+                document.getElementById('tr4').style.display = "none";
+                document.getElementById('tr5').style.display = "none";
+                document.getElementById('tr6').style.display = "none";
+                document.getElementById('tr7').style.display = "none";
+                document.getElementById('tr8').style.display = "none";
+                document.getElementById('tr9').style.display = "block";
+            }
+            document.getElementById('tr9').style.display = "none";
+        }
+
+        function message() {
+            //top.frmright.page_305.refresh();
+            top.frmright.page_304.refresh();
+            top.Dialog.close();
+        }
+
+
+        //初始化函数
+        function initComplete() {
+
+            //初始化lister
+            initLister();
+
+        }
+
+        //初始化Lister处理
+        function initLister() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/DeptTree.ashx',
+                dataType: 'json',
+                data: { type: "GetLister" },
+                success: function (result) {
+                    //赋给data属性
+
+                    $("#lister1").data("data", result)
+
+                    //刷新下拉框
+
+                    $("#lister1").render();
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        $(function () {
+
+            //初始化时默认控制页面布局
+            getTypeRadioValue();
+            //判断编辑时数据是否已经绑定完毕
+            if ($("#hfLoadOver").val() == "1") {
+
+                //判断三个主选项卡的值
+                if ($("#hf1").val() == "Main") {
+                    $("input:radio[id=Radio1]").attr("checked", "checked");
+
+                }
+                if ($("#hf1").val() == "Aid") {
+                    $("input:radio[id=Radio2]").attr("checked", "checked");
+                    if ($("#hf2").val() == "1") { $("input:radio[id=Radio4]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio5]").attr("checked", "checked"); }
+                    if ($("#hf3").val() == "1") { $("input:radio[id=Radio6]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio7]").attr("checked", "checked"); }
+                    if ($("#hf4").val() == "1") { $("input:radio[id=Radio8]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio9]").attr("checked", "checked"); }
+                    if ($("#hf5").val() == "1") { $("input:radio[id=Radio10]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio11]").attr("checked", "checked"); }
+                    if ($("#hf6").val() == "1") { $("input:radio[id=Radio12]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio13]").attr("checked", "checked"); }
+
+                }
+
+                if ($("#hf1").val() == "Nomal") {
+                    $("input:radio[id=Radio3]").attr("checked", "checked");
+                    if ($("#hf7").val() == "1") { $("input:radio[id=Radio14]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio15]").attr("checked", "checked"); }
+
+                }
+                getTypeRadioValue();
+            }
+
+
+        });
+
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        //        function customHeightSet(contentHeight) {
+        //            $(".cusBoxContent").height(contentHeight - 55)
+        //            $(".orgTreeContainer").height(contentHeight - 30);
+        //        }
+       
+ 
+
+    </script>
+</head>
+<body>
+    <form method="post" action="PollingNoteAdd.aspx?Type=Edit&amp;Id=358" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTE2NjE0OTE5MzkPZBYCZg9kFggCAQ8PFgIeBFRleHQFDFhKMTQ1MjIzODQ4MmRkAgcPFgIeBXN0eWxlBQ1EaXNwbGF5Om5vbmU7ZAIJDw8WBB8ABSTmjInlvZPliY3miYDmnInnp5HlrqTjgIHmiYDmnInorr7lpIceB1Zpc2libGVnZGQCDQ8WAh8BBQlkaXNwbGF5OjsWAgIBD2QWAgIBDw8WAh8ABfkBQ1TlrqQs55eF55CG56eRLOW9qei2heWupCzmtYvlkKzlrqQs5pS+5bCE56eRLOWWieenkeeXheaIvyzmgKXor4rnp5Es5qOA6aqM56eRLOW6t+WkjeenkSzlurflpI3np5Hnl4XmiL8s55CG55aX5a6kLOWGhemVnOWupCzlhoXnp5Hnl4XmiL8s6K6+5aSH5YWs5YWx5bqTLOiuvuWkh+enkSzmiYvmnK/purvphonnp5Es5omL5pyv5a6kLOWkluenkeeXheaIvyzog4PplZzlrqQs5b+D55S15Zu+5a6kLOecvOenkemXqOiviizpmaLplb/lrqQsZGRkOGTmHbm3Td2Y20NDlNItG++1oLCzuWi/OXPfV60aWic=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWFwKi5d23DwLT1Nf+AQLv8aqCDAKl55raBwK0/ZvcCQLL+YihAQK93d7MCwLm8rLuBALM2MvsCwK/if/kBgL9l9PQBQKslMz9CwLLy+GoDgLI9vaTAQLr4M6dAwKYgfHlDwKz6o77CQLO06yQBALpvMqlDgKEpui6CAKfj4bQAgKZvIvlBAK6ze3zBitdEJEuzR1EbX3yhFt5Qt8ejG/b9CZZcIDZewh4so8O" />
+</div>
+    <div class="padding_right5" style="height: 500px; overflow-y: auto">
+        <table class="tableStyle"  formmode="view">
+            <tr>
+                <td>
+                    巡检单号：
+                </td>
+                <td>
+                    <span id="lblPollingNo">XJ1452238482</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    任务名称：
+                </td>
+                <td colspan="3">
+                    <input name="txtPollingName" type="text" value="412" id="txtPollingName" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    巡检周期：
+                </td>
+                <td colspan="3" id="tdClyTime">
+                    <input name="txtClyTime" type="text" value="321" id="txtClyTime" class="validate[required,custom[onlyNumber] ] " />个月
+                    <span style="color: red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    巡检类型：
+                </td>
+                <td colspan="3">
+                    <div id="divRadio" style="Display:none;">
+                        <input type="radio" id="PollingType-1" name="PollingType" value="All" checked onclick="getRadioValue()" /><label
+                            for="PollingType-1" class="hand">按当前所有科室、所有设备</label>
+                        <input type="radio" id="PollingType-2" name="PollingType" value="InstalledTime" onclick="getRadioValue()" /><label
+                            for="PollingType-2" class="hand">按设备装机日期</label>
+                        <input type="radio" id="PollingType-3" name="PollingType" value="Department" onclick="getRadioValue()" /><label
+                            for="PollingType-3" class="hand">按科室巡检</label>
+                        <input type="radio" id="PollingType-4" name="PollingType" value="Equipment" onclick="getRadioValue()" /><label
+                            for="PollingType-4" class="hand">按设备巡检</label>
+                        <input name="hidPollingTypeCode" type="hidden" id="hidPollingTypeCode" /></div>
+                    <span id="lblPollingType">按当前所有科室、所有设备</span>
+                </td>
+            </tr>
+            <tr id="trDept" style="display: none">
+                <td>
+                    选择科室：
+                </td>
+                <td colspan="3" id="tdDept">
+                    <div class="lister" id="lister1" keepdefaultstyle="true">
+                    </div>
+                    <input name="hiddDeptID" type="hidden" id="hiddDeptID" />
+                </td>
+            </tr>
+          
+
+
+            <tr id="trEqu" style="display: none">
+                <td>
+                    选择设备：
+                </td>
+                <td colspan="3" id="td1">
+                    <button type="button" id="btnSelectEqu" onclick="Open();" style="align: center; margin-right: 20px">
+                        <span class="icon_find">选择设备</span></button>
+                </td>
+            </tr>
+            <tr id="trDeptName" style="display:;">
+	<td>
+                    巡检科室：
+                </td>
+	<td colspan="3">
+                    <span id="lblDeptName">CT室,病理科,彩超室,测听室,放射科,喉科病房,急诊科,检验科,康复科,康复科病房,理疗室,内镜室,内科病房,设备公共库,设备科,手术麻醉科,手术室,外科病房,胃镜室,心电图室,眼科门诊,院长室,</span>
+                </td>
+</tr>
+
+            <tr id="trInstall" style="display: none">
+	<td>
+                    装机日期：
+                </td>
+	<td colspan="3">
+                    <input name="txtInstallTimeS" type="text" id="txtInstallTimeS" class="date validate[required]" />~<input name="txtInstallTimeE" type="text" id="txtInstallTimeE" class="date validate[required]" />
+                </td>
+</tr>
+
+            <tr>
+                <td>
+                    巡检任务期限：
+                </td>
+                <td colspan="3" id="tdPollingTime">
+                    <input name="txtPollingTimeS" type="text" value="2016/1/14" id="txtPollingTimeS" class="date validate[required] " />~
+                    <input name="txtPollingTimeE" type="text" value="2016/1/27" id="txtPollingTimeE" class="date validate[required]" />
+                    <span style="color: red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    巡检人：
+                </td>
+                <td colspan="3">
+                    <input name="txtSignName" type="text" value="213" id="txtSignName" />
+                </td>
+            </tr>
+            <tr style="display:none">
+              <td>巡检设备类别：</td>
+              <td>
+                 <div id="div1">
+                        <input type="radio" id="Radio1"  name="PollingEquType" value="Main"  onclick="getTypeRadioValue()"  /><label
+                            for="PollingType-1" class="hand">重点设备</label>
+                        <input type="radio" id="Radio2"  name="PollingEquType" value="Aid" onclick="getTypeRadioValue()"  /><label
+                            for="PollingType-2" class="hand">急救、生命支持类设备</label>
+                        <input type="radio" id="Radio3"  checked="checked"  name="PollingEquType" value="Nomal" onclick="getTypeRadioValue()"  /><label
+                            for="PollingType-3" class="hand">普通设备</label>
+                        <input name="hf1" type="hidden" id="hf1" value="Nomal" /></div>
+                    
+                </td>
+            
+            </tr>
+            <tr id="tr1" style="display:none">
+                <td>设备使用、保养记录异常：</td>
+                <td> <textarea name="txtUseException" rows="2" cols="20" id="txtUseException">
+</textarea>
+              
+                </td>
+            </tr>
+            <tr id="tr2" style="display:none">
+                <td>设备间、机房环境异常情况：</td>
+                <td> <textarea name="txtEquRoomException" rows="2" cols="20" id="txtEquRoomException">
+</textarea>
+                 <span style="color:Red">(温度、湿度、卫生)</span>
+                </td>
+            </tr>
+            <tr id="tr3" style="display:none">
+                <td>管线布局异常情况：</td>
+                <td> <textarea name="txtLineException" rows="2" cols="20" id="txtLineException">
+</textarea>
+                 <span style="color:Red">(水管、气体、电路)</span>
+                </td>
+            </tr>
+            <tr id="tr4" style="display:none">
+                <td>防护措施异常情况：</td>
+                <td> <textarea name="txtSafeguard" rows="2" cols="20" id="txtSafeguard">
+</textarea>
+                 <span style="color:Red">(电磁辐射、有害射线、噪音、震动、腐蚀)</span>
+                </td>
+            </tr>
+            <tr id="tr5" style="display:none">
+                <td> 设备外观整洁、附件完备：</td>
+                <td> 
+                <div id="div2">
+                        <input type="radio" id="Radio4" name="rdOutClear" value="1"  checked="checked"  /><label
+                            for="PollingType-1" class="hand">是</label>
+                        <input type="radio" id="Radio5" name="rdOutClear" value="0"  /><label
+                            for="PollingType-2" class="hand">否</label>
+                     
+                        <input name="hf2" type="hidden" id="hf2" /></div>
+                </td>
+            </tr>
+            <tr id="tr6" style="display:none">
+                <td> 设备使用情况：</td>
+                <td>
+                 <div id="div3">
+                  开机运行：
+                        <input type="radio" id="Radio6" name="rdOpenStatus" value="1"  checked="checked"  /><label
+                            for="PollingType-1" class="hand">正常</label>
+                        <input type="radio" id="Radio7" name="rdOpenStatus" value="0"  /><label
+                            for="PollingType-2" class="hand">故障</label>
+                     
+                        <input name="hf3" type="hidden" id="hf3" /></div>
+                         <div id="div4">
+                  内置电池：
+                        <input type="radio" id="Radio8" name="rdInBattery" value="1"  checked="checked"  /><label
+                            for="PollingType-1" class="hand">充满</label>
+                        <input type="radio" id="Radio9" name="rdInBattery" value="0"  /><label
+                            for="PollingType-2" class="hand">需充电</label>
+                     
+                        <input name="hf4" type="hidden" id="hf4" /></div>
+                </td>
+            </tr>
+            <tr id="tr7" style="display:none">
+                <td>设备使用、保养记录：</td>
+                <td> 
+                 <div id="div5">
+                        <input type="radio" id="Radio10" name="rdEquMatainRecord" value="1"  checked="checked"  />
+                        <label    for="PollingType-1" class="hand">完备</label>
+                        <input type="radio" id="Radio11" name="rdEquMatainRecord" value="0"  />
+                        <label  for="PollingType-2" class="hand">无</label>
+                     
+                        <input name="hf5" type="hidden" id="hf5" /></div>
+                </td>
+            </tr>
+            <tr id="tr8" style="display:none">
+                <td>设备使用、存放环境：</td>
+                <td> 
+                 
+                 <div id="div6">
+                        <input type="radio" id="Radio12" name="rdUseEnvironment" value="1"  checked="checked"  />
+                        <label    for="PollingType-1" class="hand">良好</label>
+                        <input type="radio" id="Radio13" name="rdUseEnvironment" value="0"  />
+                        <label  for="PollingType-2" class="hand">存在问题</label>
+                     
+                        <input name="hf6" type="hidden" id="hf6" /></div>
+
+                </td>
+            </tr>
+            <tr id="tr9" style="display:none">
+                <td>设备使用、存放环境：</td>
+                <td> 
+                   <div id="div7">
+                        <input type="radio" id="Radio14" name="rdUseEnvironment2" value="1"  checked="checked"  />
+                        <label    for="PollingType-1" class="hand">良好</label>
+                        <input type="radio" id="Radio15" name="rdUseEnvironment2" value="0"  />
+                        <label  for="PollingType-2" class="hand">存在问题</label>
+                     
+                        <input name="hf7" type="hidden" id="hf7" value="1" /></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    备注：
+                </td>
+                <td colspan="3">
+                    <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+213</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    &nbsp;&nbsp;
+                    <button type="button" id="btnSave" onclick="Save();" style="align: center; margin-right: 20px">
+                        <span class="icon_save">保存</span></button>
+                    <button type="button" onclick="message();" style="align: center; margin-right: 40px">
+                        <span class="icon_exit">返回</span></button>
+                    <input type="hidden" name="hfLoadOver" id="hfLoadOver" value="1" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>
+<script type="text/javascript">
+
+    function Open() {
+        top.Dialog.open({
+            URL: "SearchPage/SelectEqument.aspx?IsMultiple=true&Command=Polling",
+
+            Title: "选择设备", ShowMaxButton: true, Width: 950, Height: 530
+        });
+    }
+    var list = [];
+    function setvalue(rows) {
+        //var ObjPolling = getObjInfo();
+        if (rows.length > 0) {
+           
+            $(rows).each(function (i) {
+                var entity = {};
+
+                //entity.PollingNo = ObjPolling.PollingNo;
+
+                entity.PollingNo = 'XJ1452494396'; ;
+                entity.ID = rows[i].Id;
+//                entity.DeptID = rows[i].DepartmentID;
+                entity.DeptName = rows[i].DeptName;
+                entity.EquNo = rows[i].IBNumber;
+                entity.EquName = rows[i].EquName;
+                entity.Specification = rows[i].Specification;
+                entity.InstallationDate = rows[i].InstallDate;
+                entity.FactoryName = rows[i].FactoryName;
+                entity.BuyMoney = "";
+                entity.BuyDate = rows[i].InstallDate;
+                entity.EquipmentStatus = "未巡检";
+                entity.EquipmentStatusCode = "NoPolling";
+                entity.CreateName = '系统管理员'
+                entity.CreateTime = '2016/1/11 14:39:55';
+                entity.UpdateName = "系统管理员";
+                entity.UpdateTime = "2016/1/11 14:39:55";
+
+                list.push(entity);
+            })
+        }
+    }
+    //获取基本信息对象
+    function getObjInfo() {
+        var obj = new Object();
+
+        
+        if ('Edit' == "Add") {
+            obj.PollingNo = 'XJ1452494396';
+        }
+        else
+            obj.PollingNo = $("#lblPollingNo").text();
+        obj.PollingName = $("#txtPollingName").val();
+        obj.PollingClyTime = $("#txtClyTime").val();
+        obj.PollingTypeCode = $("input:radio[name=PollingType]").filter("[checked]").val();
+
+        obj.PollingStatusCode = "NoPolling";
+        obj.PollingStatusName = "未巡检";
+
+        obj.StartPollingTime = $("#txtPollingTimeS").val();
+        obj.EndPollingTime = $("#txtPollingTimeE").val();
+
+        obj.StartInstalledTime = $("#txtInstallTimeS").val();
+        obj.EndInstalledTime = $("#txtInstallTimeE").val();
+        obj.pollingPerson = $("#txtSignName").val();
+        obj.Remark = $("#txtRemark").val();
+
+
+        //新添加的字段
+        //巡检设备类别
+        obj.PollingEquType = $("input:radio[name=PollingEquType]").filter("[checked]").val();
+        //设备使用、保养记录异常
+        obj.UseException = $("#txtUseException").val();
+        //设备间、机房环境异常情况
+        obj.EquRoomException = $("#txtEquRoomException").val();
+        //管线布局异常情况
+        obj.LineException = $("#txtLineException").val();
+        //防护措施异常情况
+        obj.Safeguard = $("#txtSafeguard").val();
+        //设备外观整洁、附件完备
+        obj.OutClear = $("input:radio[name=rdOutClear]").filter("[checked]").val();
+        //开机运行
+        obj.OpenStatus = $("input:radio[name=rdOpenStatus]").filter("[checked]").val();
+        //内置电池
+        obj.InBattery = $("input:radio[name=rdInBattery]").filter("[checked]").val();
+        //设备使用、保养记录
+        obj.EquMatainRecord = $("input:radio[name=rdEquMatainRecord]").filter("[checked]").val();
+        //设备使用、存放环境
+        obj.UseEnvironment = $("input:radio[name=rdUseEnvironment]").filter("[checked]").val();
+        //设备使用、存放环境
+        obj.UseEnvironment2 = $("input:radio[name=rdUseEnvironment2]").filter("[checked]").val();
+        
+
+        obj.CreateName = '系统管理员'
+        obj.CreateTime = '2016/1/11 14:39:55';
+
+        obj.UpdateName = "系统管理员";
+        obj.UpdateTime = "2016/1/11 14:39:55";
+
+
+
+        return obj;
+    }
+    function validateForm() {
+
+        var valid = $(tdPollingTime).validationEngine({ returnIsValid: true });
+        var valid_1 = $(tdClyTime).validationEngine({ returnIsValid: true });
+
+        if (valid == true && valid_1==true) {
+
+            if ($("input:radio[name=PollingType]").filter("[checked]").val() == "InstalledTime") {
+                valid = $(trInstall).validationEngine({ returnIsValid: true });
+            }
+            if ($("input:radio[name=PollingType]").filter("[checked]").val() == "Department") {
+                valid = $(tdDept).validationEngine({ returnIsValid: true });
+            }
+        }
+        if (valid == true && valid_1 == true)
+            return true;
+        else return false;
+    }
+
+
+
+    function Save() {
+
+        if (validateForm()) {
+            objInfo = JSON.stringify(getObjInfo());
+            listEqu = JSON.stringify(list);
+            var dept = $("#lister1").attr("relValue");
+            if ($("input:radio[name=PollingType]").filter("[checked]").val() == "Department") {
+                if (dept == "") {
+                    alert("科室未选择");
+                    return;
+                }
+            }
+            if ($("input:radio[name=PollingType]").filter("[checked]").val() == "Equipment") {
+                if (list.length==0) {
+                    alert("未选择设备");
+                    return;
+                }
+            }
+            var postData = { objInfo: objInfo, dept: dept, listEqu: listEqu };
+            var Url = "../Handler/PollingNote.ashx?Type=Edit&t=" + Date.parse(new Date());
+
+            $.ajax({
+                url: Url,
+                data: postData,
+                dataType: 'text',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (result) {
+                    if (result == "ok") {
+                         top.frmright.page_304.refresh();
+                        //top.frmright.page_305.refresh();
+                        top.Dialog.close();
+                    }
+
+                    else {
+                        alert("未选择巡检设备");
+                    }
+                },
+                error: function (result) {
+                    //  alert(Url);
+                    alert("数据传输错误");
+                }
+            })
+
+        }
+    }
+</script>

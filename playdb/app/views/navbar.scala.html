@@ -1,0 +1,57 @@
+@(selectedSubNavbar: String)
+
+
+ <!-- Site CSS -->
+        <link href="@routes.Assets.at("stylesheets/bootstrap.min.css")" rel="stylesheet" type="text/css" media="screen" >
+        <link href="@routes.Assets.at("stylesheets/font-awesome.min.css")" rel="stylesheet" type="text/css" media="screen" >
+        <link href="@routes.Assets.at("stylesheets/site.min.css?v5")" rel="stylesheet" type="text/css" media="screen" >
+
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <script src="@routes.Assets.at("js/jquery.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("js/bootstrap.min.js")" type="text/javascript"></script>
+
+<nav class="navbar navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" target="_blank" href="/">Home</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="@if(Messages("subheader.time_line") == selectedSubNavbar){active}">
+          <a href="@routes.Barcodes.lineChart">
+            <i class="icon-tasks"></i>
+            <span>@Messages("subheader.time_line")</span>
+          </a>
+        </li>
+        <li class="@if(Messages("subheader.bar_column") == selectedSubNavbar){active}">
+          <a href="@routes.Barcodes.columnAndBarChart">
+            <i class=" icon-barcode"></i>
+            <span>@Messages("subheader.bar_column")</span>
+          </a>
+        </li>
+        <li class="@if(Messages("subheader.area_pie") == selectedSubNavbar){active}">
+          <a href="@routes.Barcodes.areaAndPieChart">
+            <i class="icon-th-large"></i>
+            <span>@Messages("subheader.area_pie")</span>
+          </a>
+        </li>
+        <li class="@if(Messages("subheader.bubble") == selectedSubNavbar){active}">
+          <a href="@routes.Barcodes.bubbleChart">
+            <i class=" icon-tint"></i>
+            <span>@Messages("subheader.bubble")</span>
+          </a>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>

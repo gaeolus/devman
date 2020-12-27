@@ -1,0 +1,116 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	设备移科
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+      
+        function reflesh() {
+            top.Dialog.close();
+        }
+     
+    </script>
+</head>
+<body>
+    <form method="post" action="EquipmentLook.aspx?Type=Look&amp;id=568" id="myFormId">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTkyODc4MTM2MA9kFgICAw9kFhACAQ8PFgIeBFRleHQFBjExMTExMWRkAgMPDxYCHwAFBmJiYmJiYmRkAgUPDxYCHwAFBXp6enp6ZGQCBw8PFgIfAAUCenpkZAIJDw8WAh8ABQN6enpkZAILDw8WAh8ABQN6enpkZAINDw8WAh8ABRjln7rnoYDlpJbnp5HmiYvmnK/lmajmorBkZAIPDw8WAh8ABQblkK/nlKhkZGSDBr5I/5eCEAvcG1XOnUBx4O/yfDxUpWs4GnawSbqpCw==" />
+</div>
+
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td style=" width:80px">
+                设备编号：
+            </td>
+            <td style=" width:200px">
+                 <span id="txtEquipmentNo">111111</span>
+            </td>
+            <td style=" width:80px">
+                设备名称：
+            </td>
+            <td>
+             
+                <span id="txtChinaName">bbbbbb</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                英文名称：
+            </td>
+            <td>
+             <span id="txtEnglishName">zzzzz</span>
+              
+            </td>
+            <td>
+                设备简称：
+            </td>
+            <td>
+                
+                <span id="txtReferreName">zz</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备型号：
+            </td>
+            <td>
+             <span id="txtGG">zzz</span>
+              
+            </td>
+            <td>
+               设备单位：
+            </td>
+            <td>
+               
+                 <span id="txtDW">zzz</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备分类：
+            </td>
+            <td>
+               
+                <span id="txtEquipMentType">基础外科手术器械</span>
+            </td>
+            <td>
+                使用状态：
+            </td>
+            <td>
+               
+                 <span id="txtUseState">启用</span>
+            </td>
+        </tr>
+       
+        <tr>
+            <td colspan="4">
+               
+                <input type="button" value="返回" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

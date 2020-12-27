@@ -1,0 +1,7 @@
+activator compile
+activator stage
+git add .
+git commit -m "$1"
+git push origin master
+git push osdemo master
+#ssh 101.200.82.40 -l root

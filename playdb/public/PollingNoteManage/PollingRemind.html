@@ -1,0 +1,357 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>资产巡检列表</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!--弹窗组件start-->
+    <script type="text/javascript" src="../libs/js/popup/drag.js"></script>
+    <script type="text/javascript" src="../libs/js/popup/dialog.js"></script>
+    <!--弹窗组件end-->
+</head>
+<body>
+<div id="layout1">
+    <div id="centerCon" position="center" style="">
+        <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+            <form method="post" action="PollingNoteList.aspx" id="Form1">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTIwNjM4NDg4MDcPZBYCZg9kFgICAQ8QDxYGHg1EYXRhVGV4dEZpZWxkBQROYW1lHg5EYXRhVmFsdWVGaWVsZAUEQ29kZR4LXyFEYXRhQm91bmRnZBAVBA0tLeivt+mAieaLqS0tCeW3oeajgOS4rQnlt7Llt6Hmo4AJ5pyq5beh5qOAFQQAB1BvbGxpbmcKWWVzUG9sbGluZwlOb1BvbGxpbmcUKwMEZ2dnZ2RkZPkDtQ0PPfoetOdohk0pgg0PmAXz4VWy/0DRi4IjzSrB" />
+                </div>
+
+                <div class="aspNetHidden">
+
+                    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBQKMwOvlBwLm85DxBwKkyZnSBgLC14ysBgL93/fPCHWZe3PotUqv721u/w4d1E9Gpb1PKVJdeB+eQY2VEXoD" />
+                </div>
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            巡检状态：
+                        </td>
+                        <td>
+                            <select name="ddlPollingStatus" id="ddlPollingStatus">
+                                <option value="">--请选择--</option>
+                                <option value="Polling">巡检中</option>
+                                <option value="YesPolling">已巡检</option>
+                                <option value="NoPolling">未巡检</option>
+
+                            </select>
+                        </td>
+                        <td>
+                            巡检任务期限：
+                        </td>
+                        <td>
+                            <input type="text" id="txtTimeS" class="date" />~<input type="text" id="txtTimeE"
+                                                                                    class="date" />
+                        </td>
+                        <td>
+                            <button type="button" id="btnSearch">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="padding_right5">
+            <div id="dataBasic">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+
+            var parm = "&PollingStatusCode=" + $('select#ddlPollingStatus option:selected').val();
+
+            // 巡检计划时间
+            parm += "&StartPollingTime=" + $("#txtTimeS").val();
+            parm += "&EndPollingTime=" + $("#txtTimeE").val();
+
+
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/PollingNote.ashx?type=GetList' + parm });
+            //刷新表格数据
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+
+            initGrid();
+
+
+
+
+        }
+
+
+
+        //初始化Grid处理
+        function initGrid() {
+
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '巡检单号', name: 'PollingNo', align: 'center', width: "10%" },
+				{ display: '任务名称', name: 'PollingName', align: 'center', width: "10%" },
+                { display: '巡检类型', name: 'PollingTypeName', align: 'center', width: "10%" },
+			    { display: '创建时间', name: 'CreateTime', align: 'center', width: "10%" },
+                { display: '计划盘点科室、设备数量', name: 'Dept_Equ_Count', align: 'center', width: "15%" },
+			    { display: '巡检任务期限', name: 'CycleTime', align: 'center', width: "15%" },
+                { display: '巡检状态', name: 'PollingStatusName', align: 'center', width: "10%" },
+                { display: '巡检周期(月)', name: 'PollingClyTime', align: 'center', width: "10%" },
+                { display: '下次巡检任务期限', name: 'NextCycleTime', align: 'center', width: "10%" },
+                { display: '巡检结果', isAllowHide: false, align: 'center', width: "80",
+                    render: function (rowdata, rowindex, value, column) {
+                        if (rowdata.PollingStatusCode == "YesPolling")
+                            return '<div class="padding_top4 padding_left5">'
+
+                        + '<a target="_blank" href="PollingResult.aspx?PollingNo=' + rowdata.PollingNo + '"><img src="../skin/menu/icon_5.png" /></a>'
+
+                        + '</div>';
+                    }
+                },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: "80",
+           		    render: function (rowdata, rowindex, value, column) {
+           		        //已巡检的记录 不可编辑和删除 只可以查看
+           		        if (rowdata.PollingStatusCode == "YesPolling" || rowdata.PollingStatusCode == "Polling") {
+           		            return '<div class="padding_top4 padding_left5">'
+                        + '<span class="img_list hand" title="查看" onclick="onView(' + "'" + rowdata.PollingNo + "'" + ')"></span>'
+                        + '</div>';
+
+           		        }
+           		        else {
+           		            if ('3094' != 3004 && '3094' != 3002) {
+
+           		                return '<div class="padding_top4 padding_left5">'
+                        + '<span class="img_edit hand" title="修改" onclick="onEdit(' + rowdata.ID + ',' + "'" + rowdata.PollingStatusCode + "'" + ')"></span>'
+                        + '<span class="img_list hand" title="查看" onclick="onView(' + "'" + rowdata.PollingNo + "'" + ')"></span>'
+	                    + '<span class="img_delete hand" title="删除" onclick="onDelete(' + "'" + rowdata.PollingNo + "'" + ',' + "'" + rowdata.PollingStatusCode + "'" + ')"></span>'
+                        + '</div>';
+
+           		            }
+           		            else {
+           		                return '<div class="padding_top4 padding_left5">'
+
+                        + '<span class="img_list hand" title="查看" onclick="onView(' + "'" + rowdata.PollingNo + "'" + ')"></span>'
+
+                        + '</div>';
+
+           		            }
+
+
+
+           		        }
+           		    }
+           		}
+			  ],
+                url: '../Handler/PollingNote.ashx?Type=GetList&date=' + new Date().getTime(), checkbox: true,
+                sortName: 'ID',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: false,
+                sortOrder: "desc",
+                toolbar: {
+                    items: [
+        		  { text: '新增', click: addUnit, iconClass: 'icon_add' },
+        		  { line: true },
+                   { text: '批量删除', click: deleteUnit, iconClass: 'icon_delete' },
+        		  { line: true }
+        		]
+                }
+            });
+
+        }
+
+
+        //新增
+        function addUnit() {
+            top.Dialog.open({
+                URL: "PollingNoteManage/PollingNoteAdd.aspx?Type=Add", ID: "a1",
+                Title: "添加", ShowMaxButton: true, Width: 870, Height: 530
+            });
+        }
+        //修改
+        function onEdit(rowid, PollingStatus) {
+            // alert(rowid);
+            if (PollingStatus == "YesPolling" || PollingStatus == "Polling") {
+                top.Dialog.alert("已巡检的记录不可编辑!");
+            }
+            else {
+                top.Dialog.open({
+                    URL: "PollingNoteManage/PollingNoteAdd.aspx?Type=Edit&Id=" + rowid,
+                    Title: "编辑巡检信息", Width: 870, Height: 500
+                });
+            }
+        }
+        //查看
+        function onView(rowid) {
+            top.Dialog.open({
+                URL: "PollingNoteManage/PollingNoteUpdate.aspx?Type=Look&PollingNo=" + rowid,
+                Title: "查看巡检信息", Width: 1200, Height: 600, ShowMaxButton: true
+            });
+        }
+        //查看
+        function onView1(rowid) {
+            top.Dialog.open({
+                URL: "PollingNoteManage/PollingResult.aspx?PollingNo=" + rowid,
+                Title: "查看巡检信息", Width: 1200, Height: 530, ShowMaxButton: true
+            });
+        }
+        //删除
+        function onDelete(rowid, rowidx) {
+            // alert("1");
+            top.Dialog.confirm("确定要删除该记录吗？", function () {
+                //此处进行ajax后台数据处理
+                $.ajax({
+                    url: '../Handler/PollingNote.ashx',
+                    dataType: 'text',
+                    data: { PollingNo: rowid, Type: "Del", PollingStatusCode: rowidx },
+                    success: function (result) {
+                        if (result == "OK") {
+                            grid.loadData();
+                        } else {
+                            top.Dialog.alert("已巡检的记录不可删除!");
+                        }
+                        grid.loadData();
+
+                    },
+                    error: function (result) {
+
+                        grid.loadData();
+                    }
+                });
+
+            });
+        }
+
+        //批量删除
+        function deleteUnit() {
+            var rows = grid.getSelectedRows();
+            var rowsLength = rows.length;
+            var ids = getSelectIds(grid);
+            var PollingStatusCode = getSelectPollingStatus(grid);
+            if (rowsLength == 0) {
+                //top.Dialog.alert("请选中要删除的记录!");
+                //return;
+            }
+            top.Dialog.confirm("确定要删除吗？", function () {
+                $.ajax({
+                    url: '../Handler/PollingNote.ashx',
+                    dataType: 'text',
+                    data: { PollingNo: ids, Type: "Del", PollingStatusCode: PollingStatusCode },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+
+        //删除后的提示
+        function handleResult(result) {
+            if (result == 1) {
+                top.Dialog.alert("删除成功！", null, null, null, 1);
+                grid.loadData();
+            } else {
+                top.Dialog.alert("删除失败！");
+            }
+        }
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2
+        function getSelectIds(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].PollingNo + ",";
+            }
+
+            return ids + "0";
+        }
+        //获取所有选中行获取选中行的盘点状态
+        function getSelectPollingStatus(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var PollingStatus = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                PollingStatus += selectedRows[i].PollingStatusCode + ",";
+            }
+
+            return PollingStatus + "0";
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#ddlPollingStatus").val("");
+            $("#txtTimeS").val("");
+            $("#txtTimeE").val("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新建盘点任务</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" scrollery="false" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <link href="../libs/js/artDialog/skins/blue.css" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!--弹窗组件start-->
+    <script type="text/javascript" src="../libs/js/popup/drag.js"></script>
+    <script type="text/javascript" src="../libs/js/popup/dialog.js"></script>
+    <!--弹窗组件end-->
+    <!-- 双向选择器start -->
+    <script type="text/javascript" src="../libs/js/form/lister.js"></script>
+    <!-- 双向选择器end -->
+    <script type="text/javascript">
+
+        function getRadioValue() {
+            var RadValue = $("input:radio[name=CheckType]").filter("[checked]").val();
+
+            if (RadValue == "InstalledTime") {
+                document.getElementById('trInstall').style.display = "block";
+                document.getElementById('trDept').style.display = "none";
+            }
+            else if (RadValue == "Department") {
+                document.getElementById('trDept').style.display = "block";
+                document.getElementById('trInstall').style.display = "none";
+            }
+            else {
+                document.getElementById('trInstall').style.display = "none";
+                document.getElementById('trDept').style.display = "none";
+            }
+        }
+
+        function message() {
+            top.frmright.page_301.refresh();
+            top.Dialog.close();
+        }
+
+
+        //初始化函数
+        function initComplete() {
+
+            //初始化lister
+            initLister();
+
+        }
+
+        //初始化Lister处理
+        function initLister() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/DeptTree.ashx',
+                dataType: 'json',
+                data: { type: "GetLister" },
+                success: function (result) {
+                    //赋给data属性
+
+                    $("#lister1").data("data", result)
+
+                    //刷新下拉框
+
+                    $("#lister1").render();
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        //        function customHeightSet(contentHeight) {
+        //            $(".cusBoxContent").height(contentHeight - 55)
+        //            $(".orgTreeContainer").height(contentHeight - 30);
+        //        }
+       
+ 
+
+    </script>
+</head>
+<body>
+    <form method="post" action="AssetCheckNoteAdd.aspx?Type=Add" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJNjU5ODc5MTAxD2QWAmYPZBYCAgUPFgIeBXN0eWxlBQ5EaXNwbGF5OmJsb2NrO2Rk/zqJbkYmo98nShMDNB2bh/CKtNi0S7EbiUUXGTv8B70=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWCgK0y9C1BQLKuZ6rDQLroKPmBQK0/ZvcCQLL+YihAQK93d7MCwLsyPrzDQL+yPrzDQK/if/kBgKZvIvlBN+LV8zn7IZRegPQbj6OHccobgkLlKGVuJox2wSgk12K" />
+</div>
+    <div class="padding_right5" style="height: 500px; overflow-y: auto">
+        <table class="tableStyle" formmode="view">
+            <tr>
+                <td>
+                    盘点单号：
+                </td>
+                <td>
+                    <span id="lblCheckNo">自动生成</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    任务名称：
+                </td>
+                <td colspan="3">
+                    <input name="txtCheckName" type="text" id="txtCheckName" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    盘点类型：
+                </td>
+                <td colspan="3">
+                    <div id="divRadio" style="Display:block;">
+                        <input type="radio" id="CheckType-1" name="CheckType" value="All" checked onclick="getRadioValue()" /><label
+                            for="CheckType-1" class="hand">按当前所有科室、所有设备盘点</label>
+                        <input type="radio" id="CheckType-2" name="CheckType" value="InstalledTime" onclick="getRadioValue()" /><label
+                            for="CheckType-2" class="hand">按设备装机日期盘点</label>
+                        <input type="radio" id="CheckType-3" name="CheckType" value="Department" onclick="getRadioValue()" /><label
+                            for="CheckType-3" class="hand">按科室盘点</label>
+                        <input name="hidCheckTypeCode" type="hidden" id="hidCheckTypeCode" /></div>
+                    
+                </td>
+            </tr>
+            <tr id="trDept" style="display: none">
+                <td>
+                    选择科室：
+                </td>
+                <td colspan="3" id="tdDept">
+                    <div class="lister" id="lister1" keepdefaultstyle="true">
+                    </div>
+                    <input name="hiddDeptID" type="hidden" id="hiddDeptID" />
+                </td>
+            </tr>
+            <tr id="trDeptName" style="display: none">
+	<td>
+                    盘点科室：
+                </td>
+	<td colspan="3">
+                    <span id="lblDeptName"></span>
+                </td>
+</tr>
+
+            <tr id="trInstall" style="display: none">
+	<td>
+                    装机日期：
+                </td>
+	<td colspan="3">
+                    <input name="txtInstallTimeS" type="text" id="txtInstallTimeS" class="date validate[required]" />~<input name="txtInstallTimeE" type="text" id="txtInstallTimeE" class="date validate[required]" />
+                </td>
+</tr>
+
+            <tr>
+                <td>
+                    盘点任务期限：
+                </td>
+                <td colspan="3" id="tdCheckTime">
+                    <input name="txtCheckTimeS" type="text" id="txtCheckTimeS" class="date validate[required] " />
+                    ~
+                    
+                    <input name="txtCheckTimeE" type="text" id="txtCheckTimeE" class="date validate[required]" />
+                    <span style="color: red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    盘点人：
+                </td>
+                <td colspan="3">
+                    <input name="txtSignName" type="text" id="txtSignName" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    备注：
+                </td>
+                <td colspan="3">
+                    <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    &nbsp;&nbsp;
+                      <button type="button" id="btnSave" onclick="Save();" style="align: center; margin-right: 20px">
+                        <span class="icon_save">保存</span></button>
+                    <button type="button" onclick="message();" style="align: center; margin-right: 40px">
+                        <span class="icon_exit">返回</span></button>
+                  
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>
+<script type="text/javascript">
+    //获取基本信息对象
+    function getObjInfo() {
+        var obj = new Object();
+
+        //alert(obj.CheckNo);
+        if ('Add' == "Add") {
+            obj.CheckNo = 'PD2016010002';
+        }
+        else
+            obj.CheckNo = $("#lblCheckNo").text();
+
+        obj.CheckName = $("#txtCheckName").val();
+        obj.CheckTypeCode = $("input:radio[name=CheckType]").filter("[checked]").val();
+        obj.CheckStatusCode = "NoInventory";
+        obj.CheckStatusName = "未盘点";
+
+        obj.StartCheckTime = $("#txtCheckTimeS").val();
+        obj.EndCheckTime = $("#txtCheckTimeE").val();
+
+        obj.StartInstalledTime = $("#txtInstallTimeS").val();
+        obj.EndInstalledTime = $("#txtInstallTimeE").val();
+        obj.SignName = $("#txtSignName").val();
+        obj.Remark = $("#txtRemark").val();
+
+
+        obj.CreateName = '系统管理员'
+        obj.CreateTime = '2016/1/11 14:54:09';
+
+        obj.UpdateName = "系统管理员";
+        obj.UpdateTime = "2016/1/11 14:54:09";
+
+        return obj;
+    }
+    function validateForm() {
+
+        var valid = $(tdCheckTime).validationEngine({ returnIsValid: true });
+
+        if (valid == true) {
+
+            if ($("input:radio[name=CheckType]").filter("[checked]").val() == "InstalledTime") {
+                valid = $(trInstall).validationEngine({ returnIsValid: true });
+            }
+            if ($("input:radio[name=CheckType]").filter("[checked]").val() == "Department") {
+                valid = $(tdDept).validationEngine({ returnIsValid: true });
+            }
+        }
+        return valid;
+    }
+
+    function Save() {
+
+        if (validateForm()) {
+            objInfo = JSON.stringify(getObjInfo());
+            var dept = $("#lister1").attr("relValue");
+            if ($("input:radio[name=CheckType]").filter("[checked]").val() == "Department") {
+                if (dept == "") {
+                    alert("科室未选择");
+                    return;
+                }
+            }
+            
+            var postData = { objInfo: objInfo, dept: dept };
+            var Url = "../Handler/AssetCheckNote.ashx?Type=Add&t=" + Date.parse(new Date());
+
+            $.ajax({
+                url: Url,
+                data: postData,
+                dataType: 'text',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (result) {
+                    if (result == "ok") {
+                        // top.frmright.page_1024.refresh();
+                        top.frmright.page_301.refresh();
+                        top.Dialog.close();
+                    }
+
+                    else {
+                        alert("未包含任何盘点设备");
+                    }
+                },
+                error: function (result) {
+                    //  alert(Url);
+                    alert("数据传输错误");
+                }
+            })
+
+        }
+    }
+</script>

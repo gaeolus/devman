@@ -1,0 +1,223 @@
+@****************************************
+*(currentPage: com.avaje.ebean.Page[Checklist], currentSortBy: String, currentOrder: String, currentFilter: String)
+****************************************@
+@(currentPage: com.avaje.ebean.PagedList[Checklist], currentSortBy: String, currentOrder: String, currentFilter: String, zxrq: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String,Filter:String,zxrq:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Checklists.checklist(newPage, sortBy, order, Filter, zxrq)
+    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key,null,null)">@title</a>
+    </th>
+}
+
+<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/db.css")">
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+
+@head = {
+
+}
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+    <ul class="nav navbar-nav">
+
+
+        <li class="dropdown">
+            <a href="http://101.200.82.40" class="dropdown-toggle" data-toggle="dropdown">设备台账管理<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="/checklists">检查单查询</a></li>
+                <li><a href="#">设备收费查询</a></li>
+                <li><a href="#">工作量分析</a></li>
+                <li><a href="#">成本核算</a></li>
+                <li><a href="#">效能分析</a></li>
+
+            </ul>
+        </li>
+
+
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+    </ul>
+
+
+
+</div>
+}
+
+
+@content = {
+    
+    <h1 id="homeTitle">@Messages("checks.list.title", currentPage.getTotalRowCount)</h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+    <div id="actions">
+        
+        <form action="@link(0, "sbmc",null,null)" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by device name...">
+            <input type="submit" id="searchsubmit" value="过滤" class="btn primary">
+        </form>
+        
+
+
+            <a href="@link(0, currentSortBy,currentFilter,"2015-11-05")" class="btn">今天</a>
+           <a href="@link(0, currentSortBy,currentFilter,"2015-11-02")" class="btn">本周</a>
+           <a href="@link(0, currentSortBy,currentFilter,"2015-09-01")" class="btn">本月</a>
+           
+              <a href="http://www.flotcharts.org/flot/examples/categories/index.html" class="btn">环比</a> 
+              <a href="http://www.highcharts.com/demo/" class="btn">同比</a> 
+        
+    </div>
+    
+  
+    
+           
+
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="computers zebra-striped">
+            <thead>
+                <tr>
+                    @header("sbmc", "设备")
+                    @header("brxz", "患者性质")
+                    @header("sybz", "患者来源")
+                    
+                    @header("brxm", "患者姓名")
+                                     
+                    @header("kdrq", "开单日期")
+                    @header("kdys", "开单医生")
+                    @header("ksmc", "开单科室")
+                    
+                    @header("jcrq", "预约日期")
+                    @header("jcks", "检查科室")
+                    @header("zxrq", "执行日期")
+                 
+                    @header("doctor.name", "医师")
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(checks <- currentPage.getList) {
+                    <tr>
+                        <td><a href="@routes.CheckFees.use(checks.dev)">@checks.sbmc</a></td>
+                        <td>@checks.brxz</td>
+                        <td>@checks.sybz</td>
+                        <td>@checks.brxm</td>
+                        
+                        <td>
+                            @if(checks.kdrq == null) {
+                                <em>-</em>
+                            } else {
+                                @checks.kdrq.format("MM-dd")
+                            }
+                        </td>
+                        <td>@checks.kdys</td>
+                         <td>@checks.ksmc</td>
+                        <td>
+                            @if(checks.jcrq == null) {
+                                <em>-</em>
+                            } else {
+                                @checks.jcrq.format("MM-dd ")
+                            }
+                        </td>
+                         <td>@checks.jcks</td>
+                         <td>
+                             @if(checks.zxrq == null) {
+                             <em>-</em>
+                             } else {
+                             @checks.zxrq.format("MM-dd ")
+                             }
+                             </td>
+                         
+                        <td>
+                            @if(checks.doctor == null) {
+                                <em>-</em>
+                            } else {
+                                @checks.doctor.name
+                            }
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null,currentFilter,zxrq)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null,currentFilter,zxrq)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }
+        
+}
+
+@main(null)(navbar)(content)
+
+            

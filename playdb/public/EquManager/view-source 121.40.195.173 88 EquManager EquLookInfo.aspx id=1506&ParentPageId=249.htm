@@ -1,0 +1,886 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设备管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <!--基本选项卡start-->
+    <script type="text/javascript" src="../libs/js/nav/basicTab.js"></script>
+    <!--基本选项卡end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!-- 表单start -->
+    <script src="../libs/js/popup/dialog.js" type="text/javascript"></script>
+    <script src="../libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <script type="text/javascript">
+        $(function () {
+
+            if ('' == "Inventory") {
+                $("#1").attr("style", "display:none");
+                $("#2").attr("style", "display:none");
+                $("#3").attr("style", "display:none");
+                $("#4").attr("style", "display:none");
+                $("#5").attr("style", "display:none");
+                $("#10").attr("style", "display:none");
+                $("#20").attr("style", "display:none");
+                $("#30").attr("style", "display:none");
+                $("#40").attr("style", "display:none");
+                $("#50").attr("style", "display:none");
+            }
+
+            if ('' == "30001") {
+
+                $("#3").attr("style", "display:none");
+                $("#4").attr("style", "display:none");
+                $("#5").attr("style", "display:none");
+                $("#30").attr("style", "display:none");
+                $("#40").attr("style", "display:none");
+                $("#50").attr("style", "display:none");
+            }
+
+            switch ('3094') {
+                case '3000':
+                    break;
+                case '3001':
+                    $("#2").attr("style", "display:none");
+                    $("#3").attr("style", "display:none");
+                    $("#20").attr("style", "display:none");
+                    $("#30").attr("style", "display:none");
+                    break;
+                case '3002':
+                    $("#5").attr("style", "display:none");
+                    $("#50").attr("style", "display:none");
+                    $("#1").attr("style", "display:none");
+                    $("#10").attr("style", "display:none");
+                    $("#3").attr("style", "display:none");
+                    $("#30").attr("style", "display:none");
+                    $("#4").attr("style", "display:none");
+                    $("#40").attr("style", "display:none");
+                    break;
+                case '3003':
+                    $("#3").attr("style", "display:none");
+                    $("#30").attr("style", "display:none");
+                    $("#2").attr("style", "display:none");
+                    $("#20").attr("style", "display:none");
+                    $("#4").attr("style", "display:none");
+                    $("#40").attr("style", "display:none");
+                    break;
+                case '3004':
+                    $("#1").attr("style", "display:none");
+                    $("#5").attr("style", "display:none");
+                    $("#10").attr("style", "display:none");
+                    $("#20").attr("style", "display:none");
+                    $("#50").attr("style", "display:none");
+                    break;
+                default:
+                    break;
+            }
+
+
+            // 遍历附件
+            for (var i = 0; i < ''.split('|').length - 1; i++) {
+                addHandler(''.split('|')[i]);
+            }
+
+        });
+
+        //添加行
+        function addHandler(FileName) {
+            var val1 = FileName;
+
+            var $tr = addNewRowHandler(val1);
+            $("#list").append($tr);
+            //重新渲染表格
+            $("#list").render();
+        }
+
+        //添加行处理
+        function addNewRowHandler(val1) {
+            var $tr = $("<tr><td name=FileName class=FileName>" + val1 + "</td><td><span class='img_btn_down hand' title='下载'></span></span></td></tr>");
+            var $loadBtn = $tr.find(".img_btn_down");
+            $loadBtn.click(function () {
+                modiHandler($(this));
+            })
+            enableTooltips();
+            return $tr;
+        }
+
+        //下载
+        function modiHandler($obj) {
+            var fileName = $obj.parents("tr").find("td").eq(0).html();
+            //            //window.open("SourcingUpload/" + fileName);
+            //            var a;
+            //            a = window.open("SourcingUpload/" + fileName, "_blank", "height=0,width=0,toolbar=no,menubar=no,scrollbars=no,resizable=on,location=no,status=no");
+            //            a.document.execCommand("SaveAs");
+            //            a.close();
+            var form = $("<form>");   //定义一个form表单
+            form.attr('style', 'display:none');   //在form表单中添加查询参数
+            form.attr('target', '');
+            form.attr('method', 'post');
+            form.attr('action', "../Handler/HospitalEquipment.ashx?Type=DownFile&date=" + new Date().getMilliseconds() + "&FileName=" + fileName);
+            var input1 = $('<input>');
+            input1.attr('type', 'hidden');
+            input1.attr('name', 'exportPostTime');
+            input1.attr('value', (new Date()).getMilliseconds());
+            $('body').append(form);  //将表单放置在web中 
+            form.append(input1);   //将查询参数控件提交到表单上
+            form.submit();   //表单提交 
+        }
+
+        // 重新加载查看页面
+        function ReLoad(Number) {
+            window.location.reload();
+            if (Number == "212") {
+                top.frmright.page_212.refresh();
+            }
+            else if (Number == "249") {
+                top.frmright.page_249.refresh();
+            }
+            else if (Number == "245") {
+                top.frmright.page_245.refresh();
+            }
+            else if (Number == "252") {
+                top.frmright.page_252.refresh();
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <form method="post" action="EquLookInfo.aspx?id=1506&amp;ParentPageId=249" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTIwMDA2Nzk2MzEPZBYCZg9kFmBmDw8WAh4EVGV4dGVkZAIBDw8WAh8ABQYyMTMzMjFkZAICDw8WAh8ABRjln7rnoYDlpJbnp5HmiYvmnK/lmajmorBkZAIDDw8WAh8ABQZiYmJiYmJkZAIEDw8WAh8ABQYyMTMxMjNkZAIFDw8WAh8ABQkxMjMyMzEzMjFkZAIGDw8WAh8ABQbph5Hlrp1kZAIHDw8WAh8ABQYyMzEyMzFkZAIIDw8WAh8ABRAyMDE2LTAxLTA3IDAwOjAwZGQCCQ8PFgIfAAUGMjMxMjEzZGQCCg8PFgIfAAUD5pivZGQCCw8PFgIfAAUb57K+5a+G5py65qKw57G75Yy755aX6K6+5aSHZGQCDA8PFgIfAGRkZAIODw8WAh8ABQoyMDE1LTEyLTI5ZGQCDw8PFgIfAGVkZAITDw8WAh8ABRXmiYvmnK/lrqTnp5HlrqTkuLvku7tkZAIUDw8WAh8ABQsxMjM0NTY3ODkwMWRkAhUPDxYCHwAFBueOi+mYs2RkAhYPDxYCHwAFCeaJi+acr+WupGRkAhcPDxYCHwAFBjIzMTIzMWRkAhgPDxYCHwBkZGQCGQ8PFgIfAGRkZAIaDw8WAh8AZWRkAhsPDxYCHwAFD+iLj+aziuWwlOeUteWZqGRkAhwPDxYCHwAFCDMzMzMzMzMzZGQCHQ8PFgIfAGVkZAIeDw8WAh8ABQblsI/liJhkZAIfDw8WAh8ABQgzMzMzMzMzM2RkAiAPDxYCHwAFA+WQpmRkAiEPDxYCHwAFA+WQpmRkAiIPDxYCHwAFA+WQpmRkAiMPDxYCHwAFEDIwMTYtMDEtMDcgMDA6MDBkZAIkDw8WAh8ABRAyMDE2LTAxLTA5IDAwOjAwZGQCJg8PFgIfAGVkZAInDw8WAh8AZGRkAigPDxYCHwBlZGQCKQ8PFgIfAGVkZAIqDw8WAh8AZWRkAisPPCsAEQIADxYEHgtfIURhdGFCb3VuZGceC18hSXRlbUNvdW50AgFkARAWABYAFgAWAmYPZBYGAgEPZBYMZg9kFgQCAQ8PFgIfAAUDMjMxZGQCBA8VAQMyNDhkAgEPZBYCAgEPDxYCHwAFAzMyMWRkAgIPZBYCAgEPDxYCHwAFAzIzMWRkAgMPZBYCAgEPDxYCHwAFAzEyM2RkAgQPZBYCAgEPDxYCHwBlZGQCBQ9kFgICAQ8PFgIfAGVkZAICDw8WAh4HVmlzaWJsZWhkZAIDDw8WAh8DaGRkAiwPPCsAEQIADxYEHwFnHwICAWQBEBYAFgAWABYCZg9kFgYCAQ9kFghmD2QWAgIBDw8WAh8AZWRkAgEPZBYCAgEPDxYCHwBlZGQCAg9kFgICAQ8PFgIfAGVkZAIDD2QWAgIBDw8WAh8AZWRkAgIPDxYCHwNoZGQCAw8PFgIfA2hkZAItDw8WAh8ABQEwZGQCLg8PFgIfAAUBMGRkAi8PDxYCHwAFATBkZAIwDw8WAh8ABQEwZGQCMQ8PFgIfAGVkZAIyDw8WAh8AZWRkAjMPDxYCHwAFBjAuMDAwMGRkAjQPDxYCHwAFBjAuMDAwMGRkGAIFCGd2SGFvQ2FpDzwrAAwBCAIBZAUMZ3ZDb21wZXRpdG9yDzwrAAwBCAIBZBJGNwWPiJ9I/u56UflXAn9Wu9rI766nsSXKYpYb7OaQ" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWAgL1uaHmCQLKxLbOA29DGm3ZSLscTuZ2p1oY3myuMG/BoTZ0fJkDkmJGipiA" />
+</div>
+    <div class="box_tool_min padding_top2 padding_bottom2 padding_right5" style="top: -2px;
+        z-index: 90; position: fixed; right: 0px;">
+        <div class="right">
+            <div class="left">
+                <div class="right">
+                    <div class=" padding_left10">
+                        
+                        <a href="javascript:;" onclick="onEdit();" id="1"><span class="icon_edit">编辑</span></a>
+                        <div class="box_tool_line" id="10">
+                        </div>
+                        <a href="javascript:;" onclick="Transfer();" id="2"><span class="icon_find2">设备转移</span></a>
+                        <div class="box_tool_line" id="20">
+                        </div>
+                        <a href="javascript:;" onclick="Retire();" id="3"><span class="icon_item">设备报废</span></a>
+                        <div class="box_tool_line" id="30">
+                        </div>
+                        <a href="javascript:;" onclick="Repair();" id="4"><span class="icon_mark">设备报修</span></a>
+                        <div class="box_tool_line" id="40">
+                        </div>
+                        <a href="javascript:;" onclick="MaintenancePlans();" id="5"><span class="icon_mark">
+                            保养计划</span></a>
+                        <div class="clear" id="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="height_25">
+    </div>
+    <div class="box1" panelwidth="100%">
+        <div name="设备基本信息" style="width: 100%;">
+            <table class="tableStyle" formmode="view" footer="normal">
+                <tr>
+                    <td width="15%">
+                        资产编码：
+                    </td>
+                    <td width="35%">
+                        <span id="txtZiChanBianMa"></span>
+                    </td>
+                    <td width="15%">
+                        设备属性：
+                    </td>
+                    <td>
+                        <span id="txtFDO">213321</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        设备分类：
+                    </td>
+                    <td>
+                        <span id="CategoryID">基础外科手术器械</span>
+                    </td>
+                    <td width="15%">
+                        设备名称：
+                    </td>
+                    <td width="35%">
+                        <span id="EquName">bbbbbb</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        设备型号：
+                    </td>
+                    <td>
+                        <span id="txtSheiBeiXH">213123</span>
+                    </td>
+                    <td>
+                        设备序列号：
+                    </td>
+                    <td>
+                        <span id="txtSN_Number">123231321</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        设备厂家：
+                    </td>
+                    <td>
+                        <span id="Factory">金宝</span>
+                    </td>
+                    <td>
+                        厂家系统编号：
+                    </td>
+                    <td>
+                        <span id="txtOS_Number">231231</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%">
+                        出厂日期：
+                    </td>
+                    <td>
+                        <span id="txtOutFactoryDate">2016-01-07 00:00</span>
+                    </td>
+                    <td>
+                        设备产地：
+                    </td>
+                    <td>
+                        <span id="txtEquChandi">231213</span>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>医院资产：</td>
+                    <td> <span id="lblIsHospitalAsset">是</span></td>
+                    <td>机械类别：</td>
+                    <td> <span id="lblInstrumentType">精密机械类医疗设备</span></td>
+                </tr>
+                <tr>
+                <td>设备状态：</td>
+                <td>
+                     <span id="lblEquStatus"></span>
+                </td>
+                    <td>
+                        上传设备照片：
+                    </td>
+                    <td colspan="4">
+                       <div id="plPic">
+	
+                                
+</div>
+                    </td>
+                </tr>
+               
+
+            </table>
+        </div>
+        <div class="basicTab" id="tabs1" tabscroll="true">
+            <div name="设备购置信息" style="width: 95%;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td width="15%">
+                            装机时间：
+                        </td>
+                        <td width="35%">
+                            <span id="txtInstallDate">2015-12-29</span>
+                        </td>
+                        <td width="15%">
+                            设备购买金额：
+                        </td>
+                        <td>
+                            <span id="txtDeviceBuyMoney"></span>
+                        </td>
+                    </tr>
+                    
+                    <tr id="trContractIBWarranty" style="display: none">
+	<td>
+                            合同保修开始时间：
+                        </td>
+	<td>
+                            <span id="txtCStartDate"></span>
+                        </td>
+	<td>
+                            合同保修结束时间：
+                        </td>
+	<td>
+                            <span id="txtCEndDate"></span>
+                        </td>
+</tr>
+
+                    <tr style="display: none">
+                        <td>
+                            拆机时间：
+                        </td>
+                        <td>
+                            <span id="txtUninstallDate"></span>
+                        </td>
+                        <td>
+                            状态：
+                        </td>
+                        <td>
+                            <span id="cxbStatus"></span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            科室保管负责人：
+                        </td>
+                        <td>
+                            <span id="txtKeshiFuZeRen">手术室科室主任</span>
+                        </td>
+                        <td>
+                            保管负责人电话：
+                        </td>
+                        <td>
+                            <span id="txtKeshiFuZeRenPhone">12345678901</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备分管工程师：
+                        </td>
+                        <td>
+                            <span id="txtDeviceFenGuanRen">王阳</span>
+                        </td>
+                        <td>
+                            目前使用科室：
+                        </td>
+                        <td>
+                            <span id="Department">手术室</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            目前摆放地点：
+                        </td>
+                        <td>
+                            <span id="txtMOdelNo">231231</span>
+                        </td>
+                        <td>
+                            设备销售商：
+                        </td>
+                        <td>
+                            <span id="Saler"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                     <td>
+                            医院名称：
+                        </td>
+                        <td>
+                            <span id="txtHospital"></span>
+                        </td>
+                        <td>
+                            备注：
+                        </td>
+                        <td  style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="txtRemark"></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div name="维保信息" style="width: 96%;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td>
+                            设备供应商：
+                        </td>
+                        <td colspan="4">
+                            <span id="Supplier">苏泊尔电器</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            供应商维修电话：
+                        </td>
+                        <td width="35%">
+                            <span id="txtChangjiaRepairPhone">33333333</span>
+                        </td>
+                        <td width="15%">
+                            其他联系方式：
+                        </td>
+                        <td>
+                            <span id="txtChangjiaOtherContact"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            联系人姓名：
+                        </td>
+                        <td>
+                            <span id="txtWeiBaoContact">小刘</span>
+                        </td>
+                        <td>
+                            联系人电话：
+                        </td>
+                        <td>
+                            <span id="txtWeiBaoContactPhone">33333333</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            是否在保：
+                        </td>
+                        <td>
+                            <span id="IsSafe">否</span>
+                        </td>
+                        <td>
+                            是否原厂在保：
+                        </td>
+                        <td>
+                            <span id="IsOldSafe">否</span>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>是否合同在保：</td>
+                        <td>
+                            <span id="lblIsContract">否</span>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            保修开始时间：
+                        </td>
+                        <td>
+                            <span id="txtWarranty_start_date">2016-01-07 00:00</span>
+                        </td>
+                        <td>
+                            保修结束时间：
+                        </td>
+                        <td>
+                            <span id="txtWarranty_date">2016-01-09 00:00</span>
+                        </td>
+                    </tr>
+
+                    <tr style="display: none">
+                        <td>
+                            地址：
+                        </td>
+                        <td colspan="3">
+                            <span id="Address"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            当地供应商授权维保联系单位名称：
+                        </td>
+                        <td  style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="txtWeiBaoDanWei"></span>
+                        </td>
+                          <td>
+                            资产所属：
+                        </td>
+                        <td >
+                            <span id="txtEquiqmentSource"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备购买时供应商及授权方维修承诺：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="txtWeiBaoChengNuo"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            维修记录及承诺：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="txtWeiBaoJiLu"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            备注：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <span id="txtRepairRemark"></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div name="设备配件信息" style="width: 99%;">
+                <div id="Div2" style="width: 100%; height: 540px; overflow: auto;">
+                    <div>
+	<table class="tableStyle" cellspacing="0" id="gvCompetitor" style="width:100%;border-collapse:collapse;">
+		<tr>
+			<th align="center" scope="col">配件名称</th><th align="center" scope="col">配件货号</th><th align="center" scope="col">配件序列号</th><th align="center" scope="col">配件数量</th><th align="center" scope="col">单价</th><th align="center" scope="col">备注</th>
+		</tr><tr>
+			<td align="center">
+                                    <span id="gvCompetitor_txtVender_0">231</span>
+                                    <input name="gvCompetitor$ctl02$hfisDelete" type="hidden" id="gvCompetitor_hfisDelete_0" class="isDelete" value="0" />
+                                    <input id="hfID" class="hfID" value='248' type="hidden" />
+                                </td><td align="center">
+                                    <span id="gvCompetitor_txtPartNo_0">321</span>
+                                </td><td align="center">
+                                    <span id="gvCompetitor_txtDealer_0">231</span>
+                                </td><td align="center">
+                                    <span id="gvCompetitor_txtQty_0">123</span>
+                                </td><td align="center">
+                                    <span id="gvCompetitor_txtPrice_0"></span>
+                                </td><td align="center">
+                                    <span id="gvCompetitor_txtCompetProductVersion_0"></span>
+                                </td>
+		</tr>
+	</table>
+</div>
+                </div>
+            </div>
+            <div name="设备耗材信息" style="width: 99%;">
+                <div id="Div1" style="width: 100%; height: 540px; overflow: auto;">
+                    <div>
+	<table class="tableStyle" cellspacing="0" id="gvHaoCai" style="width:100%;border-collapse:collapse;">
+		<tr>
+			<th align="center" scope="col">耗材名称</th><th align="center" scope="col">耗材型号</th><th align="center" scope="col">耗材数量</th><th align="center" scope="col">备注</th>
+		</tr><tr>
+			<td align="center">
+                                    <span id="gvHaoCai_txtVender_0"></span>
+                                </td><td align="center">
+                                    <span id="gvHaoCai_txtCompetProduct_0"></span>
+                                </td><td align="center">
+                                    <span id="gvHaoCai_txtDealer_0"></span>
+                                </td><td align="center">
+                                    <span id="gvHaoCai_txtCompetProductVersion_0"></span>
+                                </td>
+		</tr>
+	</table>
+</div>
+                </div>
+            </div>
+            <div name="设备使用信息" style="width: 95%;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td>
+                            使用频率：
+                        </td>
+                        <td>
+                            <span id="txtPinlv">0</span>次/天
+                        </td>
+                        <td>
+                            设备收入：
+                        </td>
+                        <td>
+                            <span id="txtAvgRevenue">0</span>元/次
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            报废年限：
+                        </td>
+                        <td>
+                            <span id="txtEquipmentDisuse">0</span>年
+                        </td>
+                        <td>
+                            年折旧率：
+                        </td>
+                        <td>
+                            <span id="txtDepreciationRate">0</span>%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            开始日期：
+                        </td>
+                        <td>
+                            <span id="txtUseBeginDate"></span>
+                        </td>
+                        <td>
+                            结束日期：
+                        </td>
+                        <td>
+                            <span id="txtUseEndDate"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            人员费用：
+                        </td>
+                        <td>
+                            <span id="txtHumanCost">0.0000</span>
+                            元/天
+                        </td>
+                        <td>
+                            水电其他费用 ：
+                        </td>
+                        <td>
+                            <span id="txtOtherCost">0.0000</span>元/天
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div name="附件上传" style="width: 95%; height: 550px;">
+                <table class='tableStyle' useclick="false" mode="list" id="list">
+                    <tr>
+                        <th style="width: 70%">
+                            文件名
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                </table>
+            </div>
+            <div name="设备保养记录" style="width: 95%;" id="dataBasicM">
+            </div>
+            <div name="设备维修记录" style="width: 95%;" id="dataBasicR">
+            </div>
+            <div name="设备计量记录" style="width: 95%;" id="dataBasicC">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var EquRepair = '0';
+        var EquRetire = '0';
+        var EquMove = '0';
+        var EquMain = '0';
+        function Repair() {
+            if (EquRepair == 0 && EquRetire == 0 && EquMove == 0 ) {
+                top.Dialog.open({
+                    URL: "Repair/ApplyInfo.aspx?Type=Add&Flag=1&IfFast=1&id=" + '1506',
+                    Title: "设备报修", ShowMaxButton: true, Width: 850, Height: 530
+                });
+
+            }
+            else if (EquRepair == 1) {
+                top.Dialog.alert("该设备已报修！");
+            } else if (EquRetire==1) {
+                top.Dialog.alert("该设备已报废！");
+            } else if (EquMove==1) {
+                top.Dialog.alert("该设备已申请转科！");
+            } 
+//            else if (EquMain==1) {
+//                top.Dialog.alert("该设备已添加保养计划！");
+//            }
+            else {
+                top.Dialog.alert("只能申请所属科室/负责的设备！");
+            }
+
+        }
+        function Retire() {
+            if (EquRepair == 0 && EquRetire == 0 && EquMove == 0 && EquMain == 0) {
+                top.Dialog.open({
+                    URL: "EquRetire/EquRetireInfo.aspx?type=Fast&Flag=1&IfFast=1&id=" + '1506' + "&ParentPageId=" + '249',
+                    Title: "添加设备报废信息",
+                    ShowMaxButton: true,
+                    Width: 800,
+                    Height: 450
+                })
+
+            } else if (EquRepair == 1) {
+                top.Dialog.alert("该设备已报修！");
+            } else if (EquRetire == 1) {
+                top.Dialog.alert("该设备已报废！");
+            } else if (EquMove == 1) {
+                top.Dialog.alert("该设备已申请转科！");
+            } 
+            else if (EquMain == 1) {
+                top.Dialog.alert("该设备已添加保养计划！");
+            } 
+            else {
+                top.Dialog.alert("只能申请所属科室/负责的设备！");
+            }
+
+        }
+        function Transfer() {
+            if (EquRepair == 0 && EquRetire == 0 && EquMove == 0 && EquMain == 0) {
+                top.Dialog.open({
+                    URL: "EquManager/TransferInfo.aspx?Type=Add&Flag=1&IfFast=1&id=" + '1506' + "&ParentPageId=" + '249',
+                    Title: "添加", ShowMaxButton: true, Width: 850, Height: 530
+                });
+
+            } else if (EquRepair == 1) {
+                top.Dialog.alert("该设备已报修！");
+            } else if (EquRetire == 1) {
+                top.Dialog.alert("该设备已报废！");
+            } else if (EquMove == 1) {
+                top.Dialog.alert("该设备已申请转科！");
+            } else if (EquMain == 1) {
+                top.Dialog.alert("该设备已添加保养计划！");
+            } 
+            else {
+                top.Dialog.alert("只能申请所属科室/负责的设备！");
+            }
+
+        }
+
+        //修改	
+        function onEdit() {
+            top.Dialog.open({
+                URL: "EquManager/EquInfo.aspx?Type=Edit&IfFast=1&id=" + '1506' + "&ParentPageId=" + '249', ID: "a2",
+                Title: "修改设备信息", ShowMaxButton: true, Width: 970, Height: 650
+            });
+
+        }
+
+        // 保养计划
+        function MaintenancePlans() {
+            if ( EquRetire == 0 && EquMove == 0 && EquMain==0) {
+                top.Dialog.open({
+                    URL: "Maintenance/MaintenancePlansInfo.aspx?type=Add&Flag=1&EquName=bbbbbb&EquType=213123&DeptName=手术室&FactoryName=金宝&HospitalName=&Equput=231231&IBNumber=6801160108514&IfFast=1",
+                    Title: "添加计划",
+                    Width: 900,
+                    Height: 650
+                }).max();
+            }
+//            else if (EquRepair == 1) {
+//                top.Dialog.alert("该设备已报修！");
+//            } 
+            else if (EquRetire == 1) {
+                top.Dialog.alert("该设备已报废！");
+            } else if (EquMove == 1) {
+                top.Dialog.alert("该设备已申请转科！");
+            } else if (EquMain == 1) {
+                top.Dialog.alert("该设备已添加保养计划！");
+            } else{
+                top.Dialog.alert("只能申请所属科室/负责的设备！");
+            }
+        }
+
+        //数据表格初始化
+        var grid;
+        //初始化Grid处理
+        function initGridM() {
+
+            grid = $("#dataBasicM").quiGrid({
+                columns: [
+				    { display: '执行状态', name: 'IsCompleted', align: 'center', width: "10%", showTitle: true },
+				{ display: '计划编号', name: 'PMCode', align: 'left', width: "10%" },
+                { display: '计划名称', name: 'PMTitle', align: 'left', width: "10%", showTitle: true },
+			    { display: '系统编号', name: 'IBNumber', align: 'left', width: "10%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'center', width: "10%" },
+                { display: '计划保养科室', name: 'DeptName', align: 'left', width: "10%", showTitle: true },
+                { display: '外包公司', name: 'Outsource', align: 'left', width: "10%", showTitle: true },
+                { display: '状态', name: 'HasUnusual', align: 'left', width: "10%", showTitle: true },
+                { display: '预计执行时间', name: 'PlanTime', align: 'left', width: "10%", showTitle: true }
+
+			    ],
+                url: '../Handler/MaintenancePlans.ashx?type=GetListExe&IBNumber=6801160108514&date=' + new Date().getTime(),
+                sortName: 'ProjectedDate',
+                rownumbers: true,
+                height: 300, width: "100%", pageSize: 20,
+                percentWidthMode: true,
+                sortOrder: "desc"
+            });
+        }
+
+        function initGridRepair() {
+
+            grid = $("#dataBasicR").quiGrid({
+                columns: [
+				    { display: '维修单号', name: 'RepairCode', align: 'left', width: "15%" },
+			    { display: '系统编号', name: 'EquCode', align: 'left', width: "15%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "15%" },
+			    { display: '目前所属科室', name: 'DeptName', align: 'left', width: "15%" },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: "10%" },
+                { display: '维修期限', name: 'MaintenDate', align: 'left', width: "10%" },
+                { display: '报修人', name: 'RepairPerson', align: 'left', width: "10%" },
+                { display: '维修状态', name: 'RepairStatus', align: 'left', width: "10%" }
+
+			    ],
+                url: '../Handler/Repairs.ashx?EquNo=6801160108514&date=' + new Date().getTime(),
+                sortName: 'Id',
+                rownumbers: true,
+                height: 300, width: "100%", pageSize: 20,
+                percentWidthMode: false,
+                sortOrder: "desc"
+            });
+        }
+
+        function initGridCheck() {
+            grid = $("#dataBasicC").quiGrid({
+                columns: [
+				{ display: '当前状态', name: 'State', align: 'left', width: "5%" },
+                { display: '证书编号', name: 'BookSn', align: 'left', width: "5%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', width: "10%" },
+			    { display: '设备厂家', name: 'FactoryName', align: 'left', width: "10%" },
+                { display: '系统编号', name: 'IBNumber', align: 'left', width: "15%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '费用', name: 'Money', align: 'left', width: "5%" },
+                { display: '检测日期', name: 'CheckTime', align: 'left', width: "5%" },
+                { display: '下次检测日期', name: 'NextTime', align: 'left', width: "5%" },
+                { display: '检定结论', name: 'Result', align: 'left', width: "5%" },
+                { display: '主管人', name: 'Manager', align: 'left', width: "5%" },
+                { display: '审核人', name: 'Checker', align: 'left', width: "5%" },
+                { display: '检定人', name: 'Tester', align: 'left', width: "5%" }
+
+			    ],
+                url: '../Handler/CheckInfo.ashx?type=Search&IBNumber=6801160108514&date=' + new Date().getTime(),
+                sortName: 'Id',
+                rownumbers: true,
+                height: 300, width: "100%", pageSize: 20,
+                percentWidthMode: false,
+                sortOrder: "desc"
+            });
+        }
+
+        $(function () {
+            $("#tabs1").bind("actived", function (e, i) {
+                if (i == 6) {
+
+                    initGridM();
+                }
+                if (i == 7) {
+                    initGridRepair();
+                }
+                if (i == 8) {
+                    initGridCheck();
+                }
+            });
+
+            // 监听图片点击事件
+            $("#plPic img").click(function () {
+                $tr =$(this);
+                var FileName = $tr.attr("class");
+                top.Dialog.open({ URL: "EquManager/PicView.aspx?UploadName=" + FileName, ShowMaxButton: true, Title: "预览设备图片" }).max();
+            });
+        });
+
+
+       
+    </script>
+    </form>
+</body>
+</html>

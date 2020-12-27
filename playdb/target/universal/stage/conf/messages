@@ -1,0 +1,24 @@
+# Messages
+
+devices.list.title={0,choice,0#No computers|1#One computer|1<{0,number,integer} 设备} found
+
+checks.list.title={0,choice,0#No computers|1#One computer|1<{0,number,integer} 检查单} found
+
+
+#Header
+subheader.time_line=Time & Line
+subheader.bar_column=Bar & Column
+subheader.area_pie=Area & Pie
+subheader.bubble=Bubble
+
+
+#Chart Labels
+label.line=Line Chart
+label.time=Time Series
+label.bar=Bar Chart
+label.stacked=Stacked Bar Chart
+label.column=Column Chart
+label.bubble=Bubble Chart
+label.combination=Combination Chart
+label.area=Area Chart
+label.pie=Pie Chart

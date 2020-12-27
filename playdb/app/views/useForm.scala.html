@@ -1,0 +1,198 @@
+@(id: Long, deviceForm: Form[Device], checkListFromMyController: com.avaje.ebean.PagedList[CheckFee],tfee: Double,currentSortBy: String, currentOrder: String, currentFilter: String,zxrq: String)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String,Filter:String,zxrq:String) = @{
+
+var sortBy = currentSortBy
+var order = currentOrder
+
+if(newSortBy != null) {
+sortBy = newSortBy
+if(currentSortBy == newSortBy) {
+if(currentOrder == "asc") {
+order = "desc"
+} else {
+order = "asc"
+}
+} else {
+order = "asc"
+}
+}
+
+// Generate the link
+routes.CheckFees.use(id,newPage, sortBy, order, Filter,zxrq)
+
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="headerSortDown">
+        @title
+    </th>
+}
+      <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/db.css")">
+      
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+
+
+@head = {
+
+}
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+    <ul class="nav navbar-nav">
+
+
+        <li class="dropdown">
+            <a href="http://101.200.82.40" class="dropdown-toggle" data-toggle="dropdown">设备台账管理<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="/checklists">检查单查询</a></li>
+                <li><a href="#">设备收费查询</a></li>
+                <li><a href="#">工作量分析</a></li>
+                <li><a href="#">成本核算</a></li>
+                <li><a href="#">效能分析</a></li>
+
+            </ul>
+        </li>
+
+
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+    </ul>
+
+
+
+</div>
+}
+
+
+@content = {
+    
+    <h1>设备收费查询</h1>
+    
+    
+        <div class="actions">
+            <h1>工作量: 共 @checkListFromMyController.getTotalRowCount 人次</h1><h1>设备收费：@tfee 元</h1>
+            <a href="@link(0, currentSortBy,currentFilter,"2015-11-01")" class="btn">今天</a>
+            <a href="@link(0, currentSortBy,currentFilter,"2015-10-01")" class="btn">本周</a>
+            <a href="@link(0, currentSortBy,currentFilter,"2015-09-01")" class="btn">本月</a>
+
+            <a href="/monthdevfee/@id" class="btn">环比</a>
+            <a href="http://www.highcharts.com/demo/" class="btn">同比</a>
+            按科室、设备进行分析
+            设备月份、季度效益对比分析
+
+        </div>
+
+
+
+
+
+
+<table class="computers zebra-striped">
+            <thead>
+                <tr>
+                   @header("sbmc", "设备")
+                    @header("brxz", "患者性质")
+                    @header("sybz", "患者来源")
+                    
+                    @header("brxm", "患者姓名")
+                                     
+                    @header("ksmc", "开单科室")
+                    
+                    @header("jcrq", "预约日期")
+                    @header("jcks", "检查科室")
+                    @header("zxrq", "执行日期")
+                 
+                    @header("doctor.name", "医师")
+                    
+                    @header("fymc", "费用名称")
+                    @header("fymc", "费用")
+                    
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(checks <- checkListFromMyController.getList) {
+                    <tr>
+                        <td><a href="@routes.Devices.list()">@checks.cl.sbmc</a></td>
+                        <td>@checks.cl.brxz</td>
+                        <td>@checks.cl.sybz</td>
+                        <td>@checks.cl.brxm</td>
+                        
+
+                         <td>@checks.cl.ksmc</td>
+                        <td>
+                            @if(checks.cl.jcrq == null) {
+                                <em>-</em>
+                            } else {
+                                @checks.cl.jcrq.format("MM-dd ")
+                            }
+                        </td>
+                         <td>@checks.cl.jcks</td>
+                         <td> @if(checks.cl.zxrq == null) {
+                             <em>-</em>
+                             } else {
+                             @checks.cl.zxrq.format("MM-dd ")
+                             }
+                         </td>
+                         
+                        <td>
+                            @if(checks.cl.doctor == null) {
+                                <em>-</em>
+                            } else {
+                                @checks.cl.doctor.name
+                            }
+                        </td>
+                        <td>@checks.cl.fymc</td>
+                        <td> @checks.totalAmount</td>
+                         
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+<div id="pagination" class="pagination">
+    <ul>
+        @if(checkListFromMyController.hasPrev) {
+        <li class="prev">
+            <a href="@link(checkListFromMyController.getPageIndex - 1, null,currentFilter,zxrq)">&larr; Previous</a>
+        </li>
+        } else {
+        <li class="prev disabled">
+            <a>&larr; Previous</a>
+        </li>
+        }
+        <li class="current">
+            <a>Displaying @checkListFromMyController.getDisplayXtoYofZ(" to "," of ")</a>
+        </li>
+        @if(checkListFromMyController.hasNext) {
+        <li class="next">
+            <a href="@link(checkListFromMyController.getPageIndex + 1, null,currentFilter,zxrq)">Next &rarr;</a>
+        </li>
+        } else {
+        <li class="next disabled">
+            <a>Next &rarr;</a>
+        </li>
+        }
+    </ul>
+</div>
+
+    
+}
+
+@main(null)(navbar)(content)

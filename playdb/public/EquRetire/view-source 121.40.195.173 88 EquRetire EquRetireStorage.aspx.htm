@@ -1,0 +1,228 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设备信息管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" scrollery="false" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <script src="../libs/js/form/suggestion.js" type="text/javascript"></script>
+    <style type="text/css">
+        .l-layout-center
+        {
+            border: none !important;
+        }
+        .l-layout-left
+        {
+            border-bottom: none !important;
+        }
+        .l-layout-drophandle-left
+        {
+            width: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="layout1">
+        <div id="centerCon" position="center" style="">
+            <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+                <form method="post" action="EquRetireStorage.aspx" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTUxMTcwNzgxMGRktUGr/BAPhqkMEINGr2Vrd+t8zazF48W9sipmuW9UykA=" />
+</div>
+
+                <input type="hidden" id="parentId" name="parentId" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            设备序列号：
+                        </td>
+                        <td>
+                            <input type="text" id="SerialNumber" />
+                        </td>
+                        <td>
+                            设备名称：
+                        </td>
+                        <td>
+                            <input type="text" id="EquName" />
+                        </td>
+                        <td>
+                            设备厂家：
+                        </td>
+                        <td>
+                            
+                             <div class="suggestion" id="ddlFactory"  keepDefaultStyle="true" showList="true" ></div>
+                        </td>
+                        <td>
+                            设备分类：
+                        </td>
+                        <td>
+                            <div class="selectTree" selectedvalue="" id="CategoryID" url="../Handler/WordBook.ashx?Command=Tree&ParentID=10000">
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" onclick="searchHandler()">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+            <div class="padding_right5">
+                <div id="dataBasic">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        //定义grid
+        var grid = null;
+        //初始化函数
+        function initComplete() {
+
+            //绑定厂商
+            $.post("../Handler/Factory.ashx", { Type: "GetFacoryName" }, function (result) {
+                $("#ddlFactory").data("data", result);
+                $("#ddlFactory").render();
+            }, "json");
+
+            initGrid();
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+
+
+            //监听查询框的回车事件
+            $("#EquipmentName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    searchHandler();
+                }
+            })
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+				{ display: '系统编号', name: 'IBNumber', align: 'left', width: "13%" },
+			    { display: '资产编码', name: 'EquNo', align: 'left', width: "10%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', width: "10%" },
+                { display: '设备厂家', name: 'FactoryName', align: 'left', width: "10%" },
+                { display: '设备序列号', name: 'SerialNumber', align: 'left', width: "10%" },
+                { display: '装机时间', name: 'InstallDate', align: 'left', width: "10%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'left', width: "17%" },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        return '<div class="padding_top4 padding_left5">'
+	                            + '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.Id + ')"></span>'
+	                            + '<span class="img_edit hand" title="修改" onclick="onEdit(' + rowdata.Id + ')"></span>'
+	                            + '</div>';
+           		    }
+           		}
+			  ],
+                url: '../Handler/HospitalEquipment.ashx?Type=RetireList&date=' + new Date().getTime(),
+                sortName: 'Id',
+                rownumbers: true,
+                height: '100%', width: "100%",
+                pageSize: 20,
+                percentWidthMode: true
+
+            });
+        }
+
+        //查看
+        function onView(rowid) {
+            top.Dialog.open({
+                URL: "EquManager/EquLookInfo.aspx?Type=Look&id=" + rowid + "&DepartmentID=30001&ParentPageId=245", ID: "a1",
+                Title: "查看设备信息", ShowMaxButton: true, Width: 970, Height: 650
+            }).max();
+        }
+        //修改
+        function onEdit(rowid) {
+            top.Dialog.open({
+                URL: "EquManager/EquInfo.aspx?Type=Edit&IfFast=2&id=" + rowid,
+                Title: "修改设备信息", ShowMaxButton: true, Width: 970, Height: 650
+            });
+        }
+
+
+
+
+        //查询
+        function searchHandler() {
+            var parm = "&SerialNumber=" + $("#SerialNumber").val();
+            parm += "&EquName=" + escape($("#EquName").val());
+            parm += "&CategoryID=" + $("#CategoryID").attr("relValue");
+            parm += "&FactoryId=" + $('#ddlFactory').attr("relValue");
+            //alert(parm);
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/HospitalEquipment.ashx?Type=RetireList' + parm });
+           
+            //刷新表格数据 
+            grid.loadData();
+        }
+
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#ddlFactory").attr("relValue", "");
+            $("#CategoryID").setValue("");
+            searchHandler();
+        }
+
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+    </script>
+</body>
+</html>

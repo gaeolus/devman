@@ -1,0 +1,5 @@
+git rm -r --cached target/native_libraries
+git rm -r --cached target/resolution-cache 
+git rm -r --cached target/scala-2.11
+git rm -r --cached target/streams
+git rm -r --cached target/web

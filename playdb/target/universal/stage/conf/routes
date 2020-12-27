@@ -1,0 +1,108 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Default path will just redirect to the computer list
+GET     /                           controllers.Application.index()
+
+# Computers list (look at the default values for pagination parameters)
+GET     /devices                  controllers.Devices.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET     /device                    controllers.Devices.devlist()
+#GET     /devices/equ                    controllers.Devices.equlist()
+#POST     /devices/json              controllers.Devices.equlists()
+GET    /devices/test                controllers.Devices.test()
+
+#POST     /devices/HospitalEquipment              controllers.Devices.HospitalEquipment()
+POST     /equipments/list              controllers.Equipments.list(p:Int ?= 0, ps:Int ?=20)
+GET     /equipments/EquInfo        controllers.Equipments.create()
+GET     /equipments/:id/EquInfo        controllers.Equipments.edit(id:Long)
+PUT     /equipments/EquInfo        controllers.Equipments.save()
+GET     /equipments/:id/EquLookInfo              controllers.Equipments.EquLookInfo(id:Long)
+#POST    /equipments/SearchRepairPerson           controllers.Equipments.SearchRepairPerson(IBNumber ?= "")
+POST    /equipments/Search/:deptid           controllers.Equipments.Search(p:Int ?= 0, ps:Int ?=20,deptid:Long)
+
+POST     /repairs/list              controllers.Repairs.list(p:Int ?= 0, ps:Int ?=20)
+GET     /repairs/ApplyInfo              controllers.Repairs.create()
+GET     /repairs/:id/ApplyInfoEdit              controllers.Repairs.edit(id:Long)
+#PUT     /repairs/ApplyInfoEdit        controllers.Repairs.save()
+GET     /repairs/:id/LookInfo              controllers.Repairs.LookInfo(id:Long)
+POST     /repairs/save        controllers.Repairs.save()
+
+
+
+#GET     /devices/Departments              controllers.Devices.Departments()
+GET     /devices/WordBook             controllers.Devices.WordBook()
+POST     /devices/Factory             controllers.Devices.Factory()
+
+GET     /departments/tree              controllers.Departments.tree()
+GET     /departments/list              controllers.Departments.list()
+POST    /departments/:id/SearchRepairPerson           controllers.Departments.SearchRepairPerson(id:Long)
+
+POST     /users/list              controllers.Users.list()
+GET     /users/userdep              controllers.Users.userdep()
+GET     /users/engineer/:roleid              controllers.Users.engineer(roleid:Long)
+POST    /users/save                 controllers.Users.save()
+DELETE    /users/:id/delete            controllers.Users.delete(id:Long)
+POST    /users/usertree/:deptid            controllers.Users.usertree(deptid:Long)
+
+
+# Add computer
+GET     /devices/new              controllers.Devices.create()
+POST    /devices                  controllers.Devices.save()
+
+# Edit existing computer
+GET     /devices/:id              controllers.Devices.edit(id:Long)
+POST    /devices/:id              controllers.Devices.update(id:Long)
+
+GET     /devices/json/:id              controllers.Devices.details(id:Long)
+
+# Delete a computer
+POST    /devices/:id/delete       controllers.Devices.delete(id:Long)
+
+
+GET     /products                  controllers.Products.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET     /products/new              controllers.Products.create()
+POST    /products                  controllers.Products.save()
+
+GET     /products/:id              controllers.Products.edit(id:Long)
+DELETE    /products/:id            controllers.Products.delete(id:Long)
+
+GET     /purchases              controllers.Purchases.list(p:Int ?= 0, s ?= "id", o ?= "asc", f ?= "")
+GET     /purchases/new              controllers.Purchases.create(pid:Long)
+POST    /purchases                  controllers.Purchases.save(pid:Long)
+
+
+GET     /bar/:ean              controllers.Barcodes.bar(ean:String)
+GET     /barcode/:ean              controllers.Barcodes.barcode(ean:String)
+
+# CheckFee
+GET     /use/:id              controllers.CheckFees.use(id:Long,p:Int ?= 0, s ?= "jcrq", o ?= "desc", f ?= "", zx ?="2015-09-01")
+GET     /fee              controllers.CheckFees.fee(p:Int ?= 0, s ?= "jcrq", o ?= "desc", f ?= "", zx ?="2015-09-01")
+GET     /monthdevfee/:id              controllers.CheckFees.monthdevfee(id:Long)
+
+
+# Checklist
+GET    /checklists      controllers.Checklists.checklist(p:Int ?= 0, s ?= "jcrq", o ?= "desc", f ?= "", zx ?= "2015-09-01")
+
+GET     /worktime                  controllers.Devices.worktime(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET     /cost                  controllers.Devices.cost(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET     /crm                  controllers.Devices.crm(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET     /menu                  controllers.Devices.menu()
+
+GET    /orders               controllers.Purchases.order(id:Long)
+
+GET     				/line 		                controllers.Barcodes.lineChart
+GET /columnAndBarChart controllers.Barcodes.columnAndBarChart
+GET /areaAndPieChart controllers.Barcodes.areaAndPieChart
+GET /bubbleChart	controllers.Barcodes.bubbleChart
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+##GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+#除了":"之外，还有另一个提示符"*"。与":"不同，"*"表示的区间不受"/"限制
+#如果我们访问/newRecord/abc/def，那么name将对应字符串"abc/def"
+#GET     /libs/*file               controllers.Assets.at(path="/public/libs", file)
+#GET     /skin/*file               controllers.Assets.at(path="/public/skin", file)
+

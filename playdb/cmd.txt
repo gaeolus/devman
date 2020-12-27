@@ -1,0 +1,11 @@
+git pull -s recursive -X theirs mysql master
+
+cd ${OPENSHIFT_DATA_DIR}
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u40-b25/jdk-8u40-linux-x64.tar.gz"
+
+    tar xzf jdk-8u40-linux-x64.tar.gz
+
+activator clean compile
+activator stage
+
+ssh://564c0ac92d52717d0400004b@tongren-deviceman.rhcloud.com/~/git/tongren.git/

@@ -1,0 +1,134 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head >
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--框架必需start-->
+    <script src="../libs/js/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+        function reflesh() {
+            top.frmright.page_208.refresh();
+            top.Dialog.close();
+        }
+
+        function func1() {
+            var str = $("#txtName").val().replace(/[ ]/g, "");
+            if (str.length == 0) {
+
+                return true;
+            }
+            else {
+
+                return false;
+
+            }
+        }
+        function func2() {
+            var str = $("#txtPinPai").val().replace(/[ ]/g, "");
+            if (str.length == 0) {
+
+                return true;
+            }
+            else {
+
+                return false;
+
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <form method="post" action="FactoryInfo.aspx?Type=Look&amp;id=188" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMjE1MTY5NDE3D2QWAgIBD2QWAgINDw8WAh4HVmlzaWJsZWhkZGTSaDBPA1L53ORPBzwh9qbFijwFSQNNbj2CASjLNrEg8Q==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwKwkPvdAgLEhISFCwLklZ6wAgKemun7AgKL+4qxCwLv7ITZAgKZvIvlBA26HolM2mIWT7+OFJLoJVpoDvX/YkP9e64gK03zz5st" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td width="100" align="right">
+                厂家名称：
+            </td>
+            <td align="left">
+                <input name="txtName" type="text" value="费森1" id="txtName" class="validate[required,functionCall[func1|* 不能全是空格],length[2,30]]" />
+            </td>
+        </tr>
+        <tr>
+            <td width="100">
+                厂家品牌：
+            </td>
+            <td align="left">
+                <input name="txtPinPai" type="text" value="费森1" id="txtPinPai" class="validate[required,functionCall[func2|* 不能全是空格],length[2,30]]" />
+                <span style="color: red">*</span>
+            </td>
+        </tr>
+        <tr id="trCreateName">
+	<td width="100">
+                厂家国籍：
+            </td>
+	<td align="left">
+                <input name="txtContry" type="text" value="aa" id="txtContry" />
+            </td>
+</tr>
+
+        <tr>
+            <td width="100" align="right">
+                厂家电话：
+            </td>
+            <td align="left">
+                <input name="txtTel" type="text" value="11111" id="txtTel" />
+            </td>
+        </tr>
+        <tr>
+            <td width="100" align="right">
+                厂家地址：
+            </td>
+            <td align="left">
+                <input name="txtAddress" type="text" value="1111" id="txtAddress" />
+            </td>
+        </tr>
+        <tr>
+            <td width="100" align="right">
+                备注信息：
+            </td>
+            <td align="left">
+                <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+1111</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                &nbsp;&nbsp;
+                <input type="button" id="Button1" value="返 回" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>资产盘点信息</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+</head>
+<body>
+    <div id="layout1">
+        <div id="leftCon" position="left" style="" paneltitle="科室结构树">
+            <div class="orgTreeContainer">
+                <ul id="tree" class="ztree">
+                </ul>
+            </div>
+        </div>
+        <div id="centerCon" position="center" style="">
+            <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+                <form method="post" action="InventoryList.aspx" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTUxMTcwNzgxMGRkiix/YXB1vNB1zGg6+CUQmRYz3gMi7AD7JofbpqXfylo=" />
+</div>
+
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            系统编号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtCode" />
+                        </td>
+                        <td>
+                            设备名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtTitle" />
+                        </td>
+                        <td>
+                            <button type="button" id="btnSearch">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+            <div class="padding_right5">
+                <div id="dataBasic">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "科室结构", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodes = treeObj.getSelectedNodes()[0];
+            var parm = "&IBNumber=" + encodeURIComponent($("#txtCode").val());
+            parm += "&EquName=" + encodeURIComponent($("#txtTitle").val());
+            parm += "&DeptId=" + $("#Id").val();
+            parm += "&DeptParentId=" + $("#ParentId").val();
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/InventoryInfo.ashx?type=GetList' + parm });
+            //刷新表格数据 
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+            initTree();
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/Departments.ashx?Command=List',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+				{ display: '系统编号', name: 'IBNumber', align: 'left', width: "15%" },
+                { display: '设备名称', name: 'EquName', align: 'left', width: "15%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', width: "10%" },
+                { display: '设备厂家', name: 'FactoryName', align: 'left', width: "10%" },
+			    { display: '设备状态', name: 'State', align: 'center', width: "10%" },
+                { display: '购买金额', name: 'BuyMoney', align: 'right', width: "10%" },
+                { display: '购买日期', name: 'BuyDate', align: 'left', width: "10%" },
+                { display: '报废年限', name: 'EquipmentDisuse', align: 'left', width: "5%" },
+                { display: '盘点日期', name: 'InventoryDate', align: 'left', width: "10%" },
+                { display: '盘点人', name: 'InventoryUserName', align: 'center', width: "5%" },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        return '<div class="padding_top4 padding_left5">'
+	                    + '<span class="img_delete hand" title="删除" onclick="onDelete(' + rowdata.Id + ')"></span>' + '</div>';
+           		    }
+           		}
+			  ],
+                url: '../Handler/InventoryInfo.ashx?Type=GetList&date=' + new Date().getTime(), checkbox: true,
+                sortName: 'Id',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: true,
+                sortOrder: "desc",
+                toolbar: {
+                    items: [
+        		  { text: '新增', click: addUnit, iconClass: 'icon_add' },
+        		  { line: true },
+                   { text: '批量删除', click: deleteUnit, iconClass: 'icon_delete' },
+        		  { line: true }
+        		]
+                }
+            });
+        }
+
+
+        //新增
+        function addUnit() {
+            top.Dialog.open({
+                URL: "Inventory/InventoryAdd.aspx", ID: "a1",
+                Title: "添加", ShowMaxButton: true, Width: 950, Height: 530
+            });
+        }
+
+        //删除
+        function onDelete(rowid, rowidx) {
+
+            top.Dialog.confirm("确定要删除该记录吗？", function () {
+                //此处进行ajax后台数据处理
+                $.ajax({
+                    url: '../Handler/InventoryInfo.ashx',
+                    dataType: 'json',
+                    data: { Id: rowid, Type: "Del" },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+
+            });
+        }
+
+        //批量删除
+        function deleteUnit() {
+            var rows = grid.getSelectedRows();
+            var rowsLength = rows.length;
+            var ids = getSelectIds(grid);
+            if (rowsLength == 0) {
+                //top.Dialog.alert("请选中要删除的记录!");
+                //return;
+            }
+            top.Dialog.confirm("确定要删除吗？", function () {
+                $.ajax({
+                    url: '../Handler/InventoryInfo.ashx',
+                    dataType: 'json',
+                    data: { Id: ids, Type: "Del" },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+
+        //删除后的提示
+        function handleResult(result) {
+            if (result == 1) {
+                top.Dialog.alert("删除成功！", null, null, null, 1);
+                grid.loadData();
+            } else {
+                top.Dialog.alert("删除失败！");
+            }
+        }
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
+        function getSelectIds(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].Id + ",";
+            }
+
+            return ids + "0";
+        }
+
+        //点击树节点刷选对应的表格数据 
+        function zTreeSelect(event, treeId, treeNode) {
+            selectTreeNode = treeNode;
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            searchHandler();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#txtCode").val("");
+            $("#txtTitle").val("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

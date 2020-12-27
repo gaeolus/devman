@@ -1,0 +1,702 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	巡检管理
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" scrollery="false" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!-- 表单start -->
+    <script src="../libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <!--弹窗组件start-->
+    <script type="text/javascript" src="../libs/js/popup/drag.js"></script>
+    <script type="text/javascript" src="../libs/js/popup/dialog.js"></script>
+    <!--弹窗组件end-->
+</head>
+<body>
+    <div id="layout1">
+        <form method="post" action="PollingNoteUpdate.aspx?Type=Look&amp;PollingNo=XJ1452238482" id="Form2">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEzMjM0NjgxMDIPFgQeCXBvbGxpbmdubwUMWEoxNDUyMjM4NDgyHgpjcmVhdGVOYW1lBQ/ns7vnu5/nrqHnkIblkZgWAgIBD2QWIAIBDw8WAh4EVGV4dAUDNDEyZGQCAw8PFgIfAgUDMzIxZGQCBQ8PFgIfAgUk5oyJ5b2T5YmN5omA5pyJ56eR5a6k44CB5omA5pyJ6K6+5aSHZGQCBw8PFgIfAgUQMjAxNi0wMS0wOCAxNTozNGRkAgkPDxYCHwIFAjIyZGQCCw8PFgIfAgUDMjcxZGQCDQ8PFgIfAgUKMjAxNi0wMS0xNGRkAg8PDxYCHwIFCjIwMTYtMDEtMjdkZAIRDw8WAh8CBQoyMDQyLTEwLTE0ZGQCEw8PFgIfAgUKMjA0Mi0xMC0yN2RkAhUPDxYCHwIFAzIxM2RkAi8PDxYCHwIFAzIxM2RkAjEPEA8WBh4NRGF0YVRleHRGaWVsZAUIRGVwdE5hbWUeDkRhdGFWYWx1ZUZpZWxkBQZEZXB0SUQeC18hRGF0YUJvdW5kZ2QQFRcNLS3or7fpgInmi6ktLQVDVOWupAnnl4XnkIbnp5EJ5b2p6LaF5a6kCea1i+WQrOWupAnmlL7lsITnp5EM5ZaJ56eR55eF5oi/CeaApeiviuenkQnmo4Dpqoznp5EJ5bq35aSN56eRD+W6t+WkjeenkeeXheaIvwnnkIbnlpflrqQJ5YaF6ZWc5a6kDOWGheenkeeXheaIvw/orr7lpIflhazlhbHlupMJ6K6+5aSH56eRD+aJi+acr+m6u+mGieenkQnmiYvmnK/lrqQM5aSW56eR55eF5oi/CeiDg+mVnOWupAzlv4PnlLXlm77lrqQM55y856eR6Zeo6K+KCemZoumVv+WupBUXAAUzMDQ4MAUzMDQ4MQUzMDQ4MgUzMDQ4MwUzMDQ4NAUzMDQ4NQUzMDQ4NgUzMDUwMgUzMDQ4NwUzMDQ4OAUzMDQ4OQUzMDQ5MAUzMDQ5MQUzMDAwMQUzMDA4OQUzMDQ5MgUzMDAxOQUzMDQ5MwUzMDQ5NAUzMDQ5NQUzMDQ5NgUzMDQ3OBQrAxdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2RkAjUPDxYCHwIFAzI3MWRkAjcPDxYCHwIFATBkZAI5Dw8WAh8CBQEwZGRkhTcOvqbSivU51JsqtujgGQyEjYL/5WnxikwPn4+/C54=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWKQKk3M/SAgK/if/kBgL9l9PQBQKslMz9CwLLy+GoDgLI9vaTAQLr4M6dAwKYgfHlDwKz6o77CQLO06yQBALpvMqlDgKEpui6CAKfj4bQAgKZvIvlBALD2p/dCwL64qCQAgL54qCQAgL04qCQAgL74qCQAgL+4qCQAgL94qCQAgL44qCQAgKR+6LUBQL/4qCQAgLy4qCQAgLx4qCQAgL64rSvCwL54rSvCwKNybdCAoXJ16ULAvTitK8LAoXJi5kJAvvitK8LAv7itK8LAv3itK8LAvjitK8LAvLijKsNArrN7fMGArursYYIAoznisYGAtaUz5sCQp0aNqw7wB3tKAehKRpkSFa5fMo6IEU2ve8Gz4Wh8+E=" />
+</div>
+        <div id="centerCon" position="center" style="">
+           
+           <div class="padding_right5" style="height: 300px; overflow-y: auto">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td>
+                            任务名称：
+                        </td>
+                        <td>
+                            <span id="lblCheckName">412</span>
+                        </td>
+                        <td>
+                            巡检周期：
+                        </td>
+                        <td>
+                            <span id="lblInspectioncycle">321</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            巡检类型：
+                        </td>
+                        <td>
+                            <span id="lblInspectionType">按当前所有科室、所有设备</span>
+                        </td>
+                        <td>
+                            创建时间：
+                        </td>
+                        <td>
+                            <span id="lblCreateTime">2016-01-08 15:34</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            计划巡检科室、设备数量：
+                        </td>
+                        <td>
+                            (<span id="lblInspectionDept">22</span>) (<span id="lblInspectionNo">271</span>)
+                        </td>
+                        <td>
+                            巡检任务期限：
+                        </td>
+                        <td>
+                            <span id="lblStartTime">2016-01-14</span>--<span id="lblEndTime">2016-01-27</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            下次巡检任务期限：
+                        </td>
+                        <td>
+                            <span id="lblNestTaskStartTime">2042-10-14</span>--<span id="lblNestTaskEndTime">2042-10-27</span>
+                        </td>
+                          <td>
+                            签名：
+                        </td>
+                        <td colspan="5">
+                            <input name="txtSignName" type="text" value="213" id="txtSignName" disabled="disabled" class="aspNetDisabled" />
+                        </td>
+                    </tr>
+
+                     <tr style="display:none">
+              <td>巡检设备类别：</td>
+              <td colspan="3">
+                 <div id="div1">
+                        <input disabled="disabled" type="radio" id="Radio1"  name="PollingEquType" value="Main"   onclick="getTypeRadioValue()"  /><label
+                            for="PollingType-1" class="hand">重点设备</label>
+                        <input  disabled="disabled" type="radio" id="Radio2"  name="PollingEquType" value="Aid" onclick="getTypeRadioValue()"  /><label
+                            for="PollingType-2" class="hand">急救、生命支持类设备</label>
+                        <input  disabled="disabled" type="radio" id="Radio3"  name="PollingEquType" value="Nomal" checked="checked" onclick="getTypeRadioValue()"  /><label
+                            for="PollingType-3" class="hand">普通设备</label>
+                        <input name="hf1" type="hidden" id="hf1" value="Nomal" /></div>
+                    
+                </td>
+            
+            </tr>
+            <tr id="tr1" style="display:none">
+                <td>设备使用、保养记录异常：</td>
+                <td colspan="3"> <textarea name="txtUseException" rows="2" cols="20" id="txtUseException" disabled="disabled" class="aspNetDisabled">
+</textarea>
+              
+                </td>
+                
+            </tr>
+            <tr id="tr2" style="display:none">
+                <td>设备间、机房环境异常情况：</td>
+                <td colspan="3"> <textarea name="txtEquRoomException" rows="2" cols="20" id="txtEquRoomException" disabled="disabled" class="aspNetDisabled">
+</textarea>
+                 <span style="color:Red">(温度、湿度、卫生)</span>
+                </td>
+            </tr>
+            <tr id="tr3" style="display:none">
+                <td>管线布局异常情况：</td>
+                <td colspan="3"> <textarea name="txtLineException" rows="2" cols="20" id="txtLineException" disabled="disabled" class="aspNetDisabled">
+</textarea>
+                 <span style="color:Red">(水管、气体、电路)</span>
+                </td>
+            </tr>
+            <tr id="tr4" style="display:none">
+                <td>防护措施异常情况：</td>
+                <td colspan="3"> <textarea name="txtSafeguard" rows="2" cols="20" id="txtSafeguard" disabled="disabled" class="aspNetDisabled">
+</textarea>
+                 <span style="color:Red">(电磁辐射、有害射线、噪音、震动、腐蚀)</span>
+                </td>
+            </tr>
+            <tr id="tr5" style="display:none">
+                <td> 设备外观整洁、附件完备：</td>
+                <td colspan="3"> 
+                <div id="div2">
+                        <input  disabled="disabled" type="radio" id="Radio4" name="rdOutClear" value="1"  checked="checked"  /><label
+                            for="PollingType-1" class="hand">是</label>
+                        <input  disabled="disabled" type="radio" id="Radio5" name="rdOutClear" value="0"  /><label
+                            for="PollingType-2" class="hand">否</label>
+                     
+                        <input name="hf2" type="hidden" id="hf2" /></div>
+                </td>
+            </tr>
+            <tr id="tr6" style="display:none">
+                <td> 设备使用情况：</td>
+                <td colspan="3">
+                 <div id="div3">
+                  开机运行：
+                        <input type="radio"  disabled="disabled" id="Radio6" name="rdOpenStatus" value="1"  checked="checked"  /><label
+                            for="PollingType-1" class="hand">正常</label>
+                        <input type="radio"  disabled="disabled" id="Radio7" name="rdOpenStatus" value="0"  /><label
+                            for="PollingType-2" class="hand">故障</label>
+                     
+                        <input name="hf3" type="hidden" id="hf3" /></div>
+                         <div id="div4">
+                  内置电池：
+                        <input type="radio"  disabled="disabled" id="Radio8" name="rdInBattery" value="1"  checked="checked"  /><label
+                            for="PollingType-1" class="hand">充满</label>
+                        <input type="radio"  disabled="disabled" id="Radio9" name="rdInBattery" value="0"  /><label
+                            for="PollingType-2" class="hand">需充电</label>
+                     
+                        <input name="hf4" type="hidden" id="hf4" /></div>
+                </td>
+            </tr>
+            <tr id="tr7" style="display:none">
+                <td>设备使用、保养记录：</td>
+                <td colspan="3"> 
+                 <div id="div5">
+                        <input type="radio"  disabled="disabled" id="Radio10" name="rdEquMatainRecord" value="1"  checked="checked"  />
+                        <label    for="PollingType-1" class="hand">完备</label>
+                        <input type="radio"  disabled="disabled" id="Radio11" name="rdEquMatainRecord" value="0"  />
+                        <label  for="PollingType-2" class="hand">无</label>
+                     
+                        <input name="hf5" type="hidden" id="hf5" /></div>
+                </td>
+            </tr>
+            <tr id="tr8" style="display:none">
+                <td>设备使用、存放环境：</td>
+                <td colspan="3"> 
+                 
+                 <div id="div6">
+                        <input type="radio"  disabled="disabled" id="Radio12" name="rdUseEnvironment" value="1"  checked="checked"  />
+                        <label    for="PollingType-1" class="hand">良好</label>
+                        <input type="radio"  disabled="disabled" id="Radio13" name="rdUseEnvironment" value="0"  />
+                        <label  for="PollingType-2" class="hand">存在问题</label>
+                     
+                        <input name="hf6" type="hidden" id="hf6" /></div>
+
+                </td>
+            </tr>
+            <tr id="tr9" style="display:none">
+                <td>设备使用、存放环境：</td>
+                <td colspan="3"> 
+                   <div id="div7">
+                        <input type="radio"  disabled="disabled" id="Radio14" name="rdUseEnvironment2" value="1"  checked="checked"  />
+                        <label    for="PollingType-1" class="hand">良好</label>
+                        <input type="radio"  disabled="disabled" id="Radio15" name="rdUseEnvironment2" value="0"  />
+                        <label  for="PollingType-2" class="hand">存在问题</label>
+                     
+                        <input name="hf7" type="hidden" id="hf7" value="1" /></div>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td>
+                            备注：
+                        </td>
+                        <td colspan="5">
+                            <textarea name="txtRemark" rows="2" cols="20" id="txtRemark" disabled="disabled" class="aspNetDisabled">
+213</textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="padding_right5">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td>
+                            目前使用科室：
+                        </td>
+                        <td colspan="4">
+                            <select name="DeptId" id="DeptId">
+	<option value="">--请选择--</option>
+	<option value="30480">CT室</option>
+	<option value="30481">病理科</option>
+	<option value="30482">彩超室</option>
+	<option value="30483">测听室</option>
+	<option value="30484">放射科</option>
+	<option value="30485">喉科病房</option>
+	<option value="30486">急诊科</option>
+	<option value="30502">检验科</option>
+	<option value="30487">康复科</option>
+	<option value="30488">康复科病房</option>
+	<option value="30489">理疗室</option>
+	<option value="30490">内镜室</option>
+	<option value="30491">内科病房</option>
+	<option value="30001">设备公共库</option>
+	<option value="30089">设备科</option>
+	<option value="30492">手术麻醉科</option>
+	<option value="30019">手术室</option>
+	<option value="30493">外科病房</option>
+	<option value="30494">胃镜室</option>
+	<option value="30495">心电图室</option>
+	<option value="30496">眼科门诊</option>
+	<option value="30478">院长室</option>
+
+</select>&nbsp;
+                            <button type="button" onclick="searchHandler()">
+                                <span class="icon_find">查询</span></button>
+                                <input type="hidden" name="hfLoadOver" id="hfLoadOver" value="1" />
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            未巡检设备(<span id="lblNoInventory">271</span>) &nbsp&nbsp&nbsp&nbsp
+                            正常设备(<span id="lblYesInventory">0</span>)&nbsp&nbsp&nbsp&nbsp
+                            待修设备(<span id="lblScrap">0</span>)&nbsp&nbsp&nbsp&nbsp
+                            <input name="Button2" type="button" id="Button2" value="保存正常设备" onclick="SaveUnit()" />
+                            <input name="Button1" type="button" id="Button1" value="结束本次巡检" onclick="deleteUnit()" />
+                            <input name="Button3" type="button" id="Button3" value="打印巡检单" onclick="DirectList()" />
+                        </td>
+                    </tr>
+                </table>
+                <div id="dataBasic">
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "科室结构", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+            var parm = "";
+            parm += "&DeptName=" + escape($("#DeptId option:selected").text());
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/PollingNote.ashx?Type=GetRecordList&PollingNo=' + "XJ1452238482" + parm });
+            //刷新表格数据 
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+            initTree();
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/Departments.ashx?Command=List',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            var showAdd = false;
+            var showDelAll = false;
+            if ('caf779a5-82e7-45d1-bd53-31015df561b6,1f16387c-1444-4289-93e0-452a6aed5180,5da0e19e-f050-418a-8906-b3e5461905bb,,A,A-01,A-01-01,A-01-02,A-01-03,A-01-04,A-02,A-02-01,A-03,A-04,A-05,A-06,A-06-01,A-07,G-01,fb296f6c-2eee-4e6e-a80f-765f00d31d87,E-03,F,6d62a97c-c79e-4589-8101-f49b71585269,7f4f1aaa-e17a-49f2-8f65-b312ee72312c,a5a0600d-418d-4bf8-8570-52ebb5196892,f11563dc-33bf-4291-ba48-bc04228d03ed,f3589a01-8257-4e2b-933c-8819dc90b1a8,ecce9c89-51b4-468b-a689-0db0a37f5f7f,97524c73-a870-4318-aeb1-5d6e9c470edd,B,B-01,B-01-01,B-02,B-03,B-04,B-05,B-06,C,C-01,71c2593b-6c87-41c1-b812-b2f6a814eef2,13895dfe-4d06-45d0-9fb1-ceda931e1d53,db516eff-d7c8-4f6c-b963-844e60868c18,C-02,C-03,C-04,C-05,D,D-01,5422cd5f-9feb-4f94-b171-6961d9a82d9f,a6ea311f-479d-4bd6-962c-53d2cd9038df,b8db9d79-6f9f-4e87-9590-a97f50d1ee43,D-02,D-03,E,E-01,E-01-01,E-02,F-01,F-02,G-00,G-02,G-03,H,H-01,H-02,H-03,H-04,H-05,H-06,H-07,H-08,L,L-02,L-03,L-04,L-01,L-05,L-06,K,K-01,K-02,I,I-02,I-03,I-04,I-01,I-05,J,J-01,J-02,J-03,J-04'.indexOf('A-01-01') >= 0) {
+                showAdd = true;
+            }
+            if ('caf779a5-82e7-45d1-bd53-31015df561b6,1f16387c-1444-4289-93e0-452a6aed5180,5da0e19e-f050-418a-8906-b3e5461905bb,,A,A-01,A-01-01,A-01-02,A-01-03,A-01-04,A-02,A-02-01,A-03,A-04,A-05,A-06,A-06-01,A-07,G-01,fb296f6c-2eee-4e6e-a80f-765f00d31d87,E-03,F,6d62a97c-c79e-4589-8101-f49b71585269,7f4f1aaa-e17a-49f2-8f65-b312ee72312c,a5a0600d-418d-4bf8-8570-52ebb5196892,f11563dc-33bf-4291-ba48-bc04228d03ed,f3589a01-8257-4e2b-933c-8819dc90b1a8,ecce9c89-51b4-468b-a689-0db0a37f5f7f,97524c73-a870-4318-aeb1-5d6e9c470edd,B,B-01,B-01-01,B-02,B-03,B-04,B-05,B-06,C,C-01,71c2593b-6c87-41c1-b812-b2f6a814eef2,13895dfe-4d06-45d0-9fb1-ceda931e1d53,db516eff-d7c8-4f6c-b963-844e60868c18,C-02,C-03,C-04,C-05,D,D-01,5422cd5f-9feb-4f94-b171-6961d9a82d9f,a6ea311f-479d-4bd6-962c-53d2cd9038df,b8db9d79-6f9f-4e87-9590-a97f50d1ee43,D-02,D-03,E,E-01,E-01-01,E-02,F-01,F-02,G-00,G-02,G-03,H,H-01,H-02,H-03,H-04,H-05,H-06,H-07,H-08,L,L-02,L-03,L-04,L-01,L-05,L-06,K,K-01,K-02,I,I-02,I-03,I-04,I-01,I-05,J,J-01,J-02,J-03,J-04'.indexOf('A-01-03') >= 0) {
+                showDelAll = true;
+            }
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '巡检时间', name: ' PollingTime', align: 'left', width: "10%" },
+			    { display: '巡检人', name: 'PollingPerson', align: 'left', width: "6%" },
+                { display: '系统编号', name: ' EquNo', align: 'left', width: "10%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', width: "10%" },
+                { display: '设备厂家', name: 'FactoryName', align: 'left', width: "10%" },
+                { display: '购买日期', name: 'BuyDate', align: 'left', width: "10%" },
+                { display: '购买金额', name: 'BuyMoney', align: 'left', width: "7%" },
+                { display: '装机时间', name: 'InstallationDate', align: 'left', width: "7%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '设备盘点状态', name: 'EquipmentStatus', align: 'left', width: "10%" },
+           		{ display: '操作', isAllowHide: false, align: 'left', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+           		        var operate = '<div class="padding_top4 padding_left5">' + '<span class="img_edit hand" title="待修" onclick="Scrap(' + rowdata.ID + ')"></span>';
+           		        operate += '</div>';
+           		        return operate;
+           		    }
+           		}
+			  ],
+                url: '../Handler/PollingNote.ashx?Type=GetRecordList&PollingNo=' + "XJ1452238482" + '&date=' + new Date().getTime(),
+                pageSize: 20, rownumbers: true, checkbox: true, percentWidthMode: true, isSort: false, sortName: 'ID', sortOrder: "desc",
+                height: '100%', width: "100%"
+            });
+        }
+
+        //新增
+        function addUnit() {
+            top.Dialog.open({
+                URL: "Inventory/InventoryAdd.aspx", ID: "a1",
+                Title: "添加", ShowMaxButton: true, Width: 870, Height: 530
+            });
+        }
+        //待修
+        function Scrap(rowid) {
+            $.ajax({
+                url: '../Handler/PollingNote.ashx',
+                dataType: 'json',
+                data: { Id: rowid, Type: "Scrap", Name: '系统管理员' },
+                success: function (result) {
+                    grid.loadData();
+                    BindInveryNumber();
+                },
+                error: function (result) {
+                    grid.loadData();
+                }
+            });
+        }
+
+        //删除
+        function onDelete(rowid, rowidx) {
+
+            top.Dialog.confirm("确定要删除该记录吗？", function () {
+                //此处进行ajax后台数据处理
+                $.ajax({
+                    url: '../Handler/InventoryInfo.ashx',
+                    dataType: 'json',
+                    data: { Id: rowid, Type: "Del" },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+        //保存巡检数据
+        function SaveUnit() {
+            var rows = grid.getSelectedRows();
+            var rowsLength = rows.length;
+            var ids = getSelectIds(grid);
+            if (rowsLength == 0) {
+            }
+            top.Dialog.confirm("确定要保存本次巡检设备吗？", function () {
+                $.ajax({
+                    url: '../Handler/PollingNote.ashx',
+                    dataType: 'json',
+                    data: { Id: ids, Type: "EndUpdate", Name: '系统管理员' },
+                    success: function (result) {
+                        grid.loadData();
+                        BindInveryNumber();
+                        GoingInventory();
+                        // top.frmright.page_305.refresh();
+                        top.frmright.page_304.refresh();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+
+            });
+        }
+        //结束本次巡检
+        function deleteUnit() {
+            var rows = grid.getSelectedRows();
+            var rowsLength = rows.length;
+            var ids = getSelectIds(grid);
+            if (rowsLength == 0) {
+            }
+            top.Dialog.confirm("确定要结束本次巡检吗？确定之后将无法修改巡检信息！", function () {
+                $.ajax({
+                    url: '../Handler/PollingNote.ashx',
+                    dataType: 'json',
+                    data: { Id: ids, Type: "EndUpdate", Name: '系统管理员' },
+                    success: function (result) {
+                        ReqAsset();
+                        grid.loadData();
+                        BindInveryNumber();
+                        document.getElementById('Button1').style.display = "none";
+                        document.getElementById('Button2').style.display = "none";
+                        message();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+
+            });
+        }
+
+        function BindInveryNumber() {
+            var Url = "../Handler/PollingNote.ashx";
+            $.ajax({
+                url: Url,
+                data: { Type: "PollingNumber", PollingNo: 'XJ1452238482' },
+                dataType: 'json',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                success: function (data) {
+                    $("#lblYesInventory").text(data[0].YesPolling);
+                    $("#lblNoInventory").text(data[0].NoPolling);
+                    $("#lblScrap").text(data[0].Repaired);
+                },
+                error: function (result) {
+                    alert("数据传输错误");
+                }
+            })
+        }
+        function message() {
+            top.frmright.page_304.refresh();
+            // top.frmright.page_305.refresh();
+            top.Dialog.close();
+        }
+
+        function ReqAsset() {
+            $.ajax({
+                url: '../Handler/PollingNote.ashx',
+                dataType: 'json',
+                data: { Id: 'XJ1452238482', Type: "RquAssetList", Sign: $("#txtSignName").val(), Remark: $("#txtRemark").val() },
+                success: function (result) {
+                    grid.loadData();
+                },
+                error: function (result) {
+                    grid.loadData();
+                }
+            });
+        }
+
+        function GoingInventory() {
+            $.ajax({
+                url: '../Handler/PollingNote.ashx',
+                dataType: 'json',
+                data: { Id: 'XJ1452238482', Type: "GoingPollingList", Sign: $("#txtSignName").val(), Remark: $("#txtRemark").val() },
+                success: function (result) {
+                    grid.loadData();
+                },
+                error: function (result) {
+                    grid.loadData();
+                }
+            });
+        }
+        //删除后的提示
+        function handleResult(result) {
+            if (result == 1) {
+                top.Dialog.alert("删除成功！", null, null, null, 1);
+                grid.loadData();
+            } else {
+                top.Dialog.alert("删除失败！");
+            }
+        }
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
+        function getSelectIds(grid) {
+
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].ID + ",";
+            }
+
+            return ids + "0";
+        }
+
+        //点击树节点刷选对应的表格数据 
+        function zTreeSelect(event, treeId, treeNode) {
+            selectTreeNode = treeNode;
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            searchHandler();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#txtCode").val("");
+            $("#txtTitle").val("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+        function DirectList() {
+            window.open("PrintInventory.aspx?Type=Look&PollingNo=" + 'XJ1452238482' + "&DeptName='" + $("#DeptId option:selected").text() + "'");
+        }
+    </script>
+
+
+
+
+    <script>
+        function getTypeRadioValue() {
+            var RadValue = $("input:radio[name=PollingEquType]").filter("[checked]").val();
+
+            if (RadValue == "Main") {
+                document.getElementById('tr1').style.display = "block";
+                document.getElementById('tr2').style.display = "block";
+                document.getElementById('tr3').style.display = "block";
+                document.getElementById('tr4').style.display = "block";
+                document.getElementById('tr5').style.display = "none";
+                document.getElementById('tr6').style.display = "none";
+                document.getElementById('tr7').style.display = "none";
+                document.getElementById('tr8').style.display = "none";
+                document.getElementById('tr9').style.display = "none";
+
+
+
+            }
+            else if (RadValue == "Aid") {
+
+                document.getElementById('tr1').style.display = "none";
+                document.getElementById('tr2').style.display = "none";
+                document.getElementById('tr3').style.display = "none";
+                document.getElementById('tr4').style.display = "none";
+                document.getElementById('tr5').style.display = "block";
+                document.getElementById('tr6').style.display = "block";
+                document.getElementById('tr7').style.display = "block";
+                document.getElementById('tr8').style.display = "block";
+                document.getElementById('tr9').style.display = "none";
+
+            }
+            else if (RadValue == "Nomal") {
+                document.getElementById('tr1').style.display = "none";
+                document.getElementById('tr2').style.display = "none";
+                document.getElementById('tr3').style.display = "none";
+                document.getElementById('tr4').style.display = "none";
+                document.getElementById('tr5').style.display = "none";
+                document.getElementById('tr6').style.display = "none";
+                document.getElementById('tr7').style.display = "none";
+                document.getElementById('tr8').style.display = "none";
+                document.getElementById('tr9').style.display = "block";
+            }
+            document.getElementById('tr9').style.display = "none";
+        }
+
+
+
+
+
+        $(function () {
+
+            //初始化时默认控制页面布局
+            getTypeRadioValue();
+            //判断编辑时数据是否已经绑定完毕
+            if ($("#hfLoadOver").val() == "1") {
+
+                //判断三个主选项卡的值
+                if ($("#hf1").val() == "Main") {
+                    $("input:radio[id=Radio1]").attr("checked", "checked");
+
+                }
+                if ($("#hf1").val() == "Aid") {
+                    $("input:radio[id=Radio2]").attr("checked", "checked");
+                    if ($("#hf2").val() == "1") { $("input:radio[id=Radio4]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio5]").attr("checked", "checked"); }
+                    if ($("#hf3").val() == "1") { $("input:radio[id=Radio6]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio7]").attr("checked", "checked"); }
+                    if ($("#hf4").val() == "1") { $("input:radio[id=Radio8]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio9]").attr("checked", "checked"); }
+                    if ($("#hf5").val() == "1") { $("input:radio[id=Radio10]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio11]").attr("checked", "checked"); }
+                    if ($("#hf6").val() == "1") { $("input:radio[id=Radio12]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio13]").attr("checked", "checked"); }
+
+                }
+
+                if ($("#hf1").val() == "Nomal") {
+                    $("input:radio[id=Radio3]").attr("checked", "checked");
+                    if ($("#hf7").val() == "1") { $("input:radio[id=Radio14]").attr("checked", "checked"); }
+                    else { $("input:radio[id=Radio15]").attr("checked", "checked"); }
+
+                }
+                getTypeRadioValue();
+            }
+
+
+        });
+    </script>
+</body>
+</html>

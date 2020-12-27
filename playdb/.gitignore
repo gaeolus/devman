@@ -1,0 +1,25 @@
+logs
+project/project
+project/target
+##target  #for openshift deployment, NOT commented
+
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/RUNNING_PID
+/.settings
+.target
+
+##db  #for h2 db file
+tmp
+.history
+dist
+
+/*.iml
+/out
+
+.cache
+##bin  #for openshift deployment, NOT commented
+.DS_Store
+activator-sbt-*-shim.sbt

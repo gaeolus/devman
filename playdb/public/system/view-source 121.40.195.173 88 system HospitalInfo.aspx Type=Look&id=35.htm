@@ -1,0 +1,118 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head >
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--框架必需start-->
+    <script src="../libs/js/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+        function reflesh() {
+            top.frmright.page_299.refresh();
+            top.Dialog.close();
+        }
+
+        function func1() {
+            var str = $("#txtName").val().replace(/[ ]/g, "");
+            if (str.length == 0) {
+
+                return true;
+            }
+            else {
+
+                return false;
+
+            }
+        }
+        function func2() {
+            var str = $("#txtPinPai").val().replace(/[ ]/g, "");
+            if (str.length == 0) {
+
+                return true;
+            }
+            else {
+
+                return false;
+
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <form method="post" action="HospitalInfo.aspx?Type=Look&amp;id=35" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTQ2Nzk4MzEzMw9kFgICAQ9kFgICCQ8PFgIeB1Zpc2libGVoZGRk7o7Xaep0U2T/s+laaOjhOnsHbps3VMvDccDdhyxz0wc=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBQLY3uTKBQLEhISFCwKvhL6CCwKL+4qxCwLv7ITZAv1PgnhuS6muNH2VVWsVgjCxhXZ/nt/iu5tTG/dxdesz" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td width="100" align="right">
+                医院名称：
+            </td>
+            <td align="left">
+                <input name="txtName" type="text" value="济南医院" id="txtName" class="validate[required,functionCall[func1|* 不能全是空格],length[2,30]]" />
+            </td>
+        </tr>
+        
+        <tr id="trCreateName">
+	<td width="100">
+                医院编号：
+            </td>
+	<td align="left">
+                <input name="txtNumber" type="text" value="123" id="txtNumber" />
+            </td>
+</tr>
+
+        <tr>
+            <td width="100" align="right">
+                医院电话：
+            </td>
+            <td align="left">
+                <input name="txtTel" type="text" value="123123" id="txtTel" />
+            </td>
+        </tr>
+        <tr>
+            <td width="100" align="right">
+                医院地址：
+            </td>
+            <td align="left">
+                <input name="txtAddress" type="text" value="123" id="txtAddress" />
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan="2">
+                &nbsp;&nbsp;
+                <input type="button" id="Button1" value="返 回" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

@@ -1,0 +1,1547 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设备管理</title>
+    <!--框架必需start-->
+    <script src="../libs/js/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <!--基本选项卡start-->
+    <script type="text/javascript" src="../libs/js/nav/basicTab.js"></script>
+    <!--基本选项卡end-->
+    <!-- 上传图片end -->
+    <!-- 异步上传控件start -->
+    <script src="../libs/js/ajaxfileupload.js" type="text/javascript"></script>
+    <!-- 异步上传控件end -->
+    <!-- 表单start -->
+    <script src="../libs/js/popup/dialog.js" type="text/javascript"></script>
+    <script src="../libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <script src="../libs/js/form/suggestion.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $("#Suppliers").bind("listSelect", function (e, obj) {
+                $.post("../Handler/Supplier.ashx", { Type: "GetRelation", Id: obj.relValue }, function (data) {
+                    $("#txtWeiBaoContact").val(data[0].Person);
+                    $("#txtChangjiaRepairPhone").val(data[0].Tel);
+                    $("#txtWeiBaoContactPhone").val(data[0].Tel);
+                }, "json");
+            })
+
+            $("#divDepartment").bind("change", function () {
+                if ($(this).attr("relValue") != "") {
+                    $("#hfdDepartment").val($(this).attr("relValue"));
+                    $("#EquType").val($(this).attr("relValue"));
+                    BindDepInfo($(this).attr("relValue"));
+
+                } else {
+                    $("#txtKeshiFuZeRenPhone").val("");
+                    $("#txtDeviceFenGuanRen").val("");
+                    $("#txtKeshiFuZeRen").val("");
+                }
+
+            })
+
+            $("#CategoryID").bind("change", function () {
+                $("#EquType").val($(this).attr("relValue"));
+
+                if ($(this).attr("relValue") == "") {
+                    var selData = { "list": [] };
+                    //赋给data
+                    $("#ddlEquName").data("data", selData)
+                    $("#ddlEquName").val("");
+                    //刷新下拉框
+                    $("#ddlEquName").render();
+                } else {
+                    BindEquName($(this).attr("relValue"));
+                }
+
+            })
+
+            if ('Edit' == "Look") {
+                $("#btnSave").css("display", "none");
+                $("#CategoryID").setValue('10073');
+                BindEquName('10073');
+                $("#Supplier").val('27');
+                $("#Suppliers").setValue('27');
+                $("#ddlEquStatus").setValue('');
+
+
+
+                $("#hfdDepartment").val('30019');
+                $("#divDepartment").setValue('30019');
+
+                if ('否' == "是") {
+                    $("input:radio[name=age-2]").eq(0).attr("checked", true);
+                }
+                else {
+                    $("input:radio[name=age-2]").eq(1).attr("checked", true);
+                }
+                if ('否' == "是") {
+                    $("input:radio[name=age-2]").eq(0).attr("checked", true);
+                }
+                else {
+                    $("input:radio[name=age-2]").eq(1).attr("checked", true);
+                }
+                if ('否' == "是") {
+                    $("input:radio[name=age-4]").eq(0).attr("checked", true);
+                }
+                else {
+                    $("input:radio[name=age-4]").eq(1).attr("checked", true);
+                }
+            }
+            else if ('Edit' == "Edit") {
+                $("#CategoryID").setValue('10073');
+                $("#hfdCategoryID").val('10073');
+
+                BindEquName('10073');
+                $("#ddlEquStatus").setValue('');
+                $("#hfdDepartment").val('30019');
+                $("#divDepartment").setValue('30019');
+
+                $("#Supplier").val('27');
+
+
+                // 厂商赋值
+                $("#ddlFactory").attr("selectedvalue", '187');
+
+                // 医院赋值
+                $("#dllHospital").attr("selectedvalue", '');
+
+                // 供应商赋值
+                $("#Suppliers").attr("selectedvalue", '27');
+
+                // 销售商赋值
+                $("#ddlSaler").attr("selectedvalue", '0');
+
+                if ('否' == "是") {
+                    $("input:radio[name=age-2]").eq(0).attr("checked", true);
+                }
+                else {
+                    $("input:radio[name=age-2]").eq(1).attr("checked", true);
+                }
+                if ('否' == "是") {
+                    $("input:radio[name=age-3]").eq(0).attr("checked", true);
+                }
+                else {
+                    $("input:radio[name=age-3]").eq(1).attr("checked", true);
+                }
+                if ('否' == "是") {
+                    $("input:radio[name=age-4]").eq(0).attr("checked", true);
+                }
+                else {
+                    $("input:radio[name=age-4]").eq(1).attr("checked", true);
+                }
+
+                //如果不是医院资产  否按钮选中
+                if ($("#hfIsHospitalAsset").val() == "0") {
+                    $("input:radio[id=rdIsHospitalAsset1]").attr("checked", "checked");
+                }
+                //如果停止使用  是钮选中
+                if ($("#hfIsNoUse").val() == "0") {
+                    $("input:radio[id=rdIsNoUse1]").attr("checked", "checked");
+                }
+
+                //器械类型赋值
+                $("#divInstrumentType").setValue($("#hfInstrumentType").val());
+
+               
+
+
+            }
+            $("#EquType").hide();
+
+            // 设备照片赋值
+            if ('' != "" && '' != null) {
+                $("#img1").attr("src", "");
+                $("#hidImg").val("");
+            }
+
+
+            // 遍历附件
+            for (var i = 0; i < ''.split('|').length - 1; i++) {
+                addHandler(''.split('|')[i]);
+            }
+
+            // 遍历设备图片
+            for (var i = 0; i < ''.split('|').length - 1; i++) {
+                addHandler1(''.split('|')[i]);
+            }
+        });
+
+        // 设备分类联动设备名称 ADD BY WANGPC 2014/11/10
+        function BindEquName(CategoryId) {
+
+            var Url = "../Handler/HospitalEquipment.ashx";
+            $.post(Url, { Type: "GetEquName", CategoryId: CategoryId }, function (result) {
+
+                if (result != null && result != "") {
+                    //赋给data
+                    $("#ddlEquName").data("data", result)
+
+                    //刷新下拉框
+                    $("#ddlEquName").render();
+                    // 编辑时绑定值
+                    if ('bbbbbb' != "") {
+
+                        if ('10073' == CategoryId) {
+                            $("#ddlEquName").setValue(CategoryId + "|" + 'bbbbbb');
+                        }
+                        else {
+                            $("#ddlEquName").setValue("");
+                        }
+                    } else {
+                        $("#ddlEquName").setValue("");
+                    }
+
+                } else {
+
+                    var selData = { "list": [] };
+                    //赋给data
+                    $("#ddlEquName").data("data", selData)
+                    $("#ddlEquName").val("");
+                    //刷新下拉框
+                    $("#ddlEquName").render();
+
+                }
+
+
+            }, "json");
+        }
+
+        // 科室联动科室负责人及电话 ADD BY WANGPC 2014/11/10
+        function BindDepInfo(DepartmentId) {
+            var Url = "../Handler/Departments.ashx";
+            $.ajax({
+                url: Url,
+                data: { Type: "GetDepInfo", DepartmentId: DepartmentId },
+                dataType: 'json',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                success: function (data) {
+                    $("#txtKeshiFuZeRenPhone").val(data[0].MobilePhone);
+                    $("#txtDeviceFenGuanRen").val(data[0].EngineerName);
+                    $("#txtKeshiFuZeRen").val(data[0].ManagerName);
+                },
+                error: function (result) {
+                    alert("数据传输错误");
+                }
+            })
+        }
+
+        //设备附件添加行
+        function AddRowCompetitor() {
+            var gv = $("#gvCompetitor");
+            var tr = $("#gvCompetitor tr:last").clone();
+            gv.append(tr);
+            $("#gvCompetitor tr:last").show();
+            $("#gvCompetitor tr:last").find(".hfID").val("0");        //ID 0 
+            $("#gvCompetitor tr:last").find(".isDelete").val("0");    //删除标记设为 0 
+            $("#gvCompetitor tr:last input[name*='txtVender']").val("");
+            $("#gvCompetitor tr:last input[name*='txtDealer']").val("");
+            $("#gvCompetitor tr:last input[name*='txtCompetProduct']").val("");
+            $("#gvCompetitor tr:last input[name*='txtOffer']").val("");
+            $("#gvCompetitor tr:last input[name*='txtTranPrice']").val("");
+            $("#gvCompetitor tr:last input[name*='txtQty']").val("");
+            $("#gvCompetitor tr:last input[name*='txtPartRemark']").val("");
+            $("#gvCompetitor tr:last input[name*='txtPartNo']").val("");
+            $("#gvCompetitor tr:last input[name*='txtPrice']").val("");
+
+            $("#gvCompetitor tr:last input[name*='Add']").render();
+        }
+
+        //设备耗材添加行
+        function AddRowHaoCai() {
+            var gv = $("#gvHaoCai");
+            var tr = $("#gvHaoCai tr:last").clone();
+            gv.append(tr);
+            $("#gvHaoCai tr:last").show();
+            $("#gvHaoCai tr:last").find(".hfID").val("0");        //ID 0
+            $("#gvHaoCai tr:last").find(".isDelete").val("0");    //删除标记设为 0
+            $("#gvHaoCai tr:last input[name*='txtVender']").val("");
+            $("#gvHaoCai tr:last input[name*='txtDealer']").val("");
+            $("#gvHaoCai tr:last input[name*='txtCompetProduct']").val("");
+            $("#gvHaoCai tr:last input[name*='txtOffer']").val("");
+            $("#gvHaoCai tr:last input[name*='txtTranPrice']").val("");
+            $("#gvHaoCai tr:last input[name*='Add']").render();
+        }
+
+        //设备配件删除当前行
+        function deleteCurrentRowCompetitor(obj) {
+            //获取当前行对象
+            var $row = $(obj.parentNode.parentNode);
+            var count = 0;
+            $("#gvCompetitor tr:gt(0)").each(function () {
+                var $currentrow = $(this);
+                if ($currentrow.find(".isDelete").val() == "0") {
+                    count++;
+                }
+            });
+            if (count > 1) {
+                $row.find(".isDelete").val("1");     //将删除的行做标记
+                $row.hide();
+            }
+        }
+
+        //设备耗材删除当前行
+        function deleteCurrentRowHaoCai(obj) {
+            //获取当前行对象
+            var $row = $(obj.parentNode.parentNode);
+            var count = 0;
+            $("#gvHaoCai tr:gt(0)").each(function () {
+                var $currentrow = $(this);
+                if ($currentrow.find(".isDelete").val() == "0") {
+                    count++;
+                }
+
+            });
+            if (count > 1) {
+                $row.find(".isDelete").val("1");     //将删除的行做标记
+                $row.hide();
+            }
+        }
+
+        //设备配件的集合
+        function getIBpartlist() {
+            var IBpartlist = new Array();
+            //遍历GridView循环获取科室对象，并添加到 Array中
+            $("#gvCompetitor tr:gt(0)").each(function () {
+                var $row = $(this);
+                if ($row.find(".txtVender").val() != undefined && $row.find(".txtVender").val() != "") {
+                    var id = $row.find(".hfID").val();
+                    var PartName = $row.find(".txtVender").val();
+                    var SerialNo = $row.find(".txtDealer").val();
+                    var PartNo = $row.find(".txtPartNo").val();
+                    var Qty = $row.find(".txtQty").val();
+                    var Remark = $row.find(".txtPartRemark").val(); //备注
+                    var Price = $row.find(".txtPrice").val();
+                    //txtPartRemark
+                    var obj = new Object();
+                    obj.isDelete = $row.find(".isDelete").val();
+                    if (id == undefined || id == "") {
+                        obj.id = 0;
+                    }
+                    else if (obj.isDelete == "1") {
+                        obj.id = -99 + id;
+                    }
+                    else {
+                        obj.id = id;
+                    }
+                    obj.PartName = PartName;
+                    obj.SerialNo = SerialNo;
+                    obj.PartNo = PartNo;
+                    obj.Qty = Qty;
+                    obj.Price = Price;
+                    obj.Remark = Remark;
+                    obj.CreateName = "";
+                    obj.CreateTime = "2016/1/11 14:29:56";
+                    obj.UpdateName = "";
+                    obj.UpdateTime = "2016/1/11 14:29:56";
+                    IBpartlist.push(obj);
+
+                }
+            });
+            return IBpartlist;
+        }
+
+        //设备配件的集合
+        function getIBHaoCailist() {
+
+            var IBHaoCailist = new Array();
+            $("#gvHaoCai tr:gt(0)").each(function () {
+                var $row = $(this);
+                if ($row.find(".hfID").val() != undefined && $row.find(".hfID").val() != "") {
+                    var id = $row.find(".hfID").val();
+                    var HaoCai_Name = $row.find(".txtVender").val();          //耗材名称
+                    var HaoCaiXinghao = $row.find(".txtCompetProduct").val();      //耗材型号
+                    var Qty = $row.find(".txtDealer").val();
+                    var Price = $row.find(".txtPrice").val();                  //耗材数量           
+                    var Remark = $row.find(".txtCompetProductVersion").val(); //备注
+                    var obj = new Object();
+                    obj.isDelete = $row.find(".isDelete").val();
+                    if (id == undefined || id == "") {
+                        obj.id = 0;
+                    }
+                    else if (obj.isDelete == "1") {
+                        obj.id = -99 + id;
+                    }
+                    else {
+                        obj.id = id;
+                    }
+
+                    obj.ConsumableName = HaoCai_Name;
+                    obj.ConsumableNo = HaoCaiXinghao;
+                    obj.Qty = Qty;
+                    obj.Price = Price;
+                    obj.Remark = Remark;
+
+                    obj.CreateName = "";
+                    obj.CreateTime = "2016/1/11 14:29:56";
+                    obj.UpdateName = "";
+                    obj.UpdateTime = "2016/1/11 14:29:56";
+                    IBHaoCailist.push(obj);
+
+                }
+            });
+            return IBHaoCailist;
+        }
+
+        //获取设备基本信息对象
+        function getObj_IBInfo() {
+            var obj = new Object();
+            obj.ID = $("#hfdIBID").val();
+            obj.IBNumber = $("#hfdIBNo").val();
+            obj.EquNO = $("#txtZiChanBianMa").val();
+            obj.EquAttribute = $("#txtFDO").val();
+            obj.EquName = $("#ddlEquName option:selected").text();
+            obj.Specification = $("#txtSheiBeiXH").val();
+            obj.SerialNumber = $("#txtSN_Number").val();
+            obj.CategoryID = $("#ddlEquName").val().toString().split("|")[0];
+            obj.OSNumber = $("#txtOS_Number").val();
+            obj.EquPhoto = $("#hidImg").val();
+
+            // EquPhoto
+            var FileNames1 = "";
+            $("#list1 tr").each(function () {
+
+                var value = $(this).find("td").eq(1).html();
+                if (value != null && "" != value) {
+                    FileNames1 += value + "|";
+                }
+            })
+            obj.EquPhoto = FileNames1;
+            obj.EquipmentStaus = $('#ddlEquStatus').attr("relValue");
+            obj.InstallDate = $("#txtInstallDate").val();
+            obj.BuyMoeny = $("#txtDeviceBuyMoney").val();
+            obj.ServiceBegin = $("#txtWarranty_start_date").val();
+            obj.ServiceEnd = $("#txtWarranty_date").val();
+            obj.DepartPerson = $("#txtKeshiFuZeRen").val();
+            obj.DepartPersonTel = $("#txtKeshiFuZeRenPhone").val();
+            obj.Equengineer = $("#txtDeviceFenGuanRen").val();
+            obj.DepartmentID = $("#divDepartment").attr("relValue"); // $("#hfdDepartment").val();
+            obj.Equput = $("#txtMOdelNo").val();
+            obj.EquRemark = $("#txtRemark").val();
+            obj.UsingFrequency = $("#txtPinlv").val();
+            obj.AvgRevenue = $("#txtAvgRevenue").val();
+            obj.EquipmentDisuse = $("#txtEquipmentDisuse").val();
+            obj.DepreciationRate = $("#txtDepreciationRate").val();
+            obj.FactoryTel = $("#txtChangjiaRepairPhone").val();
+            obj.FactoryOtherTel = $("#txtChangjiaOtherContact").val();
+            obj.FactoryContact = $("#txtWeiBaoContact").val();
+            obj.FactoryContactTel = $("#txtWeiBaoContactPhone").val();
+            obj.LocalFactoryRepairName = $("#txtWeiBaoDanWei").val();
+            obj.BuyCommitment = $("#txtWeiBaoChengNuo").val();
+            obj.RepairRecord = $("#txtWeiBaoJiLu").val();
+            obj.RepairRemark = $("#txtRepairRemark").val();
+            obj.SupplierID = $("#Suppliers").attr("relValue");
+            obj.FactoryID = $('#ddlFactory').attr("relValue");
+            obj.HospitalNumber = $('#dllHospital').attr("relValue");
+            obj.EquipmentSource = $("#ddlEquipmentSource option:selected").val();
+            obj.SalerId = $('#ddlSaler').attr("relValue");
+            obj.OtherCost = $("#txtOtherCost").val();
+            obj.HumanCost = $("#txtHumanCost").val();
+            obj.UseBeginDate = $("#txtUseBeginDate").val();
+            obj.UseEndDate = $("#txtUseEndDate").val();
+            obj.Equorigin = $("#txtEquChandi").val();
+            obj.Manufacturedate = $("#txtOutFactoryDate").val();
+            obj.IsWarranty = obj.RepairFinish = $("input:radio[name=age-2]").filter("[checked]").val();
+            obj.Factorywarranty = obj.RepairFinish = $("input:radio[name=age-3]").filter("[checked]").val();
+            obj.IsContract = obj.RepairFinish = $("input:radio[name=age-4]").filter("[checked]").val();
+
+
+            obj.InstrumentType = $('#divInstrumentType').attr("relValue");
+            obj.IsHospitalAsset = $("input:radio[name=group-1]").filter("[checked]").val();
+            obj.IsNoUse = $("input:radio[name=group-2]").filter("[checked]").val();
+
+            obj.CreateName = "系统管理员";
+            obj.CreateTime = "2016/1/11 14:29:56";
+            obj.UpdateName = "系统管理员";
+            obj.UpdateTime = "2016/1/11 14:29:56";
+
+            // 附件 EquFile
+            var FileNames = "";
+            $("#list tr").each(function () {
+                var value = $(this).find("td").eq(0).html();
+                if (value != null && "" != value) {
+                    FileNames += value + "|";
+                }
+            })
+            obj.EquFile = FileNames;
+
+            // 判断是否由公共仓库转出
+            if ('30019' == "30001" && $("#divDepartment").attr("relValue") != "30001") {
+                obj.State = 1;
+            }
+            return obj;
+        }
+
+        //保存
+        function SaveAll() {
+
+            var CheckData = true;
+            var valid = $("#form1").validationEngine({ returnIsValid: true });
+            if (valid == true) {
+                if ($("#EquType").val() != "" || $("#hfdCategoryID").val() != "") {
+                    CheckData = true;
+                } else {
+                    top.Dialog.alert("请选择设备分类！");
+                    CheckData = false;
+                }
+            } else {
+                top.Dialog.alert("请完善设备信息！");
+                CheckData = false;
+            }
+
+            var IBpartlist1 = new Array();
+            //遍历GridView循环获取科室对象，并添加到 Array中
+            $("#gvCompetitor tr:gt(0)").each(function () {
+                var $row = $(this);
+                var id = $row.find(".hfID").val();
+                var PartName = $row.find(".txtVender").val();
+                var SerialNo = $row.find(".txtDealer").val();
+                var PartNo = $row.find(".txtPartNo").val();
+                var Qty = $row.find(".txtQty").val();
+                var Remark = $row.find(".txtPartRemark").val(); //备注
+                var Price = $row.find(".txtPrice").val();
+                //txtPartRemark
+                var obj = new Object();
+                obj.isDelete = $row.find(".isDelete").val();
+                if (id == undefined || id == "") {
+                    obj.id = 0;
+                }
+                else if (obj.isDelete == "1") {
+                    obj.id = -99 + id;
+                }
+                else {
+                    obj.id = id;
+                }
+                obj.PartName = PartName;
+                obj.SerialNo = SerialNo;
+                obj.PartNo = PartNo;
+                obj.Qty = Qty;
+                obj.Price = Price;
+                obj.Remark = Remark;
+                obj.CreateName = "";
+                obj.CreateTime = "2016/1/11 14:29:56";
+                obj.UpdateName = "";
+                obj.UpdateTime = "2016/1/11 14:29:56";
+
+                if (PartName != "" || SerialNo != "" || PartNo != "" || Qty != "") {
+
+                    if (PartName == "") {
+                        top.Dialog.alert("请填写配件名称！");
+                        CheckData = false;
+                        return;
+                    }
+                    if (SerialNo == "") {
+                        top.Dialog.alert("请填写配件序列号！");
+                        CheckData = false;
+                        return;
+                    }
+                    if (PartNo == "") {
+                        top.Dialog.alert("请填写配件货号！");
+                        CheckData = false;
+                        return;
+
+                    }
+                    if (Qty == "") {
+                        top.Dialog.alert("请填写配件数量！");
+                        CheckData = false;
+                        return;
+                    }
+                    IBpartlist1.push(obj);
+                }
+            });
+
+            if (CheckData) {
+
+                IBinfoObj = JSON.stringify(getObj_IBInfo());
+                IBpartlist = JSON.stringify(IBpartlist1);
+                IBHaoCailist = JSON.stringify(getIBHaoCailist());
+
+                var postData = { IBinfoObj: IBinfoObj, IBpartlist: IBpartlist, IBHaoCailist: IBHaoCailist };
+             
+                if ($("input:radio[name=age-4]").filter("[checked]").val() == "是" && ($("#txtWarranty_start_date").val() == '' && $("#txtWarranty_date").val() == '')) {
+                    alert("请填写保修时间！");
+                }
+                else {
+                    var Url = "../Handler/HospitalEquipment.ashx?Type=Add&t=" + Date.parse(new Date());
+                    $.ajax({
+                        url: Url,
+                        data: postData,
+                        dataType: 'text',   //返回的数据类型
+                        type: "POST",       //请求方式
+                        async: false,
+                        cache: false,
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (result) {
+                            if (result == "ok") {
+                                if ('' == "1") {
+                                    top.document.getElementById("_DialogFrame_a1").contentWindow.ReLoad('');
+                                    top.Dialog.close();
+                                }
+                                else if ('' == "2") {
+                                    top.frmright.page_245.refresh();
+                                    top.Dialog.close();
+                                }
+                                //维修处理  修改设备信息  韩淑田
+                                else if ('' == "3") {
+
+                                    alert("保存成功!");
+                                    top.document.getElementById("_DialogFrame_a2").contentWindow.ReLoad($("#ddlEquName").val().toString().split("|")[1], $("#CategoryID").attr("relText"), $("#txtSheiBeiXH").val(), $("#divDepartment").attr("relText"), $("#txtMOdelNo").val());
+                                    //  top.Dialog.close();
+                                    // top.Dialog.alert("保存成功！");
+                                    // top.document.getElementById("_DialogFrame_a2").contentWindow.ReLoad();
+                                    top.Dialog.close();
+
+                                }
+                                else {
+                                    top.frmright.page_212.refresh();
+                                    top.Dialog.close();
+                                }
+                            }
+                            else {
+                                alert("保存失败");
+                            }
+                        },
+                        error: function (result) {
+                            alert("数据传输错误");
+                        }
+                    })
+                }
+            }
+        }
+
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+
+
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        // 附件上传
+        var upload1;
+        var catalogId1;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "设备分类", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+        //初始化函数
+        function initComplete() {
+
+            //绑定厂商
+            $.post("../Handler/Factory.ashx", { Type: "GetFacoryName" }, function (result) {
+                $("#ddlFactory").data("data", result);
+                $("#ddlFactory").render();
+            }, "json");
+
+            //绑定销售商
+            $.post("../Handler/Supplier.ashx", { Type: "GetSupplierName" }, function (result) {
+                $("#ddlSaler").data("data", result);
+                $("#ddlSaler").render();
+            }, "json");
+
+            //绑定供应商
+            $.post("../Handler/Supplier.ashx", { Type: "GetSupplierName" }, function (result) {
+                $("#Suppliers").data("data", result);
+                $("#Suppliers").render();
+            }, "json");
+
+            //绑定医院
+            $.post("../Handler/Hospital.ashx", { Type: "GetHospitalName" }, function (result) {
+                $("#dllHospital").data("data", result);
+                $("#dllHospital").render();
+            }, "json");
+
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+            $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+
+            //初始化tree
+            initTree();
+
+            //监听查询框的回车事件
+            $("#EquipmentName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    searchHandler();
+                }
+            })
+
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/WordBook.ashx?Command=Tree',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //点击树节点刷选对应的表格数据 
+        function zTreeSelect(event, treeId, treeNode) {
+            var query = null;
+            selectTreeNode = treeNode;
+            query = { 'parentId': treeNode.id };
+            grid.setOptions({ url: '../Handler/Equipment.ashx?CategoryID=' + treeNode.id })
+            //页号重置为1
+            grid.setNewPage(1);
+            //刷新表格数据 
+            grid.loadData();
+        }
+
+        //上传图片
+        $(function () {
+            $('#file1').change(function () {
+                if (checkImgType(document.getElementById("file1"))) {
+                    Upload();
+                }
+            });
+            $('#file2').change(function () {
+                UploadFile();
+            });
+        });
+
+        //判断图片类型
+        function checkImgType(ths) {
+            if (ths.value == "") {
+                alert("请上传图片");
+                return false;
+            } else {
+                if (!/\.(jpg|jpeg|png|JPG|JPEG|PNG)$/.test(ths.value)) {
+                    alert("图片类型必须是.gif,jpeg,jpg,png中的一种");
+                    ths.value = "";
+                    return false;
+                }
+            }
+            return true;
+        }
+        function reflesh() {
+            if ('' == "1") {
+                top.Dialog.close();
+            }
+            else if ('' == "2") {
+                top.frmright.page_245.refresh();
+                top.Dialog.close();
+            }
+            //维修处理  修改设备信息  韩淑田
+            else if ('' == "3") {
+                top.Dialog.close();
+            }
+            else {
+                top.frmright.page_212.refresh();
+                top.Dialog.close();
+            }
+
+        }
+
+        // 图片上传函数
+        function Upload() {
+            $.ajaxFileUpload({
+                url: '../Handler/Equipment.ashx?Type=UpdatePic', //用于文件上传的服务器端请求地址
+                secureuri: false, //一般设置为false
+                fileElementId: 'file1', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    if (data[0] == "error") {
+                        top.Dialog.alert(data[1]);
+                    } else {
+                        $("#img1").attr("src", "../AppPhoto/Equ/" + data[1]);
+                        $("#hidImg").val(data[1] + "|");
+                        addHandler1(data[1]);
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert(e);
+                }
+            })
+            $('#file1').change(function () {
+                if (checkImgType(document.getElementById("file1"))) {
+                    Upload();
+                }
+            });
+            return false;
+        }
+
+
+        //添加行
+        function addHandler1(FileName) {
+            var val1 = FileName;
+
+            var $tr = addNewRowHandler1(val1);
+            $("#list1").append($tr);
+            //重新渲染表格
+            $("#list1").render();
+        }
+
+        //添加行处理
+        function addNewRowHandler1(val1) {
+            var $tr = $("<tr><td><img src='../AppPhoto/Equ/" + val1 + "' class='view' width='80' height='60'/></td><td name=FileName class=FileName>" + val1 + "</td><td><span class='img_btn_down hand' title='下载'></span> <span class='img_delete hand' title='删除'></span></td></tr>");
+            var $loadBtn = $tr.find(".img_btn_down");
+            var $delBtn = $tr.find(".img_delete");
+            var $view = $tr.find(".view");
+            $delBtn.click(function () {
+                delHandler1($(this));
+            })
+            $loadBtn.click(function () {
+                modiHandler1($(this));
+            })
+            $view.click(function () {
+                viewHandler1($(this));
+            })
+            enableTooltips();
+            return $tr;
+        }
+
+        // 预览
+        function viewHandler1($obj) {
+            var fileName = $obj.parents("tr").find("td").eq(1).html();
+            top.Dialog.open({ URL: "EquManager/PicView.aspx?UploadName=" + fileName, ShowMaxButton: true, Title: "预览设备图片" }).max();
+        }
+
+        //删除行
+        function delHandler1($obj) {
+            $currentTr = $obj.parents("tr");
+            top.Dialog.confirm("确定要删除吗？", function () {
+                $currentTr.remove();
+            });
+        }
+
+        //下载
+        function modiHandler1($obj) {
+            var fileName = $obj.parents("tr").find("td").eq(1).html();
+            var form = $("<form>");   //定义一个form表单
+            form.attr('style', 'display:none');   //在form表单中添加查询参数
+            form.attr('target', '');
+            form.attr('method', 'post');
+            form.attr('action', "../Handler/HospitalEquipment.ashx?Type=DownPhoto&date=" + new Date().getMilliseconds() + "&FileName=" + fileName);
+            var input1 = $('<input>');
+            input1.attr('type', 'hidden');
+            input1.attr('name', 'exportPostTime');
+            input1.attr('value', (new Date()).getMilliseconds());
+            $('body').append(form);  //将表单放置在web中 
+            form.append(input1);   //将查询参数控件提交到表单上
+            form.submit();   //表单提交 
+        }
+
+
+
+        // 附件上传
+        function UploadFile() {
+            var i = 0;
+            $.ajaxFileUpload({
+                url: '../Handler/HospitalEquipment.ashx?Type=UploadFile', //用于文件上传的服务器端请求地址
+                secureuri: false, //一般设置为false
+                fileElementId: 'file2', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    if (data[0].toString() == "success") {
+                        addHandler(data[1]);
+                    } else {
+                        top.Dialog.alert(data[1]);
+                    }
+                },
+                error: function (data, status) {
+                    if (i == 0) {
+                        top.Dialog.alert("文件过大！");
+                        i++;
+                    }
+                }
+            })
+            $('#file2').change(function () {
+                UploadFile();
+            });
+            return false;
+        }
+
+        //添加行
+        function addHandler(FileName) {
+            var val1 = FileName;
+
+            var $tr = addNewRowHandler(val1);
+            $("#list").append($tr);
+            //重新渲染表格
+            $("#list").render();
+        }
+
+        //添加行处理
+        function addNewRowHandler(val1) {
+            var $tr = $("<tr><td name=FileName class=FileName>" + val1 + "</td><td><span class='img_btn_down hand' title='下载'></span> <span class='img_delete hand' title='删除'></span></td></tr>");
+            var $loadBtn = $tr.find(".img_btn_down");
+            var $delBtn = $tr.find(".img_delete");
+            $delBtn.click(function () {
+                delHandler($(this));
+            })
+            $loadBtn.click(function () {
+                modiHandler($(this));
+            })
+            enableTooltips();
+            return $tr;
+        }
+
+        //删除行
+        function delHandler($obj) {
+            $currentTr = $obj.parents("tr");
+            top.Dialog.confirm("确定要删除吗？", function () {
+                $currentTr.remove();
+            });
+        }
+
+        //下载
+        function modiHandler($obj) {
+            var fileName = $obj.parents("tr").find("td").eq(0).html();
+            var form = $("<form>");   //定义一个form表单
+            form.attr('style', 'display:none');   //在form表单中添加查询参数
+            form.attr('target', '');
+            form.attr('method', 'post');
+            form.attr('action', "../Handler/HospitalEquipment.ashx?Type=DownFile&date=" + new Date().getMilliseconds() + "&FileName=" + fileName);
+            var input1 = $('<input>');
+            input1.attr('type', 'hidden');
+            input1.attr('name', 'exportPostTime');
+            input1.attr('value', (new Date()).getMilliseconds());
+            $('body').append(form);  //将表单放置在web中 
+            form.append(input1);   //将查询参数控件提交到表单上
+            form.submit();   //表单提交 
+        }     
+    </script>
+</head>
+<body>
+    <form method="post" action="EquInfo.aspx?Type=Edit&amp;id=1506" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUIODkzODM3NjcPZBYCZg9kFgYCSQ8QDxYGHg1EYXRhVGV4dEZpZWxkBQhXb3JkTmFtZR4ORGF0YVZhbHVlRmllbGQFAklkHgtfIURhdGFCb3VuZGdkEBUBDS0t6K+36YCJ5oupLS0VAQAUKwMBZ2RkAlEPPCsAEQIADxYEHwJnHgtfIUl0ZW1Db3VudAIBZAEQFgAWABYAFgJmD2QWBgIBD2QWAmYPZBYCAgQPFQEDMjQ4ZAICDw8WAh4HVmlzaWJsZWhkZAIDDw8WAh8EaGRkAlMPPCsAEQIADxYEHwJnHwMCAWQBEBYAFgAWABYCZg9kFgYCAQ9kFgJmD2QWAgIEDxUBAzMxM2QCAg8PFgIfBGhkZAIDDw8WAh8EaGRkGAMFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYBBQljeGJTdGF0dXMFCGd2SGFvQ2FpDzwrAAwBCAIBZAUMZ3ZDb21wZXRpdG9yDzwrAAwBCAIBZKweCJqJ+2h9Ta29Hquuu5y66ARyPYSuaIjLCIBvbxFz" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWPgKf6JTaCAK7j4DQDAKY8+kzAvWslKECAqz7nscOAqSJtoQHAuPtldcPAriV24QFAqji18MLApXnx/wNAuK0sYcJAtOt1ooEAoHT+PkKAu2PxLUHAs6E5JUNAtKM3EcCxKiKzw0Cv4CN/QYCiM7w9AUC8YXxDwLOu+/6BAL664jQDgK3lOzWDwLtxoe8AQLCu/G/AwLTmZ2aDgL2ntjbDwKZvIvlBALuldbECgLAo5z8CQL/05q7AwKHx5rQDAKM66XPDALR07KdCAKc3dHGBgKq1OzhAwKSg6gxArnIo+ADAorP4aEFAq+t+2ACmIe9hg4C8/i69wcCysS2zgMC+Kj2qg0C9suU1wQCyvuQqgcCqvTCqwUCxvu54g0C7Zj/gwwCqNC26AQCl+mR4Q0C7I+T6QQChYGnlwsC+eSo/A0CrcKGjwsC7v6GnA8ClLTTyQQCpJWbhg8Cy9iaoAgCwrz9IAL1/ZTbBwK6ze3zBs61ut4r0GQX2om+xtDB8N19mmU02FzaLmOnxOiN7FsB" />
+</div>
+    <div class="box1" panelwidth="100%">
+        <div class="basicTab">
+            <div name="设备基本信息" style="width: 100%; height: 550px;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td width="15%">
+                            资产编码：
+                        </td>
+                        <td width="35%">
+                            <input name="txtZiChanBianMa" type="text" id="txtZiChanBianMa" />
+                            <input type="hidden" name="hfdIBID" id="hfdIBID" value="1506" />
+                            <input type="hidden" name="hfdIBNo" id="hfdIBNo" value="6801160108514" />
+                        </td>
+                        <td width="15%">
+                            设备属性：
+                        </td>
+                        <td>
+                            <input name="txtFDO" type="text" value="213321" id="txtFDO" class="validate[required]" />
+                            <span style="color: red">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备分类：
+                        </td>
+                        <td>
+                            <input type="hidden" name="hfdCategoryID" id="hfdCategoryID" value="10073" />
+                            <div class="selectTree" id="CategoryID" url="../Handler/WordBook.ashx?Command=Tree&ParentID=10000">
+                            </div>
+                            <span style="color: red">*</span>
+                        </td>
+                        <td width="15%">
+                            设备名称：
+                        </td>
+                        <td width="35%">
+                            <select name="ddlEquName" id="ddlEquName" class="validate[required]">
+	<option value="">请选择</option>
+
+</select>
+                            <span style="color: red">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备型号：
+                        </td>
+                        <td>
+                            <input name="txtSheiBeiXH" type="text" value="213123" id="txtSheiBeiXH" class="validate[required]" />
+                            <span style="color: red">*</span>
+                        </td>
+                        <td>
+                            设备序列号：
+                        </td>
+                        <td>
+                            <input name="txtSN_Number" type="text" value="123231321" id="txtSN_Number" class="validate[required]" />
+                            <span style="color: red">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            设备厂家：
+                        </td>
+                        <td>
+                            
+                            <div class="suggestion" id="ddlFactory" keepdefaultstyle="true" showlist="true">
+                            </div>
+                            <span style="color: red">*</span>
+                        </td>
+                        <td>
+                            厂家系统编号：
+                        </td>
+                        <td>
+                            <input name="txtOS_Number" type="text" value="231231" id="txtOS_Number" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            出厂日期：
+                        </td>
+                        <td>
+                            <input name="txtOutFactoryDate" type="text" value="2016-01-07 00:00" id="txtOutFactoryDate" class="date" />
+                        </td>
+                        <td>
+                            设备产地：
+                        </td>
+                        <td>
+                            <input name="txtEquChandi" type="text" value="231213" id="txtEquChandi" />
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>设备状态：</td>
+                     <td> <input type="hidden" name="hidEquStatus" id="hidEquStatus" />
+                            <div class="selectTree" id="ddlEquStatus" url="../Handler/WordBook.ashx?Command=Tree&ParentID=10040">
+                            </div>
+                            <span style="color: red">*</span>
+                            </td>
+                            <td>机械类别：</td>
+                            <td>
+                              <div class="selectTree" id="divInstrumentType" url="../Handler/WordBook.ashx?Command=Tree&ParentID=10527">
+                            </div>
+                            <input type="hidden" name="hfInstrumentType" id="hfInstrumentType" value="10528" />
+                            </td>
+                    </tr>
+                    <tr>
+
+                    <td>医院资产：</td>
+                    <td>
+                         <input type="radio" id="rdIsHospitalAsset" name="group-1" value="1" checked="checked" /><label for="male-3" class="hand">是</label>
+			             <input type="radio" id="rdIsHospitalAsset1" name="group-1" value="0" /><label for="female-3" class="hand">否</label>
+
+                           <input type="hidden" name="hfIsHospitalAsset" id="hfIsHospitalAsset" value="1" />
+                           <span style="color:Red">(由于医院借用等情况 不是医院的设备则选择否) </span>
+                    </td>
+                    <td> </td>
+                    <td>
+                         <div style="display:none">
+                         <input type="radio" id="rdIsNoUse" name="group-2" value="1" /><label for="male-3" class="hand">是</label>
+			             <input type="radio" id="rdIsNoUse1" name="group-2" value="0" checked="checked" /><label for="female-3" class="hand">否</label>
+                         <input type="hidden" name="hfIsNoUse" id="hfIsNoUse" value="0" />
+                         </div>
+                    </td>
+                    </tr>                    
+                    
+                </table>
+                <div style="float: left; width: 100%; height: 300px; overflow: auto">
+                    <table class="tableStyle" formmode="view">
+                        <tr>
+                            <td width="15%">
+                                上传设备照片(<2Mb)：
+                            </td>
+                            <td width="35%">
+                                <input type="file" id="file1" name="file" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="list1" class="tableStyle" useclick="false" mode="list">
+	<tr>
+		<th style="width: 20%">
+                                缩略图
+                            </th>
+		<th style="width: 50%">
+                                照片名称
+                            </th>
+		<th>
+                                操作
+                            </th>
+	</tr>
+</table>
+
+                </div>
+               
+            </div>
+            <div name="设备购置信息" style="width: 95%; height: 550px;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td width="15%">
+                            装机时间：
+                        </td>
+                        <td width="35%">
+                            <input name="txtInstallDate" type="text" value="2015-12-29" id="txtInstallDate" class="date validate[required]" />
+                            <span style="color: red">*</span>
+                        </td>
+                        <td width="15%">
+                            设备购买金额：
+                        </td>
+                        <td>
+                            <input name="txtDeviceBuyMoney" type="text" id="txtDeviceBuyMoney" />
+                        </td>
+                    </tr>
+                    
+                    <tr id="trContractIBWarranty" style="display: none">
+	<td>
+                            合同保修开始时间：
+                        </td>
+	<td>
+                            <input name="txtCStartDate" type="text" id="txtCStartDate" class="date" />
+                        </td>
+	<td>
+                            合同保修结束时间：
+                        </td>
+	<td>
+                            <input name="txtCEndDate" type="text" id="txtCEndDate" class="date" />
+                        </td>
+</tr>
+
+                    <tr style="display: none">
+                        <td>
+                            拆机时间：
+                        </td>
+                        <td>
+                            <input name="txtUninstallDate" type="text" id="txtUninstallDate" class="date" onclick="WdatePicker()" />
+                        </td>
+                        <td>
+                            状态：
+                        </td>
+                        <td>
+                            <input id="cxbStatus" type="checkbox" name="cxbStatus" /><label for="cxbStatus">Uninstall</label>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            目前使用科室：
+                        </td>
+                        <td>
+                            <input type="hidden" name="hfdDepartment" id="hfdDepartment" />
+                            <div class="selectTree validate[required]" selectedvalue="" id="divDepartment" url="../Handler/Departments.ashx?Command=Tree">
+                            </div>
+                            <span style="color: red">*</span>
+                        </td>
+                        <td>
+                            保管负责人电话：
+                        </td>
+                        <td>
+                            <input name="txtKeshiFuZeRenPhone" type="text" value="12345678901" id="txtKeshiFuZeRenPhone" style="height:22px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备分管工程师：
+                        </td>
+                        <td>
+                            <input name="txtDeviceFenGuanRen" type="text" value="王阳" id="txtDeviceFenGuanRen" />
+                        </td>
+                        <td>
+                            科室保管负责人：
+                        </td>
+                        <td>
+                            <input name="txtKeshiFuZeRen" type="text" value="手术室科室主任" id="txtKeshiFuZeRen" class="validate[required]" />
+                            <span style="color: red">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            目前摆放地点：
+                        </td>
+                        <td>
+                            <input name="txtMOdelNo" type="text" value="231231" id="txtMOdelNo" class="validate[required]" />
+                            <span style="color: red">*</span>
+                        </td>
+                        <td>
+                            设备销售商：
+                        </td>
+                        <td>
+                            
+                            <div class="suggestion" id="ddlSaler" keepdefaultstyle="true" showlist="true">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            医院名称：
+                        </td>
+                        <td colspan="3">
+                            
+                            <div class="suggestion" id="dllHospital" keepdefaultstyle="true" showlist="true">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            备注：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <textarea name="txtRemark" rows="2" cols="20" id="txtRemark" style="width: 400px;">
+</textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div name="维保信息" style="width: 96%; height: 550px;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td>
+                            设备供应商：
+                        </td>
+                        <td colspan="4">
+                            <input type="hidden" name="Supplier" id="Supplier" />
+                            
+                            <div class="suggestion" id="Suppliers" keepdefaultstyle="true" showlist="true">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            供应商维修电话：
+                        </td>
+                        <td width="35%">
+                            <input name="txtChangjiaRepairPhone" type="text" value="33333333" id="txtChangjiaRepairPhone" />
+                        </td>
+                        <td width="15%">
+                            其他联系方式：
+                        </td>
+                        <td>
+                            <input name="txtChangjiaOtherContact" type="text" id="txtChangjiaOtherContact" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            联系人姓名：
+                        </td>
+                        <td>
+                            <input name="txtWeiBaoContact" type="text" value="小刘" id="txtWeiBaoContact" />
+                        </td>
+                        <td>
+                            联系人电话：
+                        </td>
+                        <td>
+                            <input name="txtWeiBaoContactPhone" type="text" value="33333333" id="txtWeiBaoContactPhone" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            是否在保：
+                        </td>
+                        <td>
+                            <input type="radio" id="Radio3" name="age-2" value="是" checked="checked" /><label
+                                for="lt25-2" class="hand">是</label>
+                            <input type="radio" id="Radio4" name="age-2" value="否" /><label for="gt25-2" class="hand">否</label>
+                            <span style="color: red">*</span>
+                        </td>
+                        <td>
+                            是否原厂在保：
+                        </td>
+                        <td>
+                            <input type="radio" id="Radio1" name="age-3" value="是" checked="checked" /><label
+                                for="lt25-2" class="hand">是</label>
+                            <input type="radio" id="Radio2" name="age-3" value="否" /><label for="gt25-2" class="hand">否</label>
+                            <span style="color: red">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>是否合同内保修</td>
+                    <td>
+                     <input type="radio" id="Radio5" name="age-4" value="是" checked="checked" /><label
+                                for="lt25-2" class="hand">是</label>
+                            <input type="radio" id="Radio6" name="age-4" value="否" /><label for="gt25-2" class="hand">否</label>
+                            <span style="color: red">*</span>
+                    </td>
+                    <td></td> <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            保修开始时间：
+                        </td>
+                        <td>
+                            <input name="txtWarranty_start_date" type="text" id="txtWarranty_start_date" class="date" onclick="WdatePicker()" value="2016-01-07 00:00" />
+                        </td>
+                        <td>
+                            保修结束时间：
+                        </td>
+                        <td>
+                            <input name="txtWarranty_date" type="text" id="txtWarranty_date" class="date" onclick="WdatePicker({ minDate: $(&#39;#txtWarranty_start_date&#39;).val() })" value="2016-01-09 00:00" />
+                        </td>
+                    </tr>
+                    <tr style="display: none">
+                        <td>
+                            地址：
+                        </td>
+                        <td colspan="3">
+                            <textarea name="TextBox11" rows="2" cols="20" id="TextBox11" style="width: 400px; height: 40px">
+</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            当地供应商授权维保联系单位名称：
+                        </td>
+                        <td>
+                            <textarea name="txtWeiBaoDanWei" rows="2" cols="20" id="txtWeiBaoDanWei" style="width: 400px; height: 40px">
+</textarea>
+                        </td>
+                        <td>
+                            资产所属：
+                        </td>
+                        <td>
+                            <select name="ddlEquipmentSource" id="ddlEquipmentSource">
+	<option value="">--请选择--</option>
+
+</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备购买时供应商及授权方维修承诺：
+                        </td>
+                        <td colspan="3">
+                            <textarea name="txtWeiBaoChengNuo" rows="2" cols="20" id="txtWeiBaoChengNuo" style="width: 400px; height: 40px">
+</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            维修记录及承诺：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <textarea name="txtWeiBaoJiLu" rows="2" cols="20" id="txtWeiBaoJiLu" style="width: 400px; height: 40px">
+</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            备注：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <textarea name="txtRepairRemark" rows="2" cols="20" id="txtRepairRemark" style="width: 400px;">
+</textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div name="设备配件信息" style="width: 99%; height: 550px;">
+                <div id="Div2" style="width: 100%; height: 540px; overflow: auto;">
+                    <div>
+	<table class="tableStyle" cellspacing="0" id="gvCompetitor" style="width:100%;border-collapse:collapse;">
+		<tr>
+			<th align="center" scope="col">配件名称</th><th align="center" scope="col">配件货号</th><th align="center" scope="col">配件序列号</th><th align="center" scope="col">配件数量</th><th align="center" scope="col">单价</th><th align="center" scope="col">备注</th><th align="center" scope="col">操作</th>
+		</tr><tr>
+			<td align="center">
+                                    <input name="gvCompetitor$ctl02$txtVender" type="text" value="231" id="gvCompetitor_txtVender_0" class="txtVender" style="width:90%;" />
+                                    <span style="color: red">*</span>
+                                    <input name="gvCompetitor$ctl02$hfisDelete" type="hidden" id="gvCompetitor_hfisDelete_0" class="isDelete" value="0" />
+                                    <input id="hfID" class="hfID" value='248' type="hidden" />
+                                </td><td align="center">
+                                    <input name="gvCompetitor$ctl02$txtPartNo" type="text" value="321" id="gvCompetitor_txtPartNo_0" class="txtPartNo" style="width:90%;" />
+                                    <span style="color: red">*</span>
+                                </td><td align="center">
+                                    <input name="gvCompetitor$ctl02$txtDealer" type="text" value="231" id="gvCompetitor_txtDealer_0" class="txtDealer" style="width:90%;" />
+                                    <span style="color: red">*</span>
+                                </td><td align="center">
+                                    <input name="gvCompetitor$ctl02$txtQty" type="text" value="123" id="gvCompetitor_txtQty_0" class="txtQty" style="width:90%;" /><span style="color: red">*</span>
+                                </td><td align="center">
+                                    <input name="gvCompetitor$ctl02$txtPrice" type="text" id="gvCompetitor_txtPrice_0" class="txtPrice" style="width:90%;" />
+                                </td><td align="center">
+                                    <input name="gvCompetitor$ctl02$txtPartRemark" type="text" id="gvCompetitor_txtPartRemark_0" class="txtPartRemark" style="width:90%;" />
+                                </td><td align="center">
+                                    <span class="img_add hand" title="添加" onclick="AddRowCompetitor(this)" style="width: 50%">
+                                    </span><span class="img_delete hand" title="删除" onclick="deleteCurrentRowCompetitor(this)"
+                                        style="width: 50%"></span>
+                                </td>
+		</tr>
+	</table>
+</div>
+                </div>
+            </div>
+            <div name="设备耗材信息" style="width: 99%; height: 550px;">
+                <div id="Div1" style="width: 100%; height: 540px; overflow: auto;">
+                    <div>
+	<table class="tableStyle" cellspacing="0" id="gvHaoCai" style="width:100%;border-collapse:collapse;">
+		<tr>
+			<th align="center" scope="col">耗材名称</th><th align="center" scope="col">耗材型号</th><th align="center" scope="col">耗材数量</th><th align="center" scope="col">备注</th><th align="center" scope="col">操作</th>
+		</tr><tr>
+			<td align="center">
+                                    <input name="gvHaoCai$ctl02$txtVender" type="text" id="gvHaoCai_txtVender_0" class="txtVender" />
+                                    <input name="gvHaoCai$ctl02$hfisDelete" type="hidden" id="gvHaoCai_hfisDelete_0" class="isDelete" value="0" />
+                                    <input id="hfID" class="hfID" value='313' type="hidden" />
+                                </td><td align="center">
+                                    <input name="gvHaoCai$ctl02$txtCompetProduct" type="text" id="gvHaoCai_txtCompetProduct_0" class="txtCompetProduct" />
+                                </td><td align="center">
+                                    <input name="gvHaoCai$ctl02$txtDealer" type="text" id="gvHaoCai_txtDealer_0" class="txtDealer" />
+                                </td><td align="center">
+                                    <input name="gvHaoCai$ctl02$txtCompetProductVersion" type="text" id="gvHaoCai_txtCompetProductVersion_0" class="txtCompetProductVersion" />
+                                </td><td align="center">
+                                    <span class="img_add hand" title="添加" onclick="AddRowHaoCai(this)"></span><span class="img_delete hand"
+                                        title="删除" onclick="deleteCurrentRowHaoCai(this)"></span>
+                                </td>
+		</tr>
+	</table>
+</div>
+                </div>
+            </div>
+            <div name="设备使用信息" style="width: 95%; height: 550px;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td>
+                            使用频率：
+                        </td>
+                        <td>
+                            <input name="txtPinlv" type="text" value="0" id="txtPinlv" />次/天
+                        </td>
+                        <td>
+                            设备收入：
+                        </td>
+                        <td>
+                            <input name="txtAvgRevenue" type="text" value="0" id="txtAvgRevenue" />元/次
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            报废年限：
+                        </td>
+                        <td>
+                            <input name="txtEquipmentDisuse" type="text" id="txtEquipmentDisuse" value="0" />年
+                        </td>
+                        <td>
+                            年折旧率：
+                        </td>
+                        <td>
+                            <input name="txtDepreciationRate" type="text" id="txtDepreciationRate" value="0" />%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            开始日期：
+                        </td>
+                        <td>
+                            <input name="txtUseBeginDate" type="text" id="txtUseBeginDate" class="date" />
+                        </td>
+                        <td>
+                            结束日期：
+                        </td>
+                        <td>
+                            <input name="txtUseEndDate" type="text" id="txtUseEndDate" class="date" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            人员费用：
+                        </td>
+                        <td>
+                            <input name="txtHumanCost" type="text" id="txtHumanCost" value="0.0000" />
+                            元/天
+                        </td>
+                        <td>
+                            水电其他费用 ：
+                        </td>
+                        <td>
+                            <input name="txtOtherCost" type="text" id="txtOtherCost" value="0.0000" />元/天
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div name="附件上传" style="width: 95%; height: 550px;">
+                <table class="tableStyle" formmode="view">
+                    <tr>
+                        <td width="15%">
+                            上传附件(<4Mb)：
+                        </td>
+                        <td width="35%">
+                            <input type="file" id="file2" name="file" />
+                        </td>
+                    </tr>
+                </table>
+                <table class='tableStyle' useclick="false" mode="list" id="list">
+                    <tr>
+                        <th style="width: 70%">
+                            文件名
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <table class="tableStyle" formmode="transparent">
+        <tr>
+            <td>
+                <button type="button" onclick="reflesh();" style="float: right; margin-right: 40px">
+                    <span class="icon_exit">返回</span></button>
+                <button type="button" id="btnSave" onclick="SaveAll();" style="float: right; margin-right: 20px">
+                    <span class="icon_save">保存</span></button>
+                <input type="hidden" name="hfLoadOver" id="hfLoadOver" value="1" />
+
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(function () {
+
+        //复选框选中
+        if ($("#hfLoadOver").val() == "1") {
+           
+        }
+    });
+
+
+</script>

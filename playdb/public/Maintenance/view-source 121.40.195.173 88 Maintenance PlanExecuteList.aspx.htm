@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>保养计划执行管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <script type="text/javascript" src="../../libs/js/popup/drag.js"></script>
+    <script type="text/javascript" src="../../libs/js/popup/dialog.js"></script>
+     <script src="../libs/js/form/suggestion.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="layout1">
+        <div id="leftCon" position="left" style="" paneltitle="科室结构树">
+            <div class="orgTreeContainer">
+                <ul id="tree" class="ztree">
+                </ul>
+            </div>
+        </div>
+        <div id="centerCon" position="center" style="">
+            <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+                <form method="post" action="PlanExecuteList.aspx" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTE5MDY2NDM3NjFkZKIMJ09A1tAhrnRSp27RSFn5hg99LaOY1ssH4aQSi1ot" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBQLxx//sAQLyn9n2CgLi8POYBgL98POYBgK3lOzWD6qB3bfS/7BpL0ZM8a/cVVXSTcSEd1A5/5baeq/X+Nyq" />
+</div>
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            系统编号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtIBNumber" />
+                        </td>
+                        <td>
+                            计划编号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtCode" />
+                        </td>
+                        <td>
+                            计划名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtTitle" />
+                        </td>
+                        <td class="style1">
+                            设备名称：
+                        </td>
+                        <td class="style1">
+                            <input type="text" id="EquName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            实施状态：
+                        </td>
+                        <td>
+                            <select name="ddlStatus" id="ddlStatus">
+	<option selected="selected" value="">--请选择--</option>
+	<option value="0">保养未完成</option>
+	<option value="1">保养完成</option>
+
+</select>
+                        </td>
+                        <td class="style1">
+                            设备型号：
+                        </td>
+                        <td class="style1">
+                            <input type="text" id="Specification" />
+                        </td>
+                        <td align="right">
+                            目前所属科室：
+                        </td>
+                        <td>
+                            
+                            <input type="hidden" name="hfdDepartment" id="hfdDepartment" />
+                            <div class="selectTree" selectedvalue="" id="divDepartment" url="../Handler/Departments.ashx?Command=Tree">
+                            </div>
+                        </td>
+                        <td>
+                            目前摆放地点：
+                        </td>
+                        <td>
+                            <input type="text" id="txtEquput" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            归属医院：
+                        </td>
+                        <td>
+                             <div class="suggestion" id="dllHospital" keepdefaultstyle="true" showlist="true">
+                            </div>
+                        </td>
+                        <td colspan="4" align="right">
+                            <button type="button" id="btnSearch">
+                                <span class="icon_find">查询</span></button>
+                            &nbsp; &nbsp;
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+            <div class="padding_right5">
+                <div id="dataBasic">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "科室结构", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodes = treeObj.getSelectedNodes()[0];
+            var parm = "&code=" + encodeURIComponent($("#txtCode").val());
+            parm += "&title=" + encodeURIComponent($("#txtTitle").val());
+            parm += "&status=" + $("#ddlStatus").find("option:selected").val();
+            if (nodes) {
+                parm += "&dept=" + nodes.id;
+            }
+            parm += "&IBNumber=" + $("#txtIBNumber").val();
+            parm += "&DeptId=" + $("#Id").val();
+            parm += "&DeptParentId=" + $("#ParentId").val();
+            parm += "&RoleId=0&UserId=20036";
+
+            parm += "&EquName=" + encodeURIComponent($("#EquName").val());
+            parm += "&Specification=" + encodeURIComponent($("#Specification").val());
+            // 科室
+            parm += "&DepartmentID=" + escape($("#hfdDepartment").val());
+            parm += "&Equput=" + encodeURIComponent($("#txtEquput").val()); //目前摆放地点
+            parm += "&HospitalName=" + $('#dllHospital').attr("relValue");
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/MaintenancePlans.ashx?type=GetListExe' + parm });
+            //刷新表格数据 
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+
+            $("#divDepartment").bind("change", function () {
+                $("#hfdDepartment").val($(this).attr("relValue"));
+            })
+
+            //绑定医院
+            $.post("../Handler/Hospital.ashx", { Type: "GetHospitalName" }, function (result) {
+                $("#dllHospital").data("data", result);
+                $("#dllHospital").render();
+            }, "json");
+
+            //初始化tree
+            initTree();
+
+            //初始化grid组件
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/Departments.ashx?Command=List',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+                { display: '实施状态', name: 'IsCompleted', align: 'center', width: "5%", showTitle: true },
+				{ display: '计划编号', name: 'PMCode', align: 'left', width: "10%" },
+                { display: '计划名称', name: 'PMTitle', align: 'left', width: "10%", showTitle: true },
+			    { display: '系统编号', name: 'IBNumber', align: 'left', width: "10%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', width: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'center', width: "5%" },
+
+                { display: '医院名称', name: 'HospitalName', align: 'center', width: "10%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'center', width: "5%" },
+                { display: '设备厂家', name: 'FactoryName', align: 'center', width: "10%" },
+
+
+
+                { display: '计划保养科室', name: 'DeptName', align: 'left', width: "5%", showTitle: true },
+                { display: '外包公司', name: 'Outsource', align: 'left', width: "5%", showTitle: true },
+                { display: '状态', name: 'HasUnusual', align: 'left', width: "5%", showTitle: true },
+                { display: '预计执行时间', name: 'PlanTime', align: 'left', width: "10%", showTitle: true },
+                { display: 'PM报告', isAllowHide: false, align: 'center', width: 80,
+                    render: function (rowdata, rowindex, value, column) {
+                        if (CheckPMReport(rowdata.pmid, rowdata.IBNumber) == "No" && rowdata.IsCompleted == "保养未完成") {
+
+                            if ('3094' != 3004 && '3094' != 3002) {
+
+                                var operate = '<div class="padding_top4 padding_left5">';
+                                operate += '<img src="../libs/icons/png_28/icons_01.png" title="新增" onclick="AddPMReport(' + "'" + rowdata.IBNumber + "'" + ',' + "'" + rowdata.PMCode + "'" + ',' + "'" + rowdata.IsCompleted + "'" + ')"/>';
+                                operate += '</div>';
+                            }
+                           
+
+                         
+                        }
+                        else {
+                            var operate = '<div class="padding_top4 padding_left5">';
+                            operate += '<img src="../libs/icons/png_28/icons_38.png" title="查看" onclick="LookPMReport(' + "'" + rowdata.IBNumber + "'" + ', ' + "'" + rowdata.PMCode + "'" + ',' + "'" + rowdata.IsCompleted + "'" + ')"/>';
+                            operate += '</div>';
+                        }
+
+
+                        return operate;
+                    }
+                },
+
+           		{ display: '操作', isAllowHide: false, align: 'center', width: 80,
+           		    render: function (rowdata, rowindex, value, column) {
+
+           		        if ('3094' != 3004 && '3094' != 3002) {
+
+           		            var operate = '<div class="padding_top4 padding_left5">';
+           		            operate += '<img src="img/btn_up.gif" title="上传" onclick="onUpload(' + "'" + rowdata.IBNumber + "'" + ',' + "'" + rowdata.PMCode + "'" + ')"/>&nbsp;&nbsp;';
+           		            operate += '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.pmid + ')"></span>';
+           		            operate += '</div>';
+           		            return operate;
+
+           		        }
+           		        else {
+
+           		            var operate = '<div class="padding_top4 padding_left5">';
+           		            operate += '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.pmid + ')"></span>';
+           		            operate += '</div>';
+           		            return operate;
+
+           		        }
+           		   
+           		    }
+           		}
+			  ],
+                url: '../Handler/MaintenancePlans.ashx?type=GetListExe&RoleId=0&UserId=20036&date=' + new Date().getTime() + $("#ddlStatus").find("option:selected").val(),
+                sortName: 'pmid',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: true,
+                enabledEdit: true,
+                sortOrder: "desc"//,
+                //toolbar: {
+                // items: [
+                //{ text: '新增', click: addUnit, iconClass: 'icon_add' },
+                //{ line: true }
+                //]
+                //}
+            });
+        }
+
+        //上传图片
+        function onUpload(IBNumber, PMCode) {
+            top.Dialog.open({
+                URL: "Maintenance/PMUpload.aspx?IBNumber=" + IBNumber + "&PMCode=" + PMCode,
+                Title: "上传图片",
+                Width: 920,
+                ShowMaxButton: true,
+                Height: 600
+            });
+        }
+
+        function CheckPMReport(PMCode, DeviceNo) {
+            var flag = "No"
+            //ajax begin
+            var Url = "../Handler/PMModelHandler.ashx?type=CheckPMReport"
+            var postData = { PMCode: PMCode, DeviceNo: DeviceNo };
+            $.ajax({
+                url: Url,
+                data: postData,
+                dataType: 'text',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (result) {
+                    flag = result;
+
+                },
+                error: function (result) {
+                    alert("连接错误");
+
+                }
+            })  //ajax end
+            return flag;
+        }
+
+
+        function LookPMReport(IBNumber, PMCode, IsCompleted) {
+            top.Dialog.open({
+                URL: "Maintenance/PMModel.aspx?print=1&IBNumber=" + IBNumber + "&PMCode=" + PMCode + "&IsCompleted=" + IsCompleted,
+                Title: "查看PM报告",
+                Width: 1100,
+                ShowMaxButton: true,
+                Height: 650
+            });
+        }
+
+        function AddPMReport(IBNumber, PMCode, IsCompleted) {
+            top.Dialog.open({
+                URL: "Maintenance/PMModel.aspx?IBNumber=" + IBNumber + "&PMCode=" + PMCode + "&IsCompleted=" + IsCompleted,
+                Title: "新增PM报告",
+                Width: 1100,
+                ShowMaxButton: true,
+                Height: 650
+            });
+        }
+
+        //计划执行
+        function onExe(pmid, pdid) {
+            top.Dialog.open({
+                URL: "Maintenance/PlanExecute.aspx?type=Exe&id=" + pmid + "&pdid=" + pdid,
+                Title: "计划执行",
+                Width: 1100,
+                ShowMaxButton: true,
+                Height: 650
+            }).max();
+        }
+        //新增
+        function addUnit() {
+            top.Dialog.open({
+                URL: "Maintenance/MaintenancePlansInfo.aspx?type=Add",
+                ID: "a1",
+                Title: "添加",
+                Width: 1000,
+                Height: 650
+            });
+        }
+        //查看
+        function onView(rowid) {
+            top.Dialog.open({
+                URL: "Maintenance/MaintenancePlansLook.aspx?id=" + rowid,
+                Title: "查看计划信息",
+                Width: 1000,
+                ShowMaxButton: true,
+                Height: 650
+            });
+        }
+
+
+        //点击树节点刷选对应的表格数据 
+        function zTreeSelect(event, treeId, treeNode) {
+            //            var query = null;
+            selectTreeNode = treeNode;
+            //            query = { 'parentId': treeNode.id };
+            //            var code = encodeURIComponent($("#txtCode").val());
+            //            var title = encodeURIComponent($("#txtTitle").val());
+            //            var status = $("#ddlStatus").find("option:selected").val();
+            //            grid.setOptions({ url: '../Handler/MaintenancePlans.ashx?type=GetList&dept='
+            //            + treeNode.id
+            //            + "&code=" + code
+            //            + "&title=" + title
+            //            + "&status=" + status
+            //            })
+            //            //页号重置为1
+            //            grid.setNewPage(1);
+            //            //刷新表格数据 
+            //            //grid.loadData();
+
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            searchHandler();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#ddlStatus").setValue("");
+            $("#divDepartment").setValue("");
+            $("#dllHospital").attr("relValue", "");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'pmid';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

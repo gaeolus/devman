@@ -1,0 +1,23 @@
+12-20 21:02:52 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "PLAY_EVOLUTIONS" not found; SQL statement:
+select id, hash, apply_script, revert_script, state, last_problem from play_evolutions where state like 'applying_%' [42102-187]
+12-20 21:02:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ORDER[*] (
+ID                        BIGINT NOT NULL,
+DEPARTMENT                VARCHAR(255),
+ORDER_EMPLOYEE            VARCHAR(255),
+CONSTRAINT PK_ORDER PRIMARY KEY (ID)) "; expected "identifier"; SQL statement:
+create table order (
+id                        bigint not null,
+department                varchar(255),
+order_employee            varchar(255),
+constraint pk_order primary key (id)) [42001-187]
+12-20 21:07:23 jdbc[33]: exception
+org.h2.jdbc.JdbcSQLException: Table "PRODUCT" not found; SQL statement:
+select count(*) from product t0 where lower(t0.name) like ?  [42102-187]
+12-20 21:08:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "PRODUCT" not found; SQL statement:
+select count(*) from product t0 where lower(t0.name) like ?  [42102-187]
+02-23 20:08:05 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "DROP TABLE IF EXISTS ORDER[*] "; expected "identifier"; SQL statement:
+drop table if exists order [42001-187]

@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	设备移科
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+        $(function () {
+            $("#divDepartment").setValue('');
+            $("#divAuiUser").setValue('');
+
+            if ('' == "1") {
+                $("#imgSelect").attr("style","display:none");
+            }
+        });
+        function reflesh() {
+            if ('' == "1" || '' == "1") {
+                top.Dialog.close();
+            }
+            else {
+                top.frmright.page_211.refresh();
+                top.Dialog.close();
+            }
+        }
+        function initComplete() {
+            $("#divDepartment").bind("change", function () {
+                $("#hfdDepartment").val($(this).attr("relValue"));
+                $("#hfdValue").val($(this).attr("relText"));
+                if ($(this).attr("relValue") != "") {
+                    BindDepInfo($(this).attr("relValue"));
+                }
+
+            })
+            $("#divAuiUser").bind("change", function () {
+                $("#hfdAuiUser").val($(this).attr("relValue"));
+                $("#hfdUserRealName").val($(this).attr("relText"));
+            })
+        }
+
+        // 科室联动科室负责人及电话 ADD BY WANGPC 2014/11/11
+        function BindDepInfo(DepartmentId) {
+            var Url = "../Handler/Departments.ashx";
+            $.ajax({
+                url: Url,
+                data: { Type: "GetDepInfo", DepartmentId: DepartmentId },
+                dataType: 'json',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                success: function (data) {
+                    $("#txtPersonTwo").val(data[0].ManagerName);
+                    $("#txtPhoneTwo").val(data[0].MobilePhone);
+                },
+                error: function (result) {
+                    alert("数据传输错误");
+                }
+            })
+        }
+
+        //获取界面填充的数据
+        function EquipmentObj() {
+            var obj = new Object();
+            if ('Add' == "Add") {
+                obj.id = -1;
+                obj.EquipmentIBNumber = 'TF2016010004';
+            }
+            else {
+                obj.id = '';
+                obj.EquipmentIBNumber = ''
+            }
+            obj.CategoryID = $("#txtCategoryID").val();
+            obj.DeptNowId = $("#hdDeptID").val();
+            obj.IB_Number = $("#txtIBNumber").val();
+            obj.EquName = $("#txtEquName").val();
+            obj.EquTypeNumber = $("txtFactory").val();
+            obj.EquTypeName = $("#txtEquipMentType").val();
+            obj.DeptNameNow = $("#txtDeptName").val();
+            obj.ApplyPerson = $("#txtAuditPerson").val();
+            obj.ApplyDate = $("#txtApplyDate").val();
+            obj.HeadNowName = $("#txtDeptPersonOne").val();
+            obj.HeadPhoneNow = $("#txtPhoneOne").val();
+            obj.HeadAfterName = $("#txtPersonTwo").val();
+            obj.HearPhoneAfter = $("#txtPhoneTwo").val();
+            obj.DeptNameAfter = $("#hfdValue").val();
+            obj.DeptAfterId = $("#hfdDepartment").val();
+            obj.DepositAddress = $("#txtAddress").val();
+            obj.AuditPerson = $("#hfdUserRealName").val();
+            obj.AuditUserName = $("#hfdAuiUser").val();
+           
+            if ($("#cbxAduit").attr("checked")) {
+                obj.IsPerson = 1;
+                obj.StatusName = 0;
+
+            }
+            else {
+                obj.IsPerson = 0;
+                obj.StatusName = 2;
+
+            }
+            obj.TransferReason = $("#txtRemark").val();
+            obj.CreateTime = '2016/1/11 14:31:17';
+            obj.CreateName = '系统管理员';
+            return obj;
+        }
+        //保存
+        function Save() {
+
+            if (CheckData()) {
+                infoObj = JSON.stringify(EquipmentObj());
+                var postData = { infoObj: infoObj };
+                var Url = "../Handler/EquipmentTransfer.ashx?Type=Save&t=" + Date.parse(new Date());
+                $.ajax({
+                    url: Url,
+                    data: postData,
+                    dataType: 'text',   //返回的数据类型
+                    type: "POST",       //请求方式
+                    async: false,
+                    cache: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (result) {
+                        if (result == "ok") {
+                            if ('' == "1") {
+                                top.Dialog.close();
+                            } else if ('' == "1") {
+                                top.document.getElementById("_DialogFrame_a1").contentWindow.ReLoad('');
+                                top.Dialog.close();
+                            }
+                            else {
+                                top.frmright.page_211.refresh();
+                                top.Dialog.close();
+                            }
+
+                        }
+                        else {
+                            top.Dialog.alert("保存失败");
+                        }
+                    },
+                    error: function (result) {
+                        top.Dialog.alert("数据传输错误");
+                    }
+                })
+            }
+
+        }
+        //提交时修改审核状态的信息
+        function EquipStatusNameObj() {
+            var obj = new Object();
+            obj.id = '';
+            obj.StatusName = "1";
+            return obj;
+        }
+        function UpdateStatus() {
+            infoObj = JSON.stringify(EquipStatusNameObj());
+            var postData = { infoObj: infoObj };
+            var Url = "../Handler/EquipmentTransfer.ashx?Type=Status&t=" + Date.parse(new Date());
+            $.ajax({
+                url: Url,
+                data: postData,
+                dataType: 'text',   //返回的数据类型
+                type: "POST",       //请求方式
+                async: false,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (result) {
+                    if (result == "ok") {
+                        top.frmright.page_211.refresh();
+                        top.Dialog.close();
+                    }
+                    else {
+                        top.Dialog.alert("保存失败");
+                    }
+                },
+                error: function (result) {
+                    top.Dialog.alert("数据传输错误");
+                }
+            })
+        }
+        //提交
+        function EquipmentRecordObj() {
+            var obj = new Object();
+            obj.EquipMentCode = '';
+            obj.AuditUserNumber = '';
+            obj.AuditPersonName = '';
+            //            obj.AuditPersonNo =
+            obj.AuditStatus = "待审核";
+            obj.CreateName = '系统管理员';
+            obj.CreateTime = '2016/1/11 14:31:17';
+            return obj;
+        }
+        //提交
+        function Submit() {
+            if (CheckData()) {
+                infoObj = JSON.stringify(EquipmentRecordObj());
+                var postData = { infoObj: infoObj };
+                var Url = "../Handler/EquipmentAuditRecord.ashx?Type=Save&t=" + Date.parse(new Date());
+                $.ajax({
+                    url: Url,
+                    data: postData,
+                    dataType: 'text',   //返回的数据类型
+                    type: "POST",       //请求方式
+                    async: false,
+                    cache: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (result) {
+                        if (result == "ok") {
+                            UpdateStatus();
+                            //                            top.frmright.page_211.refresh();
+                            //                            top.Dialog.close();
+                        }
+                        else {
+                            top.Dialog.alert("保存失败");
+                        }
+                    },
+                    error: function (result) {
+                        top.Dialog.alert("数据传输错误");
+                    }
+                })
+            }
+
+        }
+
+        function CheckData() {
+      
+            if ($("#txtEquName").val() == "") {
+                top.Dialog.alert("请选择设备名称！");
+                return false;
+            }
+            else if ($("#hfdDepartment").val() == "") {
+                top.Dialog.alert("请选择新科室！");
+                return false;
+            }
+            else if ($("#cbxAduit").attr("checked")) {
+                if ($("#hfdAuiUser").val() == "") {
+                    top.Dialog.alert("请选择审核人！");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+            else if ($("#cbxAduit").attr("checked")!="checked"&&$("#hfdAuiUser").val() != "") 
+            {
+                top.Dialog.alert("请选择是否需要审核！");
+                    return false;
+                
+            }
+            else {
+                return true;
+            }
+        }
+
+        function Open() {
+            top.Dialog.open({
+                URL: "SearchPage/SelectEqument.aspx?Command=CheckInfos",
+                Title: "选择设备", ShowMaxButton: true, Width: 1000, Height: 530
+            });
+        }
+
+        $(function () {
+            $("#txtApplyDate").val('2016-01-11 14:31')
+            //        $("#txtAuditStatus").val("转科申请中");
+        })
+    </script>
+</head>
+<body>
+    <form method="post" action="TransferInfo.aspx?Type=Add" id="myFormId">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEyMTgxMDc0OTgPZBYCAgMPZBYCAg8PDxYCHgRUZXh0BQ/ns7vnu5/nrqHnkIblkZhkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUIY2J4QWR1aXS8zzv0xlXDoJ91kVYKPMClSlDIX0BbakyUD4zs2qNL5w==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWFwKG48KoCgLYvJCVCgK83LDBDAKFzL3mCwKugaO2DQKzkffwAwLOw8ulAQKhltH8DQKs7Jt1AoasxdYGAv2RiLUGArCJ0+IDAreU7NYPAuDI1uEIAsbE470MAq/bhYoKAr3txI4OAqqc178CArTjiDoCucrpsg8C7+yE2QICmbyL5QQC/L64kgwuDqAUyPOsqMI9nu4b+ODZjRid8ayImmMOLTSpdEzkUA==" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <input type="hidden" name="txtCategoryID" id="txtCategoryID" />
+            <input type="hidden" name="txtSpecification" id="txtSpecification" />
+            <input type="hidden" name="hdDeptID" id="hdDeptID" />
+            <td>
+                设备名称：
+            </td>
+            <td>
+                <input name="txtEquName" type="text" id="txtEquName" /><img id="imgSelect" src="../skin/icons/list-se.png"
+                    alt="" onclick="Open();" />
+                <span class="star">*</span>
+            </td>
+            <td>
+                系统编号：
+            </td>
+            <td>
+                <input name="txtIBNumber" type="text" id="txtIBNumber" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备分类：
+            </td>
+            <td>
+                <input name="txtEquipMentType" type="text" id="txtEquipMentType" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                目前所属科室：
+            </td>
+            <td>
+                <input name="txtDeptName" type="text" id="txtDeptName" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                申请人：
+            </td>
+            <td>
+                <input name="txtAuditPerson" type="text" value="系统管理员" id="txtAuditPerson" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                申请时间：
+            </td>
+            <td>
+                <input name="txtApplyDate" type="text" id="txtApplyDate" class="date" dateFmt="yyyy-MM-dd HH:mm" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                原科室负责人：
+            </td>
+            <td>
+                <input name="txtDeptPersonOne" type="text" id="txtDeptPersonOne" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                负责人电话：
+            </td>
+            <td>
+                <input name="txtPhoneOne" type="text" id="txtPhoneOne" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                新科室：
+            </td>
+            <td>
+                <input type="hidden" name="hfdDepartment" id="hfdDepartment" />
+                <input type="hidden" name="hfdValue" id="hfdValue" />
+                <div class="selectTree" selectedvalue="" id="divDepartment" url="../Handler/Departments.ashx?Command=Tree">
+                </div>
+                <span class="star">*</span>
+            </td>
+            <td>
+                审核状态：
+            </td>
+            <td>
+                <input name="txtAuditStatus" type="text" id="txtAuditStatus" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                新科室负责人：
+            </td>
+            <td>
+                <input name="txtPersonTwo" type="text" id="txtPersonTwo" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                负责人电话：
+            </td>
+            <td>
+                <input name="txtPhoneTwo" type="text" id="txtPhoneTwo" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                是否审核：
+            </td>
+            <td>
+                <input id="cbxAduit" type="checkbox" name="cbxAduit" />
+            </td>
+            <td>
+                审核人：
+            </td>
+            <td>
+                <input type="hidden" name="hfdAuiUser" id="hfdAuiUser" />
+                <input type="hidden" name="hfdUserRealName" id="hfdUserRealName" />
+                <div class="selectTree" selectedvalue="" id="divAuiUser" url="../Handler/Users.ashx?type=UserDepartments">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                目前摆放地点：
+            </td>
+            <td>
+                <input name="txtAddress" type="text" id="txtAddress" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                备注：
+            </td>
+            <td style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input name="BtnSave" type="button" id="BtnSave" value="保存" onclick="Save();" />
+                
+                <input type="button" value="取消" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

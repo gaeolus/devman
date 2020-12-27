@@ -1,0 +1,83 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	设备移科审核
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function reflesh() {
+
+            top.Dialog.close();
+        }
+   
+    </script>
+</head>
+<body>
+    <form method="post" action="TransferAuditLook.aspx?id=217" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTgzNTc1NTA0MQ9kFgICAw9kFggCAQ8PFgIeBFRleHQFDFRGMjAxNjAxMDAwMmRkAgMPDxYCHwAFDOWuoeaguOmAmui/h2RkAgUPDxYCHwBlZGQCBw8PFgIfAAUQMjAxNi0wMS0wNSAxMToxOWRkZFj30zNkCtaODDQk1DEsIag2URbq3GGn3kn3b20qkMLu" />
+</div>
+
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td width="15%">
+                转移单号：
+            </td>
+            <td width="35%">
+                <span id="txtIBNumber">TF2016010002</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                审核状态：
+            </td>
+            <td>
+                <span id="txtAuditStatus">审核通过</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                相关描述：
+            </td>
+            <td  style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <span id="txtRemark"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                审核时间：
+            </td>
+            <td>
+                <span id="txtApplyDate">2016-01-05 11:19</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" value="返回" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

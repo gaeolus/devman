@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>人事信息管理</title>
+<!--框架必需start-->
+<script type="text/javascript" src="../libs/js/jquery.js"></script>
+<script type="text/javascript" src="../libs/js/language/cn.js"></script>
+<script type="text/javascript" src="../libs/js/framework.js"></script>
+<link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" id="skin" prePath="../"/>
+<link rel="stylesheet" type="text/css" id="customSkin"/>
+<!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+ 
+    <script type="text/javascript">
+        function reflesh() {
+    
+            if ('Look'=="Look") {
+                top.Dialog.close();
+            } else {
+                top.frmright.page_209.refresh();
+                top.Dialog.close();
+            }
+        }   
+    </script>
+</head>
+<body>
+    <form method="post" action="SupplierInfo.aspx?Type=Edit&amp;id=27" id="myFormId">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTY2OTUzNTE2NWRkciXV/gBmC8vEpvho/HAfX1xa549x90+FC+IFN8nnzmQ=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWCwK5686NCgKJrpbWAgLp+/jRBgLyh+/uCwLT8b35BQKp87aZCAKrsdfiCAKK0KrrCgLvs4SXBQKZvIvlBALKl/WiB7eS1TyFBxkKTIDnAMAx2j7wkemgw6J1vRuTu5VVGARf" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td width="175">
+                供应商名称：
+            </td>
+            <td>
+                <input name="txtVender" type="text" value="苏泊尔电器" id="txtVender" class="validate[required]" /><span
+                    class="star">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                资质名称：
+            </td>
+            <td>
+                <input name="txtAptitude" type="text" value="苏泊尔" id="txtAptitude" class="validate[required]" /><span
+                    class="star">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                有效期（年）：
+            </td>
+            <td>
+                <input name="txtValidity" type="text" value="2" id="txtValidity" class="validate[required,custom[onlyNumber]]" /><span
+                    class="star">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                开始时间：
+            </td>
+            <td>
+                <input name="txtFromTime" type="text" value="2014-11-12 16:47" id="txtFromTime" class="date " dateFmt="yyyy-MM-dd HH:mm" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                结束时间：
+            </td>
+            <td>
+                <input name="txtEndTime" type="text" value="2016-11-12 16:49" id="txtEndTime" class="date required" dateFmt="yyyy-MM-dd HH:mm" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                联系人：
+            </td>
+            <td>
+                <input name="Person" type="text" value="小刘" id="Person" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                联系电话：
+            </td>
+            <td>
+                <input name="Tel" type="text" value="33333333" id="Tel" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                地 址：
+            </td>
+            <td>
+                <input name="Adr" type="text" value="济南柯渡" id="Adr" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                备注：
+            </td>
+            <td>
+                <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+测试数据</textarea>
+            </td>
+        </tr>
+        <tr style="margin-left: 220px">
+            <td>
+            </td>
+            <td>
+                <input type="submit" name="btnApply" value="保 存" id="btnApply" />&nbsp;&nbsp;
+                <input type="button" id="Button1" value="返 回" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+    <script type="text/javascript">
+        //绑定change事件
+        $("#Users").bind("change", function () {
+            $("#UserId").val($(this).attr("relValue"));
+        })
+        $("#department").bind("change", function () {
+            $("#ToDepId").val($(this).attr("relValue"));
+        })
+
+        function chk() {
+            $("#ToDepId").val($("#department").attr("relValue"));
+            $("#UserId").val($("#Users").attr("relValue"));
+            if ($("#UserId").val() == "") {
+                top.Dialog.alert("请选择人员！");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

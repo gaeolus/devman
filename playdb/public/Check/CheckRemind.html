@@ -1,0 +1,345 @@
+
+
+
+<!DOCTYPE html />
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>计量提醒管理</title>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../" scrollery="false" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <link href="../libs/js/artDialog/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="../libs/js/tree/ztree/ztree.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <!--框架必需start-->
+    <script src="../libs/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../libs/js/language/cn.js" type="text/javascript"></script>
+    <script src="../libs/js/framework.js" type="text/javascript"></script>
+    <!--框架必需end-->
+    <!--树组件start -->
+    <script src="../libs/js/tree/ztree/ztree.js" type="text/javascript"></script>
+    <!--树组件end -->
+    <!--布局控件start-->
+    <script src="../libs/js/nav/layout.js" type="text/javascript"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!-- 表单start -->
+    <script src="../libs/js/popup/dialog.js" type="text/javascript"></script>
+    <script src="../libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <!-- 弹窗start -->
+    <script src="../libs/js/artDialog/jquery.artDialog.js" type="text/javascript"></script>
+    <script src="../libs/js/artDialog/iframeTools.js" type="text/javascript"></script>
+    <!-- 弹窗end -->
+</head>
+<body>
+<div id="layout1">
+    <div id="leftCon" position="left" style="" paneltitle="科室结构树">
+        <div class="orgTreeContainer">
+            <ul id="tree" class="ztree">
+            </ul>
+        </div>
+    </div>
+    <div id="centerCon" position="center" style="">
+        <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+            <form method="post" action="CheckRemind.aspx" id="Form1">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMwNjcxMjgxOGRk+tI758HS6MJ3qKfUREf649rkrNEgXI4maFrVNyZBTE0=" />
+                </div>
+
+                <div class="aspNetHidden">
+
+                    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwKum/aqDAL2g+LoAgLm7MiGDgL57MiGDgLF6NzRCQLKh/a/BQLLh/a/BV21QqHva6WjL0lnJ2I3VbziRcAiZsECtCGQAz4YcHUv" />
+                </div>
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            处理状态：
+                        </td>
+                        <td>
+                            <select name="ddlState" id="ddlState">
+                                <option selected="selected" value="">--请选择--</option>
+                                <option value="0">未检测</option>
+                                <option value="1">已检测</option>
+
+                            </select>
+                        </td>
+                        <td>
+                            设备名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtEquName" />
+                        </td>
+                        <td>
+                            计量时间：
+                        </td>
+                        <td>
+                            <select name="ddlTimeZones" id="ddlTimeZones">
+                                <option selected="selected" value="">--请选择--</option>
+                                <option value="1">一周内</option>
+                                <option value="2">一月内</option>
+
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" id="btnSearch">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="padding_right5">
+            <div id="dataBasic">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+
+
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "科室结构", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+
+        $(function () {
+            $("#btnSearch").click(function () {
+                searchHandler();
+            })
+        })
+
+        function searchHandler() {
+
+            var parm = "&equname=" + encodeURIComponent($("#txtEquName").val());
+            parm += "&timezone=" + $("#ddlTimeZones").find("option:selected").val();
+            parm += "&state=" + $("#ddlState").find("option:selected").val();
+            parm += "&DeptId=" + $("#Id").val();
+            parm += "&DeptParentId=" + $("#ParentId").val();
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/CheckInfo.ashx?type=Remind' + parm });
+
+            //刷新表格数据
+            grid.loadData();
+        }
+        //初始化函数
+        function initComplete() {
+            //初始化tree
+            initTree();
+
+            //初始化grid组件
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+            //监听查询框的回车事件
+            $("#EquipmentName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    searchHandler();
+                }
+            })
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                url: '../Handler/Departments.ashx?Command=List',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+				{ display: '处理状态', name: 'State', align: 'left', wdith: "5%" },
+                { display: '证书编号', name: 'BookSn', align: 'left', wdith: "5%" },
+                { display: '检测产品', name: 'CheckProduct', align: 'left', width: "5%" },
+                { display: '备件名称', name: 'PartName', align: 'left', width: "5%" },
+			    { display: '设备名称', name: 'EquName', align: 'left', wdith: "10%" },
+			    { display: '设备型号', name: 'Specification', align: 'left', wdith: "10%" },
+			    { display: '设备厂家', name: 'FactoryName', align: 'left', wdith: "10%" },
+                { display: '系统编号', name: 'IBNumber', align: 'left', wdith: "10%" },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', wdith: "10%" },
+                { display: '费用', name: 'Money', align: 'left', wdith: "5%" },
+                { display: '检测日期', name: 'CheckTime', align: 'left', wdith: "5%", render: renderTimeStatus },
+                { display: '下次检测日期', name: 'NextTime', align: 'left', wdith: "5%" },
+                { display: '检定结论', name: 'Result', align: 'left', wdith: "5%" },
+                { display: '主管人', name: 'Manager', align: 'left', wdith: "5%" },
+                { display: '审核人', name: 'Checker', align: 'left', wdith: "5%" },
+                { display: '检定人', name: 'Tester', align: 'left', wdith: "10%" },
+                { display: '操作', isAllowHide: false, align: 'left', width: 80,
+                    render: function (rowdata, rowindex, value, column) {
+                        return '<div class="padding_top4 padding_left5">'
+	                                 + '<span class="img_list hand" title="查看" onclick="onView(' + rowdata.Id + ')"></span>'
+	                             + '</div>';
+                    }
+                }
+			  ],
+                alternatingRow: false,
+                //行渲染 实质是对该行的tr标签进行属性的设置
+                rowAttrRender: function (rowdata, rowid) {
+                    if (rowdata.State == '已检测') {
+                        return "style=\"background-color:#bcfcb1;\"";
+                    }
+                },
+                url: '../Handler/CheckInfo.ashx?type=Remind&date=' + new Date().getTime(),
+                sortName: 'State',
+                rownumbers: true,
+                height: '100%',
+                width: "100%",
+                pageSize: 20,
+                percentWidthMode: true,
+                sortOrder: "asc"
+            });
+        }
+
+        function renderTimeStatus(rowdata, rowindex, value, column) {
+            //            var projectDate = new Date(value);
+            //            var now = new Date();
+            //            var dateT = parseInt((projectDate - now) / (1000 * 60 * 60 * 24));
+
+            // add by wangpc
+            s1 = new Date(value.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var dateT = parseInt(days / (1000 * 60 * 60 * 24));
+            //
+
+            if ((rowdata.State == "未检测")) {
+                if ((dateT >= 0 && dateT < 7)) {
+                    return "<div style='background-color:yellow;'>" + value + "</div>";
+                }
+//                if (dateT >= 7 && dateT <= 30) {
+//                    return "<div style='background-color:yellow;'>" + value + "</div>";
+//                }
+
+                else if (dateT < 0 && dateT > -7) {
+                    return "<div style='background-color:Red;'>" + value + "</div>";
+                }
+//                else {
+//                    return "<div style='background-color:#DDD;'>" + value + "</div>";
+                //                }
+                else {
+                    return "<div>" + value + "</div>";
+                }
+            }
+            else {
+                return "<div style='background-color:#bcfcb1;'>" + value + "</div>";
+            }
+        }
+
+        //查看
+        function onView(rowid) {
+            top.Dialog.open({
+                URL: "Check/CheckLook.aspx?id=" + rowid,
+                Title: "查看计量信息",
+                Width: 600,
+                Height: 450
+            });
+        }
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+            grid.loadData();
+        }
+        //点击树节点刷选对应的表格数据
+        function zTreeSelect(event, treeId, treeNode) {
+            //            var query = null;
+            selectTreeNode = treeNode;
+            //            query = { 'parentId': treeNode.id };
+            //            var timezone = $("#ddlTimeZones").find("option:selected").val();
+            //            var state = $("#ddlState").find("option:selected").val();
+            //            grid.setOptions({ url: '../Handler/CheckInfo.ashx?type=GetByDept&dept='
+            //            + treeNode.id
+            //            + "&timezone=" + timezone
+            //            +"&state="+state})
+            //            //页号重置为1
+            //            grid.setNewPage(1);
+            //刷新表格数据
+            //grid.loadData();
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            searchHandler();
+        }
+
+
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+
+        //重置查询
+        function resetSearch() {
+            $("#Form1")[0].reset();
+            $("#ddlState").setValue("");
+            $("#ddlTimeZones").setValue("");
+            searchHandler();
+        }
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+
+    </script>
+</body>
+</html>

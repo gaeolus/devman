@@ -1,0 +1,120 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设备管理</title>
+<!--框架必需start-->
+<script type="text/javascript" src="../libs/js/jquery.js"></script>
+<script type="text/javascript" src="../libs/js/language/cn.js"></script>
+<script type="text/javascript" src="../libs/js/framework.js"></script>
+<link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" id="skin" prePath="../"/>
+<link rel="stylesheet" type="text/css" id="customSkin"/>
+<!--框架必需end-->
+
+<!-- 日期控件start -->
+<script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+<!-- 日期控件end -->
+
+<!-- 树组件start -->
+<script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css"></link>
+<!-- 树组件end -->
+
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+<!-- 树形下拉框end -->
+
+<!-- 表单验证start -->
+<script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+<script src="../libs/js/form/validation.js" type="text/javascript"></script>
+<!-- 表单验证end -->
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#CategoryID").setValue('');
+    });
+    function reflesh() {
+      
+        top.Dialog.close();
+    }
+
+    function initComplete() {
+        $("#CategoryID").bind("change", function () {
+            $("#hfdCategoryID").val($(this).attr("relValue"));
+        })
+    }
+</script>
+</head>
+<body>
+<form method="post" action="EquipmentInfo.aspx?Type=Add" id="myFormId">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJOTYwMTcwOTY1ZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUGY2h4Qm94kqrXJ+sNEY53Z1NI9Z4ZsUXPXNeIBfWl+oDT1jlipU4=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWDALO3uD3BwKxwZJYAtm/gLoBAqjG06IIAtWEkKEGAq37/u0FAr37uv8PAqry1MgFAoP6z5ENAqSJtoQHAtCInaYHApy3uJIMzeLBzSuFoGD/MOS9UuVRAnhtKsCzf6Hh7MvP/zaW2tU=" />
+</div>
+	<table class="tableStyle" formMode="view">
+		<tr>
+			<td>设备编号：</td>
+			<td><input name="txtEquipmentNo" type="text" id="txtEquipmentNo" class="validate[required,custom[noSpecialCaracters]]" /><span class="star">*</span></td>
+           <td>设备名称：</td>
+			<td>
+				<input name="txtChinaName" type="text" id="txtChinaName" class="validate[required]" /><span class="star">*</span>
+			</td>
+		</tr>
+		<tr>
+			<td>英文名称：</td>
+			<td>
+				<input name="txtEnglishName" type="text" id="txtEnglishName" />
+			</td>
+            <td>设备简称：</td>
+			<td>
+				<input name="txtReferreName" type="text" id="txtReferreName" />
+			</td>
+		</tr>
+		<tr>
+            <td>设备型号：</td>
+			<td><input name="txtGG" type="text" id="txtGG" /></td>
+            <td>设备单位：</td>
+			<td><input name="txtDW" type="text" id="txtDW" /></td>
+		</tr>
+		<tr style="display:none">
+			<td>税前价格：</td>
+			<td><input name="txtPrePrice" type="text" value="0" id="txtPrePrice" /></td>
+           <td>税后价格：</td>
+			<td>
+           <input name="txtAfterPrice" type="text" value="0" id="txtAfterPrice" />
+            </td>
+		</tr>
+		<tr>
+			<td>设备分类：</td>
+			<td>
+            <input type="hidden" name="hfdCategoryID" id="hfdCategoryID" />
+            <div class="selectTree validate[required]" selectedValue="" id="CategoryID" url="../Handler/WordBook.ashx?Command=Tree&ParentID=10000"></div><span class="star">*</span>
+            </td>
+            <td style="display:none">生产厂商：</td>
+			<td style="display:none"><select name="ddlFactoryName" id="ddlFactoryName">
+
+</select></td>
+  
+            <td>使用状态：</td>
+			<td><input id="chxBox" type="checkbox" name="chxBox" /> 启用</td>
+         </tr>
+
+    <tr>
+			<td colspan="4">
+				<input type="submit" name="btnSave" value="保存" id="btnSave" />
+				<input type="button" value="取消" onclick="reflesh();"/>
+			</td>
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

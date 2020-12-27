@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>保养计划明细</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="/assets/libs/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/framework.js"></script>
+    <link href="/assets/libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="/assets/" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="/assets/libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="/assets/libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/libs/js/tree/ztree/ztree.css"></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="/assets/libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="/assets/libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="/assets/libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <!--基本选项卡start-->
+    <script type="text/javascript" src="/assets/libs/js/nav/basicTab.js"></script>
+    <!--基本选项卡end-->
+    <script type="text/javascript">
+
+        $(function () {
+            $("#Department").setValue($("#hdDepartment").val());
+            $("#Department").bind("change", function () {
+                $("#hdDepartment").val($(this).attr("relValue"));
+            })
+            $("#btnSave").click(function () {
+                //                Save();
+                saveGrid();
+            })
+
+            if ('' == "1") {
+                $("#imgSelect").attr("style", "display:none");
+            }
+        })
+
+        function validateForm() {
+            var valid = $("#Form1").validationEngine({ returnIsValid: true });
+            if (valid == true) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function lookupEqu() {
+            top.Dialog.open({
+                URL: "/assets/SearchPage/SelectEqument.html?IsMultiple=true&Command=Maintenance",
+                Title: "选择医院设备",
+                ShowMaxButton: true,
+                Width: 950,
+                Height: 600
+            });
+        }
+
+        function setvalue(rows) {
+            if (rows.length > 0) {
+                var $grid = $("#gvPlanDetails");
+
+                $(rows).each(function (i) {
+                    var flag = true;
+                    var ename = rows[i].EquName;
+                    var serianum = rows[i].Specification;
+                    var deptname = rows[i].DeptName;
+                    var ibnum = rows[i].IBNumber;
+                    /*
+                    添加
+                    厂家、归属医院，目前摆放地点
+                    杨来明 2015-04-21
+                    */
+                    var Equput = "";
+                    var FactoryName = "";
+                    var Hospital = "";
+                    if (rows[i].Equput != null) {
+                        Equput = rows[i].Equput;
+                    }
+                    if (rows[i].FactoryName != null) {
+                        FactoryName = rows[i].FactoryName;
+                    }
+                    if (rows[i].Hospital != null) {
+                        Hospital = rows[i].Hospital;
+                    }
+
+                   
+
+                    var $tr = $grid.find("tr:has(td):first").clone(true);
+
+                    $tds = $tr.find("td");
+                    $tds.eq(0).find(".equname").val(ename);
+                    $tds.eq(0).find(".pkey").val("-1");
+                    $tds.eq(0).find(".IBNumber").val(ibnum);
+                    $tds.eq(1).text(serianum);
+                    $tds.eq(2).text(deptname);
+                    $tds.eq(3).text(Hospital);
+                    $tds.eq(4).text(Equput);
+                    $tds.eq(5).text(FactoryName);
+
+
+
+                    $tds.eq(6).find(".plancontent").val("");
+                    $tds.eq(7).find(".notes").val("");
+                    $tds.eq(8).find(".plantime").val("");
+                    $tds.eq(9).find(".executor").val("");
+                    $tds.eq(10).find(".remark").val("");
+//                    $tds.eq(3).find(".plancontent").val("");
+//                    $tds.eq(4).find(".notes").val("");
+//                    $tds.eq(5).find(".plantime").val("");
+//                    $tds.eq(6).find(".executor").val("");
+//                    $tds.eq(7).find(".remark").val("");
+
+                    $grid.find("tr:has(td)").each(function (j) {
+                        if ($grid.find("tr:has(td)").eq(j).find(".IBNumber").val() == rows[i].IBNumber) {
+                            flag = false;
+                        }
+                    });
+                    if (flag) {
+                        $grid.append($tr.css("display", "block"));
+                    }
+                })
+                var equname = $grid.find("tr:has(td):first").find("td").eq(0).find(".equname").val();
+                if (equname == "") {
+                    $grid.find("tr:has(td):first").css("display", "none");
+                }
+            }
+        }
+
+        function saveGrid() {
+            var $grid = $("#gvPlanDetails");
+            var list = [];
+            var checkGridData = true;
+            $grid.find("tr:has(td):visible").each(function (i, row) {
+                var entity = {};
+                entity.PDID = $(row).find(".pkey").val();
+                entity.PMID = $("#hdID").val();
+                //                entity.IBNumber = $.trim($(row).find("td").eq(2).text());
+                entity.IBNumber = $(row).find(".IBNumber").val();
+                entity.PlanContent = $(row).find(".plancontent").val();
+                entity.Notes = $(row).find(".notes").val();
+                entity.PlanTime = $(row).find(".plantime").val();
+                entity.Executor = $(row).find(".executor").val();
+                entity.Remark = $(row).find(".remark").val();
+                list.push(entity);
+                if (entity.IBNumber == "") {
+                    top.Dialog.alert("请选择保养设备！");
+                    checkGridData = false;
+                    return false;
+                }
+                if (entity.PlanTime == "") {
+                    top.Dialog.alert("请填写执行时间！");
+                    checkGridData = false;
+                    return false;
+                }
+                if (entity.Executor == "") {
+                    top.Dialog.alert("请填写执行人！");
+                    checkGridData = false;
+                    return false;
+                }
+
+            });
+            if (list.length == 0) {
+                top.Dialog.alert("请选择保养设备！");
+                checkGridData = false;
+                return false;
+            }
+
+            if ($("#hdDepartment").val() == "") {
+                top.Dialog.alert("请选择保养科室！");
+                checkGridData = false;
+                return false;
+            }
+
+            if (checkGridData) {
+                if (validateForm()) {
+                    var mp = GetEntity();
+                    mp.PlanDetails = list;
+                    infoObj = JSON.stringify(mp);
+                    $.ajax({
+                        type: 'POST',
+                        async: false,
+                        url: '../Handler/PlanDetails.ashx',
+                        dataType: 'json',
+                        data: {
+                            type: "SaveList",
+                            data: infoObj
+                        },
+                        success: function (result) {
+                            if ('' != "1") {
+                                top.Dialog.alert("保存成功！|保存成功", function () { top.frmright.page_228.refresh(); top.Dialog.close(); });
+
+                            }
+                            else {
+
+                                top.Dialog.alert("保存成功！|保存成功", function () { top.Dialog.close(); top.frmright.page_228.refresh(); });
+                            }
+
+
+                        },
+                        error: function (a) {
+                            top.Dialog.alert("访问服务器端出错！");
+                        }
+                    });
+                }
+            }
+        }
+        function DeleteRow() {
+            var tt = arguments[0];
+            $(tt).parent().parent().css("display", "none");
+            var id = $(tt).parent().parent().find("td:first").find(".pkey").val();
+            $(tt).parent().parent().find("td:first").find(".IBNumber").val("")
+            if (id != "-1") {
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    url: '../Handler/PlanDetails.ashx?type=Del',
+                    dataType: 'json',
+                    data: {
+                        pdid: id
+                    },
+                    success: function (result) {
+                        //                        top.frmright.page_228.refresh();
+                        //                        top.Dialog.close();
+                    },
+                    error: function (a) {
+                        top.Dialog.alert("访问服务器端出错！");
+                    }
+                });
+            }
+        }
+        function Save() {
+            var et = GetEntity();
+            if (validateForm()) {
+                if (et.PMDept != "") {
+                    infoObj = JSON.stringify(et);
+                    $.ajax({
+                        type: 'POST',
+                        async: false,
+                        url: '../Handler/MaintenancePlans.ashx',
+                        dataType: 'json',
+                        data: {
+                            type: "Save",
+                            data: infoObj
+                        },
+                        success: function (result) {
+                            if ('' != "1") {
+                                top.Dialog.alert("保存成功！|保存成功", function () { top.frmright.page_228.refresh(); top.Dialog.close(); });
+                            }
+                            else {
+
+                                top.Dialog.alert("保存成功！|保存成功", function () { top.frmright.page_228.refresh(); top.Dialog.close(); });
+
+                            }
+                        },
+                        error: function (a) {
+                            top.Dialog.alert("访问服务器端出错！");
+                        }
+                    });
+                }
+                else {
+                    top.Dialog.alert("请选择保养科室！");
+                }
+            }
+        }
+        function GetEntity() {
+            var entity = {};
+            entity.PMID = $("#hdID").val() == "" ? "-1" : $("#hdID").val();
+            entity.PMCode = $("#txtCode").val();
+            entity.PMTitle = $("#txtTitle").val();
+            entity.ExecutionMode = $("#ddlExecutionMode").find("option:selected").text();
+            entity.ProjectedDate = $("#txtProjectedDate").val();
+            entity.Cycle = $("#txtCycle").val();
+            entity.PlanType = $("#ddlPlanType").find("option:selected").text();
+            entity.PMLevel = $("#ddlLevel").find("option:selected").text();
+            entity.PMDept = $("#hdDepartment").val();
+            entity.Outsource = $("#txtOutSource").val();
+            entity.PMStatus = $("#ddlStatus").find("option:selected").val() == "1" ? true : false;
+            entity.PMContent = $("#txtContent").val();
+            return entity;
+        }
+    </script>
+</head>
+<body>
+    <form method="post" action="MaintenancePlansInfo.aspx?type=Add" id="Form1" target="frmright">
+    <div class="box1">
+        <div class="basicTab">
+            <div name="保养计划管理" style="width: 100%;">
+                <table class="tableStyle" formmode="line">
+                    <tr>
+                        <td>
+                            计划编号：
+                        </td>
+                        <td>
+                            <input type="hidden" name="hdID" id="hdID" value="-1" />
+                            <input name="txtCode" type="text" id="txtCode" disabled="disabled" value="PM201601110005" />
+                        </td>
+                        <td>
+                            计划名称：
+                        </td>
+                        <td>
+                            <input name="txtTitle" type="text" id="txtTitle" class="validate[required]" /><span
+                                class="star">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            执行方式：
+                        </td>
+                        <td>
+                            <select name="ddlExecutionMode" id="ddlExecutionMode">
+	<option value="10034">循环多次</option>
+	<option value="10035">执行一次</option>
+
+</select>
+                        </td>
+                        <td>
+                            预计执行时间：
+                        </td>
+                        <td>
+                            <input name="txtProjectedDate" type="text" id="txtProjectedDate" class="validate[required,custom[date]] date" datefmt="yyyy-MM-dd HH:mm" /><span class="star">*</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            计划周期：
+                        </td>
+                        <td>
+                            <input name="txtCycle" type="text" id="txtCycle" style="width: 50px;" class="validate[required,custom[onlyNumber]]" />月
+                        </td>
+                        <td>
+                            计划类型：
+                        </td>
+                        <td>
+                            <select name="ddlPlanType" id="ddlPlanType">
+	<option value="10033">保养计划</option>
+
+</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            保养级别：
+                        </td>
+                        <td>
+                            <select name="ddlLevel" id="ddlLevel">
+	<option value="10028">日常保养</option>
+	<option value="10029">一级保养</option>
+	<option value="10030">二级保养</option>
+	<option value="10031">三级保养</option>
+	<option value="10032">四级保养</option>
+
+</select>
+                        </td>
+                        <td>
+                            计划保养科室：
+                        </td>
+                        <td>
+                            <div class="selectTree" selectedvalue="" id="Department" url="/departments/list">
+                            </div>
+                            <span class="star">*</span>
+                            <input type="hidden" name="hdDepartment" id="hdDepartment" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            外包公司：
+                        </td>
+                        <td>
+                            <input name="txtOutSource" type="text" id="txtOutSource" />
+                        </td>
+                        <td>
+                            计划状态：
+                        </td>
+                        <td>
+                            <select name="ddlStatus" id="ddlStatus">
+	<option selected="selected" value="1">启用</option>
+	<option value="0">停用</option>
+
+</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            计划内容：
+                        </td>
+                        <td colspan="3" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                            <textarea name="txtContent" rows="3" cols="20" id="txtContent" class="validate[required]" style="height:40px;width:500px;">
+</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <input name="btnSave" type="button" id="btnSave" value="提交" />&nbsp;<input name="ctl00" type="reset" value="重置" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="basicTab">
+            <div name="计划明细" style="width: 100%;">
+                <div class="padding_right5">
+                    <div id="dataBasic">
+                    </div>
+                </div>
+                <div class="box_tool_min padding_top2 padding_bottom2 padding_right5">
+                    <div class="center">
+                        <div class="left">
+                            <div class="right">
+                                <div class="padding_top5 padding_left10">
+                                    <a id="imgSelect" href="javascript: lookupEqu()"><span class="icon_add">选择设备</span></a>
+                                    <div class="box_tool_line">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+
+                <div id="Panel1" style="height:100%;width:100%;overflow-x:scroll;">
+	
+                <div>
+		<table class="tableStyle" cellspacing="0" id="gvPlanDetails" style="border-collapse:collapse;">
+			<tr>
+				<th scope="col" style="white-space:nowrap;">设备名称</th><th scope="col" style="white-space:nowrap;">设备型号</th><th scope="col" style="white-space:nowrap;">目前使用科室</th><th scope="col" style="white-space:nowrap;">医院名称</th><th scope="col" style="white-space:nowrap;">目前摆放地点</th><th scope="col" style="white-space:nowrap;">设备厂家</th><th scope="col" style="white-space:nowrap;">计划内容</th><th scope="col" style="white-space:nowrap;">注意事项</th><th scope="col" style="white-space:nowrap;">预计执行时间</th><th scope="col" style="white-space:nowrap;">执行人</th><th scope="col" style="white-space:nowrap;">备注</th><th scope="col">&nbsp;</th>
+			</tr><tr>
+				<td style="white-space:nowrap;">
+                                <input name="gvPlanDetails$ctl02$lblEquName" type="text" readonly="readonly" id="gvPlanDetails_lblEquName_0" class="equname" style="width:100px;" /><span class="red">*</span>
+                                <input name="gvPlanDetails$ctl02$hdPDID" type="hidden" id="gvPlanDetails_hdPDID_0" class="pkey" value="-1" />
+                                <input name="gvPlanDetails$ctl02$hdIBNumber" type="hidden" id="gvPlanDetails_hdIBNumber_0" class="IBNumber" />
+                            </td><td style="white-space:nowrap;">&nbsp;</td><td style="white-space:nowrap;">&nbsp;</td><td style="white-space:nowrap;">&nbsp;</td><td style="white-space:nowrap;">&nbsp;</td><td style="white-space:nowrap;">&nbsp;</td><td style="white-space:nowrap;">
+                                <input name="gvPlanDetails$ctl02$txtPlanContent" type="text" id="gvPlanDetails_txtPlanContent_0" class="plancontent" style="width:120px;" />
+                            </td><td style="white-space:nowrap;">
+                                <input name="gvPlanDetails$ctl02$txtNotes" type="text" id="gvPlanDetails_txtNotes_0" class="notes" style="width:120px;" />
+                            </td><td style="white-space:nowrap;">
+                                <input name="gvPlanDetails$ctl02$txtPlanTime" type="text" id="gvPlanDetails_txtPlanTime_0" class="plantime date ignore" datefmt="yyyy-MM-dd HH:mm" width="130px" /><span class="red">*</span>
+                            </td><td style="white-space:nowrap;">
+                                <input name="gvPlanDetails$ctl02$txtExecutor" type="text" id="gvPlanDetails_txtExecutor_0" class="executor" style="width:50px;" /><span
+                                    class="red">*</span>
+                            </td><td style="white-space:nowrap;">
+                                <input name="gvPlanDetails$ctl02$txtRemark" type="text" id="gvPlanDetails_txtRemark_0" class="remark" style="width:150px;" />
+                            </td><td>
+                                <span class="img_delete hand" title="删除" onclick="DeleteRow(this)"></span>
+                            </td>
+			</tr>
+		</table>
+	</div>
+
+                  
+</div> 
+            </div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

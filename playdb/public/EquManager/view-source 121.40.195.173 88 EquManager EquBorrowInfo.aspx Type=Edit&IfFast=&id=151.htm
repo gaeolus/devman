@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	设备移科
+</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!-- 日期控件start -->
+    <script type="text/javascript" src="../libs/js/form/datePicker/WdatePicker.js"></script>
+    <!-- 日期控件end -->
+    <!-- 树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link type="text/css" rel="stylesheet" href="../libs/js/tree/ztree/ztree.css" /></link>
+    <!-- 树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!-- 表单验证start -->
+    <script src="../libs/js/form/validationRule.js" type="text/javascript"></script>
+    <script src="../libs/js/form/validation.js" type="text/javascript"></script>
+    <!-- 表单验证end -->
+    <script type="text/javascript">
+        $(function () {
+            $("#txtDeptTailName").val('放射科');
+            $("#hdBorrowPersonID").val('sysadmin');
+            $("#hdDeptTailID").val('30484');
+            $("#txtDeptTailPerson").val('');
+            $("#txtBorrowPerson").val('系统管理员');
+
+            if ('Edit' == "Add") {
+                $("#txtStatus").val('待借出');
+            }
+        });
+        function reflesh() {
+
+            if ('' != "1") {
+                top.frmright.page_272.refresh();
+                top.Dialog.close();
+            } else {
+                top.Dialog.close();
+            }
+
+        }
+        function initComplete() {
+            $("#divDepartment").bind("change", function () {
+                $("#hfdDepartment").val($(this).attr("relValue"));
+                $("#hfdValue").val($(this).attr("relText"));
+            })
+        }
+
+
+        //保存
+        function Save() {
+            if (CheckData()) {
+                infoObj = JSON.stringify(EquBorrowObj());
+                var postData = { infoObj: infoObj };
+                var Url = "../Handler/EquBorrow.ashx?Type=Save&t=" + Date.parse(new Date());
+                $.ajax({
+                    url: Url,
+                    data: postData,
+                    dataType: 'text',   //返回的数据类型
+                    type: "POST",       //请求方式
+                    async: false,
+                    cache: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (result) {
+                        if (result == "ok") {
+                            if ('' != "1") {
+                                top.frmright.page_272.refresh();
+                            }
+                            top.Dialog.close();
+                        }
+                        else {
+                            top.Dialog.alert("保存失败");
+                        }
+                    },
+                    error: function (result) {
+                        top.Dialog.alert("数据传输错误");
+                    }
+                })
+            }
+
+        }
+
+        function CheckData() {
+
+            return true;
+
+        }
+
+        function Open() {
+            top.Dialog.open({
+                URL: "SearchPage/SelectEqument.aspx?Command=EquBorrow",
+                Title: "选择设备", ShowMaxButton: true, Width: 950, Height: 530
+            });
+        }
+
+        $(function () {
+            $("#txtBorrowDate").val('2016-01-11 14:35')
+        })
+
+
+        //获取界面填充的数据
+        function EquBorrowObj() {
+            var obj = new Object();
+            if ('Edit' == "Add") {
+                obj.id = -1;
+            }
+            else {
+                obj.id = '151';
+            }
+            obj.IBNumber = $("#txtIBNumber").val();
+            obj.EquName = $("#txtEquName").val();
+            obj.DeptSource = $("#hdDeptSourceID").val();
+            obj.DeptTail = $("#hdDeptTailID").val();
+            obj.DeptPut = $("#txtEquPut").val();
+            obj.BorrowDate = $("#txtBorrowDate").val();
+            obj.CreateUserCode = $("#hdBorrowPersonID").val();
+            obj.CreateDate = $("#txtBorrowDate").val();
+            obj.Remark = $("#txtRemark").val();
+            obj.Status = $("#txtStatus").val();
+
+            return obj;
+        }
+    </script>
+</head>
+<body>
+    <form method="post" action="EquBorrowInfo.aspx?Type=Edit&amp;IfFast=&amp;id=151" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEyNzU4ODE2NzUPZBYCAgMPZBYSAgMPDxYCHgRUZXh0BQ02ODAyMTUxMjMwNzIyZGQCBQ8PFgIfAAUY5pi+5b6u5aSW56eR5omL5pyv5Zmo5qKwZGQCBw8PFgIfAAUJ5rWL5ZCs5a6kZGQCCw8PFgIfAAUP57O757uf566h55CG5ZGYZGQCEQ8PFgIfAAUP5rWL5ZCs5a6k5Li75Lu7ZGQCEw8PFgIfAAUFMTAwODZkZAIZDw8WAh8AZWRkAhsPDxYCHwAF9AMwMTAxICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRkAh0PDxYCHwAFCeW+heWAn+WHumRkZBtEz3uFlLOk35S/dUmKLaoqXOdYoeH7SfdrJ6yiXbkk" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWEgKw0dXGDAKugaO2DQKzkffwAwLOw8ulAQLDycK1DQK7qOLmCgKs3qe6CwLv9uPiCgKazo61AgK6/MiRBwKwidPiAwKm0oipBAKque3BCQKfydO2BgLPm47vDQKpoImIBgKZvIvlBAL8vriSDKBj2/XkQztjLmNQCYQ+Bt5BRKr7j0dFw+pQ/uMgWDMC" />
+</div>
+    <table class="tableStyle" formmode="view">
+        <tr>
+            <td>
+                设备名称：
+            </td>
+            <td>
+                <input name="txtEquName" type="text" value="测试设备" id="txtEquName" /><img src="../skin/icons/list-se.png"
+                    alt="" onclick="Open();" />
+            </td>
+            <td>
+                系统编号：
+            </td>
+            <td>
+                <input name="txtIBNumber" type="text" value="6802151230722" id="txtIBNumber" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                设备分类：
+            </td>
+            <td>
+                <input name="txtEquipMentType" type="text" value="显微外科手术器械" id="txtEquipMentType" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                目前所属科室：
+            </td>
+            <td>
+                <input name="txtDeptSourceName" type="text" value="测听室" id="txtDeptSourceName" disabled="disabled" class="aspNetDisabled" />
+                <input type="hidden" name="hdDeptSourceID" id="hdDeptSourceID" value="30483" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                借用人：
+            </td>
+            <td>
+                <input name="txtBorrowPerson" type="text" value="系统管理员" id="txtBorrowPerson" disabled="disabled" class="aspNetDisabled" />
+                <input type="hidden" name="hdBorrowPersonID" id="hdBorrowPersonID" value="sysadmin" />
+            </td>
+            <td>
+                借用时间：
+            </td>
+            <td>
+                <input name="txtBorrowDate" type="text" value="2016/1/5 11:25:00" id="txtBorrowDate" class="date" dateFmt="yyyy-MM-dd HH:mm" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                原科室负责人：
+            </td>
+            <td>
+                <input name="txtDeptSourcePerson" type="text" value="测听室主任" id="txtDeptSourcePerson" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                负责人电话：
+            </td>
+            <td>
+                <input name="txtPhoneOne" type="text" value="10086" id="txtPhoneOne" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                借用科室：
+            </td>
+            <td>
+                <input name="txtDeptTailName" type="text" id="txtDeptTailName" disabled="disabled" class="aspNetDisabled" />
+                <input type="hidden" name="hdDeptTailID" id="hdDeptTailID" value="30484" />
+            </td>
+            <td>
+                借用科室负责人：
+            </td>
+            <td>
+                <input name="txtDeptTailPerson" type="text" id="txtDeptTailPerson" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                目前摆放地点：
+            </td>
+            <td>
+                <input name="txtEquPut" type="text" value="0101                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                " id="txtEquPut" disabled="disabled" class="aspNetDisabled" />
+            </td>
+            <td>
+                状态：
+            </td>
+            <td>
+                <input name="txtStatus" type="text" value="待借出" id="txtStatus" disabled="disabled" class="aspNetDisabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                备注：
+            </td>
+            <td colspan="4" style="white-space: normal; word-wrap: break-word; word-break: break-all;">
+                <textarea name="txtRemark" rows="2" cols="20" id="txtRemark">
+</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input name="BtnSave" type="button" id="BtnSave" value="保存" onclick="Save();" />
+                <input type="button" value="取消" onclick="reflesh();" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

@@ -1,0 +1,88 @@
+@(id: Long, deviceForm: Form[Device])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="headerSortDown">
+        @title
+    </th>
+}
+
+
+@head = {
+
+}
+
+@navbar = {
+
+<div class="navbar-collapse collapse" role="navigation">
+    <ul class="nav navbar-nav">
+
+
+
+
+
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li><a href="https://accounts.google.com/ServiceLogin?hl=zh-CN&passive=true&continue=https://www.google.com.hk/" >登陆</a></li>
+
+    </ul>
+
+
+
+</div>
+}
+
+@content = {
+    
+    <h1>设备编辑</h1>
+    
+    @form(routes.Devices.update(id)) {
+
+        
+        <fieldset>
+            <input type="hidden" value="@deviceForm("id").valueOr("")" name="id"/)
+
+            @inputText(deviceForm("name"), '_label -> "设备名称", '_help -> "")
+            @inputText(deviceForm("gname"), '_label -> "商品名 通用名", '_help -> "")
+            @inputText(deviceForm("manufacturer"), '_label -> "manufacturer", '_help -> "")
+            @inputText(deviceForm("model"), '_label -> "model", '_help -> "")
+            @inputText(deviceForm("catalog"), '_label -> "Catalog", '_help -> "")
+            @inputText(deviceForm("udi"), '_label -> "Device udi", '_help -> "")
+            @inputText(deviceForm("hudi"), '_label -> "Device hudi", '_help -> "")
+            @inputText(deviceForm("price"), '_label -> "Device price", '_help -> "")
+            @inputText(deviceForm("reg"), '_label -> "Device reg", '_help -> "")
+            @inputText(deviceForm("sn"), '_label -> "Device sn", '_help -> "")
+            @inputText(deviceForm("jcks"), '_label -> "Device jcks", '_help -> "")
+            @inputDate(deviceForm("introduced"), '_label -> "Introduced date", '_help -> "")
+            @inputDate(deviceForm("discontinued"), '_label -> "Discontinued date", '_help -> "")
+            
+            @select(
+                deviceForm("doctor.id"),
+                options(Doctor.options),
+                '_label -> "Doctor", '_default -> "-- Choose a doctor --",
+                '_showConstraints -> false
+            )
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this device" class="btn primary"> or 
+            <a href="@routes.Devices.list()" class="btn">Cancel</a>
+        </div>
+        
+    }
+    
+    @form(routes.Devices.delete(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this device" class="btn danger">
+    }
+    
+ }
+
+@main(null)(navbar)(content)

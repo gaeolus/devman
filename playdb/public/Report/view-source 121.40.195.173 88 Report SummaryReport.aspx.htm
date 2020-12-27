@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--框架必需start-->
+    <script type="text/javascript" src="../libs/js/jquery.js"></script>
+    <script type="text/javascript" src="../libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="../libs/js/framework.js"></script>
+    <link href="../libs/css/import_basic.css" rel="stylesheet" type="text/css" /><link id="skin" rel="stylesheet" type="text/css" prepath="../" /><link id="customSkin" rel="stylesheet" type="text/css" />
+    <!--框架必需end-->
+    <!--树组件start -->
+    <script type="text/javascript" src="../libs/js/tree/ztree/ztree.js"></script>
+    <link href="../libs/js/tree/ztree/ztree.css" rel="stylesheet" type="text/css" />
+  
+    <!--树组件end -->
+    <!-- 树形下拉框start -->
+    <script type="text/javascript" src="../libs/js/form/selectTree.js"></script>
+    <!-- 树形下拉框end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="../libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="../libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!-- 表单start -->
+    <script src="../libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <style type="text/css">
+        .l-layout-center
+        {
+            border: none !important;
+        }
+        .l-layout-left
+        {
+            border-bottom: none !important;
+        }
+        .l-layout-drophandle-left
+        {
+            width: 10px;
+        }
+    </style>
+<title>
+
+</title></head>
+<body>
+    <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+        <form method="post" action="SummaryReport.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTcxOTk4NzgyNWRkqKL69xvHN/Oz9TUZ//O4zBspAEdBUlVliKYhzuNQOwM=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWAgKUtImZCQK3lOzWD+BRe+e3B+efJ8nPY/SfWJvSTDiQY/4EJk/Oxb7mR4vW" />
+</div>
+        <input type="hidden" id="ParentId" name="ParentId" value="" />
+        <input type="hidden" id="Id" name="Id" value="" />
+        <table>
+            <tr>
+                <td>
+                    维修单号：
+                </td>
+                <td>
+                    <input type="text" id="txtRepairCode" />
+                </td>
+                <td>
+                    目前使用科室：
+                </td>
+                <td>
+                    <input type="hidden" name="hfdDepartment" id="hfdDepartment" />
+                    <div class="selectTree" selectedvalue="" id="divDepartment" url="../Handler/Departments.ashx?Command=Tree">
+                    </div>
+                </td>
+                 <td align="center">
+                    <button type="button" onclick="searchHandler()">
+                        <span class="icon_find">查询</span></button>&nbsp;&nbsp;
+                    <button type="button" onclick="resetSearch()">
+                        <span class="icon_reload">重置查询</span></button>
+                </td>
+            </tr>
+           
+        </table>
+        </form>
+    </div>
+    <div class="padding_right5">
+        <div id="dataBasic">
+        </div>
+    </div>
+    <script type="text/javascript">
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+
+
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "设备分类", open: true, icon: "../libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+        //初始化函数
+        function initComplete() {
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+
+            $("#divDepartment").bind("change", function () {
+                $("#hfdDepartment").val($(this).attr("relValue"));
+            })
+
+            //初始化tree
+            initTree();
+
+            //初始化grid组件
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+            //监听查询框的回车事件
+            $("#EquipmentName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    searchHandler();
+                }
+            })
+        }
+
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'POST',
+                //url: '../Handler/Departments.ashx?Command=List',//科室机构树
+                url: '../Handler/WordBook.ashx?Command=Tree&ParentID=10000', //设备分类树
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+			    { display: '医院名称', name: 'HospitalName', align: 'left', width: 100 },
+                { display: '目前使用科室', name: 'DeptName', align: 'left', width: 100 },
+			    { display: '派工单号', name: 'RepairCode', align: 'left', width: 100 },
+			    { display: '故障类型', name: 'FalutType', align: 'left', width: 100 },
+                { display: '系统编号', name: 'IBNumber', align: 'left', width: 100 },
+                { display: '设备分类', name: 'IBType', align: 'left', width: 100 },
+                { display: '设备名称', name: 'IBName', align: 'left', width: 100 },
+                { display: '设备型号', name: 'IBSpecification', align: 'left', width: 100 },
+                { display: '设备序列号', name: 'IBSeriNum', align: 'left', width: 100 },
+                { display: '设备厂家', name: 'FactoryName', align: 'left', width: 100 },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: 100 },
+                { display: '维修开始时间', name: 'StartTime', align: 'left', width: 100 },
+                { display: '维修结束时间', name: 'EndTime', align: 'left', width: 100 },
+                { display: '维修用时', name: 'Time', align: 'left', width: 100 },
+                { display: '维修工时', name: 'WorkTime', align: 'left', width: 100 },
+                { display: '维修费用', name: 'RepairMoney', align: 'left', width: 100 },
+                { display: '保养费用', name: 'MaintenanceMoney', align: 'left', width: 100 },
+                { display: '配件名称', name: 'PartName', align: 'left', width: 100 },
+                { display: '配件货号', name: 'PartType', align: 'left', width: 100 },
+                { display: '配件序列号', name: 'PartSpecification', align: 'left', width: 100 },
+                { display: '配件数量', name: 'PartCount', align: 'left', width: 100 },
+                { display: '配件单价', name: 'PartPrice', align: 'left', width: 100 },
+                { display: '配件总价', name: 'PartSumPrice', align: 'left', width: 100 },
+                { display: '费用总计', name: 'SumMoney', align: 'left', width: 100 },
+                { display: '备注', name: 'Remark', align: 'left', width: 100 }
+			  ],
+                url: '../Handler/Repairs.ashx?Type=SummaryReport&date=' + new Date().getTime(), pageSize: 20, sortName: 'Id', rownumbers: true,
+                height: '100%', width: "100%", percentWidthMode: false,
+                toolbar: {
+                    items: [
+                    { text: '下载报表', click: ExportData, iconClass: 'icon_export' },
+                    { line: true }
+        		]
+                }
+            });
+        }
+
+        // 导出
+        function ExportData() {
+      
+            var parm = "&RepairCode=" + $("#txtRepairCode").val();
+
+            // 科室
+            parm += "&Department=" + $("#hfdDepartment").val();
+
+            var url = "../Handler/ExportData.ashx?Type=SummaryReport" + parm;
+
+            window.location = url;
+
+        }
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
+        function getSelectIds(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].Id + ",";
+            }
+
+            return ids + "0";
+        }
+
+
+
+        //点击树节点刷选对应的表格数据 
+        function zTreeSelect(event, treeId, treeNode) {
+            var query = null;
+            selectTreeNode = treeNode;
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            query = { 'parentId': treeNode.id };
+            searchHandler();
+        }
+
+
+        //查询
+        function searchHandler() {
+            var parm = "&RepairCode=" + $("#txtRepairCode").val();
+
+         
+            // 科室
+            parm += "&Department=" + $("#hfdDepartment").val();
+
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/Repairs.ashx?Type=SummaryReport' + parm });
+
+            //刷新表格数据 
+            grid.loadData();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#form1")[0].reset();
+            $("#divDepartment").setValue("");
+            $("#hfdDepartment").val("");
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+            grid.loadData();
+        }
+
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+        $(function () {
+            initGrid();
+        });
+
+    </script>
+</body>
+</html>

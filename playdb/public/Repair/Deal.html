@@ -1,0 +1,450 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设备信息管理</title>
+    <!--框架必需start-->
+    <script type="text/javascript" src="/assets/libs/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/language/cn.js"></script>
+    <script type="text/javascript" src="/assets/libs/js/framework.js"></script>
+    <link href="/assets/libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" id="skin" prepath="/assets/" />
+    <link rel="stylesheet" type="text/css" id="customSkin" />
+    <!--框架必需end-->
+    <!--树组件start -->
+    <script type="text/javascript" src="/assets/libs/js/tree/ztree/ztree.js"></script>
+    <link href="/assets/libs/js/tree/ztree/ztree.css" rel="stylesheet" type="text/css" />
+    <!--树组件end -->
+    <!--布局控件start-->
+    <script type="text/javascript" src="/assets/libs/js/nav/layout.js"></script>
+    <!--布局控件end-->
+    <!--数据表格start-->
+    <script src="/assets/libs/js/table/quiGrid.js" type="text/javascript"></script>
+    <!--数据表格end-->
+    <!-- 表单start -->
+    <script src="/assets/libs/js/form/form.js" type="text/javascript"></script>
+    <!-- 表单end -->
+    <script src="/assets/libs/js/table/detailTable.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="layout1">
+    <div id="leftCon" position="left" style="" paneltitle="设备分类树">
+        <div class="orgTreeContainer">
+            <ul id="tree" class="ztree">
+            </ul>
+        </div>
+    </div>
+    <div id="centerCon" position="center" style="">
+        <div class="box2" paneltitle="查询" statustext="收缩" startstate="open" afterstatustext="展开">
+            <form method="post" action="Deal.aspx" id="queryForm">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMzg3NTE4MjQ2ZGST7eZ3xBxz0kseKwzOdhak8gNQY9hpLM239wZ0NqZ+jQ==" />
+                </div>
+
+                <div class="aspNetHidden">
+
+                    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBQKkh8PlBALBvKykCgLO04bKBgLR04bKBgLP04bKBh0EPeBYCSZrXa5r3bzT191KY9pz4aDUyjll2mNBN+sk" />
+                </div>
+                <input type="hidden" id="ParentId" name="ParentId" value="" />
+                <input type="hidden" id="Id" name="Id" value="" />
+                <table>
+                    <tr>
+                        <td>
+                            系统编号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtEquipmentNo" />
+                        </td>
+                        <td>
+                            设备名称：
+                        </td>
+                        <td>
+                            <input type="text" id="txtEquipmentName" />
+                        </td>
+                        <td>
+                            目前摆放地点：
+                        </td>
+                        <td>
+                            <input type="text" id="txtEquput" name="userinfor.userName" />
+                        </td>
+                        <td>
+                            设备状态：
+                        </td>
+                        <td >
+                            <select name="EquSataus" id="EquSataus">
+                                <option value="">--请选择--</option>
+                                <option value="1">在用</option>
+                                <option value="0">报废</option>
+                                <option value="2">维修中</option>
+
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            设备型号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtSpecification" />
+                        </td>
+                        <td>
+                            响应人：
+                        </td>
+                        <td>
+                            <input type="text" id="txtReplyPerson" name="userinfor.userName" />
+                        </td>
+                        <td>
+                            维修单号：
+                        </td>
+                        <td>
+                            <input type="text" id="txtWeiXiuNumber" />
+                        </td>
+                        <td>
+                            <button type="button" onclick="searchHandler()">
+                                <span class="icon_find">查询</span></button>
+                        </td>
+                        <td>
+                            <button type="button" onclick="resetSearch()">
+                                <span class="icon_reload">重置查询</span></button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="padding_right5">
+            <div id="dataBasic">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+        //设定不可编辑的节点id
+        var noeditArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"];
+
+
+        //定义grid
+        var grid = null;
+        //定义选中的树节点
+        var selectTreeNode = null;
+
+        //定义树节点初始数据
+        var nodes = [
+		{ id: "0", parentId: -1, name: "设备分类", open: true, icon: "/assets/libs/icons/home.gif" }
+	];
+
+        //树属性配置
+        var selectionSetting = {
+            view: {
+                dblClickExpand: true
+            },
+            callback: {
+                onClick: zTreeSelect
+            }
+        };
+        //初始化函数
+        function initComplete() {
+            //当提交表单刷新本页面时关闭弹窗
+            //top.Dialog.close();
+
+            //初始化tree
+            initTree();
+
+            //初始化grid组件
+            initGrid();
+
+            var layout = $("#layout1").layout({ leftWidth: 180, onEndResize: function () {
+                grid.resetWidth();
+            }
+            });
+            //初始化收缩左部
+            layout.setLeftCollapse(true);
+
+            //监听查询框的回车事件
+            $("#EquipmentName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    searchHandler();
+                }
+            })
+        }
+
+        //初始化tree处理
+        function initTree() {
+            $.ajax({
+                type: 'GET',
+                url: '/devices/WordBook?Command=Tree&ParentID=10000',
+                data: null,
+                success: function (result) {
+                    nodes = nodes.concat(result.treeNodes);
+                    $.fn.zTree.init($("#tree"), selectionSetting, nodes);
+                },
+                error: function (a) {
+                    top.Dialog.alert("访问服务器端出错！");
+                },
+                dataType: 'json'
+            });
+        }
+
+        //初始化Grid处理
+        function initGrid() {
+            grid = $("#dataBasic").quiGrid({
+                columns: [
+			    { display: '维修单号', name: 'RepairCode', align: 'left', width: "10%" },
+			    { display: '系统编号', name: 'EquCode', align: 'left', width: "12%" },
+                { display: '设备型号', name: 'Specification', align: 'left', width: "8%" },
+			    { display: '设备名称', name: 'HEquName', align: 'left', width: "10%" },
+			    { display: '目前所属科室', name: 'DeptName', align: 'left', width: "10%" },
+                { display: '报修日期', name: 'RepairDate', align: 'left', width: "10%" },
+                { display: '维修期限', name: 'MaintenDate', align: 'left', width: "10%" },
+                { display: '报修人', name: 'RepairPerson', align: 'left', width: "10%" },
+                { display: '目前摆放地点', name: 'Equput', align: 'left', width: "10%" },
+                { display: '响应人', name: 'ReplyPerson', align: 'left', width: "5%" },
+                { display: '维修状态', name: 'RepairStatus', align: 'left', width: "5%" },
+           		{ display: '操作', isAllowHide: false, align: 'center', width: 140,
+           		    render: function (rowdata, rowindex, value, column) {
+
+           		        var operate = '<div class="padding_top4 padding_left5">';
+           		        if (('3094' == '3001') || ('3094' == '3009') || ('3094' == '3003')) {
+
+           		            if (rowdata.RepairStatus == "审核通过" || rowdata.RepairStatus == "维修中") {
+           		                operate += '<span class="img_edit hand " title="维修处理" onclick="onEdit(' + rowdata.Id + ',' + rowdata.RepairCode + ',' + rowdata.HID + ')"></span>';
+           		                if ('3094' == '3009') {
+           		                    operate += '<span class="img_list hand" title="查看信息" onclick="onLook(' + rowdata.Id + ',' + rowdata.RepairCode + ')"></span>';
+           		                    if (rowdata.IsSupport == "1") {
+           		                        operate += '<span class="img_help hand " title="技术支持" onclick="onApply(' + rowdata.RepairCode + ')"></span>';
+           		                    }
+           		                }
+
+           		                else {
+           		                    operate += '<span class="img_help hand " title="技术支持" onclick="onApply(' + rowdata.RepairCode + ')"></span>';
+           		                }
+           		                //添加维修处理退回功能
+           		                //韩淑田  2015-04-21
+           		                //start
+           		                if ((rowdata.ReplyPerson == '系统管理员') && ('3094' == '3001')) {
+           		                    operate += '<span class="img_remove hand " title="维修单退回" onclick="onReturn(' + "'" + rowdata.RepairCode + "','" + rowdata.CreateName + "'" + ')"></span>';
+           		                }
+
+           		                //end
+
+           		            }
+           		            else {
+           		                operate += '<span class="img_list hand" title="查看信息" onclick="onLook(' + rowdata.Id + ',' + rowdata.RepairCode + ')"></span>';
+           		            }
+
+           		        }
+           		        else {
+           		            operate += '<span class="img_list hand" title="查看信息" onclick="onLook(' + rowdata.Id + ',' + rowdata.RepairCode + ')"></span>';
+           		        }
+
+           		        operate += '</div>';
+           		        return operate;
+           		    }
+           		}
+			  ],
+           		url: '../Handler/Repairs.ashx?Type=DealList&RoleId=3094&UserId=20036&UserName=' + escape('系统管理员') + '&Department=30484&date=' + new Date().getTime(), sortName: 'Id', rownumbers: true,
+                height: '100%', width: "100%", pageSize: 20, percentWidthMode: true
+            });
+          //  alert("../Handler/Repairs.ashx?Type=DealList&RoleId=3094&UserId=20036&UserName=" + escape('系统管理员') + "&Department=30484&date=" + new Date().getTime())
+        }
+
+        //申请技术支持
+        function onApply(RepairCode) {
+            top.Dialog.open({
+                URL: "Repair/ApplyTechnicalSupportInfo.aspx?RepairCode=" + RepairCode,
+                ID: "a2", Title: "申请技术支持", ShowMaxButton: true, Width: 990, Height: 640
+            });
+        }
+        //维修处理
+        //韩淑田  添加设备Id
+        function onEdit(rowid, RepairCode, hid) {
+            //hid 为设备id
+            top.Dialog.open({
+                URL: "Repair/DealInfo.aspx?Type=Edit&id=" + rowid + "&RepairCode=" + RepairCode + "&HID=" + hid, ID: "a2",
+                Title: "维修处理", ShowMaxButton: true, Width: 990, Height: 640
+            });
+        }
+
+        //维修处理
+        function onLook(rowid, RepairCode) {
+            top.Dialog.open({
+                URL: "Repair/DealLook.aspx?id=" + rowid + "&RepairCode=" + RepairCode, ID: "a2",
+                Title: "查看信息", ShowMaxButton: true, Width: 990, Height: 640
+            });
+        }
+        //获取退回信息
+        function getReturnInfo(RepairCode) {
+            var obj = new Object();
+            obj.ReturnPerson = '系统管理员';
+            obj.ReturnPersonID = '20036';
+            obj.ReturnTime = '2016/1/7 22:11:45';
+            obj.RepairCode = RepairCode;
+            obj.RepairStatus = "报修中";
+            obj.ReplyTime = null;
+            obj.ReplyPerson = null;
+            return obj;
+        }
+        //维修退回 韩淑田  20150421
+        function onReturn(RepairCode, CreateName) {
+            top.Dialog.confirm("确定要退回该维修处理记录吗？", function () {
+                infoObj = JSON.stringify(getReturnInfo(RepairCode));
+                $.ajax({
+                    url: '../Handler/Repairs.ashx',
+                    dataType: 'text',
+                    data: { Type: "Return", infoObj: infoObj, CreateName: CreateName },
+                    success: function (result) {
+                        if (result == "ok")
+                            top.Dialog.alert("退回成功！");
+                        else
+                            top.Dialog.alert("退回失败！");
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        top.Dialog.alert("数据传输错误！");
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+        //删除
+        function onDelete(rowid, rowidx) {
+            top.Dialog.confirm("确定要删除该记录吗？", function () {
+                $.ajax({
+                    url: '../Handler/Repairs.ashx',
+                    dataType: 'json',
+                    data: { Id: rowid, Type: "Del" },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+
+
+        //批量删除
+        function deleteUnit() {
+            //top.Dialog.alert("为保证数据的完整性，演示版中禁用了批量删除。");
+            //return;
+            var rows = grid.getSelectedRows();
+            var rowsLength = rows.length;
+            var ids = getSelectIds(grid);
+            if (rowsLength == 0) {
+                //top.Dialog.alert("请选中要删除的记录!");
+                //return;
+            }
+            top.Dialog.confirm("确定要删除吗？", function () {
+                $.ajax({
+                    url: '../Handler/Repairs.ashx',
+                    dataType: 'json',
+                    data: { Id: ids, Type: "Del" },
+                    success: function (result) {
+                        grid.loadData();
+                    },
+                    error: function (result) {
+                        grid.loadData();
+                    }
+                });
+            });
+        }
+
+
+        //删除后的提示
+        function handleResult(result) {
+            if (result == 1) {
+                top.Dialog.alert("删除成功！", null, null, null, 1);
+                grid.loadData();
+            } else {
+                top.Dialog.alert("删除失败！");
+            }
+        }
+
+        //获取所有选中行获取选中行的id 格式为 ids=1&ids=2
+        function getSelectIds(grid) {
+            var selectedRows = grid.getSelectedRows();
+            var selectedRowsLength = selectedRows.length;
+            var ids = "";
+
+            for (var i = 0; i < selectedRowsLength; i++) {
+                ids += selectedRows[i].Id + ",";
+            }
+
+            return ids + "0";
+        }
+
+
+
+        //点击树节点刷选对应的表格数据
+        function zTreeSelect(event, treeId, treeNode) {
+
+            selectTreeNode = treeNode;
+            $("#ParentId").val(treeNode.parentId);
+            $("#Id").val(treeNode.id);
+            searchHandler();
+
+        }
+
+
+        //查询
+        function searchHandler() {
+            var parm = "?EquName=" + escape($("#txtEquipmentName").val()) + "&UserName=" + escape('系统管理员');
+            parm += "&EquNo=" + $("#txtEquipmentNo").val();
+            parm += "&Specification=" + escape($("#txtSpecification").val());
+            parm += "&Equput=" + escape($("#txtEquput").val());
+            parm += "&ReplyPerson=" + escape($("#txtReplyPerson").val());
+            // 获取分类树Id
+            parm += "&CategoryID=" + $("#Id").val();
+            parm += "&CategoryParentID=" + $("#ParentId").val();
+            parm += "&Type=DealList";
+            parm += "&Department=30484";
+            parm += "&UserId=20036";
+            parm += "&RoleId=3094";
+            parm += "&RepairCode=" + $("#txtWeiXiuNumber").val();
+            parm += "&EquSataus=" + $("#EquSataus option:selected").val();
+            grid.setNewPage(1);
+            grid.setOptions({ url: '../Handler/Repairs.ashx' + parm });
+
+            //刷新表格数据
+            grid.loadData();
+        }
+
+        //重置查询
+        function resetSearch() {
+            $("#queryForm")[0].reset();
+            $("#EquSataus").setValue(1);
+            searchHandler();
+        }
+
+        //刷新表格数据并重置排序和页数
+        function refresh(isUpdate) {
+            if (!isUpdate) {
+                //重置排序
+                grid.options.sortName = 'Id';
+                grid.options.sortOrder = "desc";
+                //页号重置为1
+                grid.setNewPage(1);
+            }
+
+            grid.loadData();
+        }
+
+
+        //处理高度自适应，每次浏览器尺寸变化时触发
+        function customHeightSet(contentHeight) {
+            $(".cusBoxContent").height(contentHeight - 55)
+            $(".orgTreeContainer").height(contentHeight - 30);
+        }
+
+        $(function () {
+            initGrid();
+        });
+
+    </script>
+</body>
+</html>
